@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- Created by Gustavo Rezende -->
+<button>
+	<title>Arrow Mirror Right</title>
+	<svg width="50" height="40" viewBox="0 0 100 80">
+		<defs>
+			<linearGradient id="gradient" gradientUnits="userSpaceOnUse" x1="50" y1="55" x2="50" y2="80">
+				<stop id="st1" offset="0%" stop-opacity=".5" stop-color="#ffffff" />
+				<stop id="st2" offset="100%" stop-opacity="0" stop-color="#ffffff" />
+			</linearGradient>
+		</defs>
+		<path id="arrow1" fill="#ffffff"
+			d="M0,15 L60,15 L60,5 C60,0 65,0 67,1 L98,22 C100,24 100,26 98,28 L67,49 C65,50 60,50 60,45 L60,35 L0,35 L6,25 z" />
+		<path id="arrow2" fill="url(#gradient)"
+			d="M0,70 L60,70 L60,60 C60,55 65,55 67,56 L98,77 C98,78 100,79 100,80 L6,80 z" />
+	</svg>
+	<parameters>
+		<parameter>
+			<title>Arrow color</title>
+			<name>ac</name>
+			<type>colour</type>
+			<element>arrow1</element>
+			<attribute>fill</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#008000</highlighted>
+				<selected>#FFFF00</selected>
+			</default-value>
+		</parameter>
+		<parameter>
+			<title>Reflection color 1</title>
+			<name>rc1</name>
+			<type>colour</type>
+			<element>st1</element>
+			<attribute>stop-color</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#008000</highlighted>
+				<selected>#FFFF00</selected>
+			</default-value>
+		</parameter>
+		<parameter>
+			<title>Reflection color 2</title>
+			<name>rc2</name>
+			<type>colour</type>
+			<element>st2</element>
+			<attribute>stop-color</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#008000</highlighted>
+				<selected>#FFFF00</selected>
+			</default-value>
+		</parameter>
+	</parameters>
+</button>

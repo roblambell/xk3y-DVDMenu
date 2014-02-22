@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<button>
+  <title>Arrow</title>
+  <svg width="48" height="24" viewBox="0 0 100 50">
+    <path id="arrow" transform="rotate(0,50,25)"
+      style="stroke:#ffffff;stroke-width:3;stroke-linejoin:round;fill:#8080F0;"
+      d="M65,18 h-60 v14 h60 l-10,15 l40,-22 l-40,-22 z" />
+  </svg>
+  <parameters>
+    <parameter>
+      <title>Arrow colour</title>
+      <name>arrow</name>
+      <type>colour</type>
+      <element>arrow</element>
+      <attribute>fill</attribute>
+      <changeable/>
+      <default-value>
+         <highlighted>#0000FF</highlighted>
+         <selected>#FF0000</selected>
+      </default-value>
+    </parameter>
+    <parameter>
+      <title>Outline colour</title>
+      <name>stroke</name>
+      <type>colour</type>
+      <element>arrow</element>
+      <attribute>stroke</attribute>
+      <changeable/>
+      <default-value>
+        <highlighted>#ffffff</highlighted>
+        <selected>#ffffff</selected>
+      </default-value>
+    </parameter>
+    <parameter>
+      <title>Outline width</title>
+      <name>stroke-width</name>
+      <type>integer</type>
+      <element>arrow</element>
+	  <attribute>stroke-width</attribute>
+    </parameter>
+    <parameter>
+      <title>Rotation</title>
+      <name>rotation</name>
+      <type>integer(0,360)</type>
+      <element>arrow</element>
+	  <attribute>transform#1</attribute>
+    </parameter>
+  </parameters>
+</button>

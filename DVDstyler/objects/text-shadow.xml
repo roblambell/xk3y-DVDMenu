@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<object>
+  <title>Shadow text</title>
+  <svg xmlns="http://www.w3.org/2000/svg"
+       xmlns:xlink="http://www.w3.org/1999/xlink"
+	   width="8" height="8">
+    <defs>
+      <text id="text" x="50%" y="50%" text-anchor="middle"
+            dominant-baseline="middle">button</text>
+    </defs>
+    <use id="shadow" xlink:href="#text" x="2" y="2" style="fill:#888888"/>
+    <use id="textc" xlink:href="#text" x="0" y="0" style="fill:#FFFFFF"/>
+  </svg>
+  <parameters>
+    <parameter>
+      <title>Label</title>
+      <name>text</name>
+      <type>text</type>
+      <element>text</element>
+    </parameter>
+	<parameter>
+      <title>Text colour</title>
+      <name>text_fill</name>
+      <type>colour</type>
+      <element>textc</element>
+	  <attribute>fill</attribute>
+    </parameter>
+    <parameter>
+      <title>Shadow colour</title>
+      <name>text_shadow</name>
+      <type>colour</type>
+      <element>shadow</element>
+	  <attribute>fill</attribute>
+    </parameter>
+    <parameter>
+      <title>Shadow offset x</title>
+      <name>shadow_x</name>
+      <type>integer(-999,999)</type>
+      <element>shadow</element>
+	  <attribute>x</attribute>
+    </parameter>
+    <parameter>
+      <title>Shadow offset y</title>
+      <name>shadow_y</name>
+      <type>integer(-999,999)</type>
+      <element>shadow</element>
+	  <attribute>y</attribute>
+    </parameter>
+  </parameters>
+  <init-parameter>text</init-parameter>
+  <default-size>
+    <width>8|text+8</width>
+    <height>8|text+8</height>
+  </default-size>
+  <min-size>
+    <width>8|text</width>
+    <height>8|text</height>
+  </min-size>
+</object>

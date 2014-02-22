@@ -1,0 +1,78 @@
+﻿ <pgc>
+        <vob>
+          <menu rememberLastButton="-1" aspectRatio="2" videoFormat="PAL">
+            <svg width="720" height="405">
+              <rect style="fill:#000000;" width="720" height="405" id="backgroundColour"/>
+              <image xlink:href="media\Background.jpg" width="720" height="405" id="background"/>
+              <defs id="defs">
+                <svg id="s_obj01">
+                  <image style="opacity:1;" xlink:href="{$GAMEBOX}" width="100%" height="100%" id="image"/>
+                </svg>
+             {$HIDETRAILER}   <svg id="s_button02">
+             {$HIDETRAILER}     <image xlink:href="{$TRAILER}#10" width="80%" height="80%" style="opacity:1;" id="image" y="10%" x="10%"/>
+             {$HIDETRAILER}     <rect width="80%" height="80%" style="fill:none;stroke:#ffffff;stroke-width:5;" id="rect" y="10%" rx="5" ry="5" x="10%"/>
+             {$HIDETRAILER}   </svg>
+            {$HIDETRAILER}     <svg id="s_obj02">
+            {$HIDETRAILER}       <rect style="fill:none;" width="100%" y="0" height="100%" id="background" x="0"/>
+            {$HIDETRAILER}       <text style="dominant-baseline:middle;fill:#ffffff;stroke:none;stroke-width:1;text-anchor:middle;" y="50%" xml:space="preserve" id="text" x="50%">Trailer</text>
+            {$HIDETRAILER}     </svg>
+                <svg id="s_button01">
+                  <image xlink:href="{$GAMEIMAGE}" width="90%" height="90%" style="opacity:1;" id="image" y="5%" x="5%"/>
+                  <rect width="90%" height="90%" style="fill:none;stroke:#000000;stroke-width:2;" id="rect" y="5%" rx="5" ry="5" x="5%"/>
+                </svg>
+				    <svg id="s_button03">
+                  <image xlink:href="media\go-back-icon.png" width="80%" height="80%" style="opacity:1;" id="image" y="10%" x="10%"/>
+                  <rect width="80%" height="80%" style="fill:none;stroke:none;stroke-width:2;" id="rect" y="10%" rx="5" ry="5" x="10%"/>
+                </svg>
+                 <svg id="s_obj03">
+                  <rect style="fill:none;fill-opacity:1;" width="100%" y="0" height="100%" id="background" x="0"/>
+                  <text style="dominant-baseline:middle;fill:#ffffff;fill-opacity:1;font-family:Tahoma;font-size:12;font-style:normal;font-weight:normal;stroke:none;stroke-opacity:1;stroke-width:1;text-anchor:middle;" y="50%" xml:space="preserve" id="text" x="50%">Genre:{$GAMEGENRE}</text>
+                </svg>
+            
+              </defs>
+              <g id="objects">
+                <use xlink:href="#s_obj01" width="187" y="84" height="256" id="obj01" x="92"/>
+             {$HIDETRAILER}    <use xlink:href="#s_obj02" width="71" y="264" height="24" id="obj02" x="544"/>
+			        <use xlink:href="#s_button03" width="31" y="328" height="31" id="button03" x="628"/>
+             
+			 <use xlink:href="#s_obj03" width="283" y="148" height="15" id="obj03" x="328"/>
+            
+              </g>
+              <g id="buttons">
+               {$HIDETRAILER} <use xlink:href="#s_button02" width="103" y="180" height="86" id="button02" x="528"/>
+                <use xlink:href="#s_button01" width="316" y="80" height="71" id="button01" x="312"/>
+              </g>
+            </svg>
+            <object keepAspectRatio="true" id="obj01">
+              <filename>/image.xml</filename>
+            </object>
+			  <object id="obj03">
+              <filename>text.xml</filename>
+            </object>
+         {$HIDETRAILER}   <button id="button02">
+          {$HIDETRAILER}    <action>{$JumpToTrailler}</action>
+          {$HIDETRAILER}    <filename>frame.xml</filename>
+          {$HIDETRAILER}    <parameter highlighted="#0000ff" selected="#ff0000" name="stroke" normal="#ffffff"/>
+           {$HIDETRAILER}   <parameter highlighted="none" selected="none" name="fill" normal="none"/>
+           {$HIDETRAILER} </button>
+          {$HIDETRAILER}   <object defSize="true" id="obj02">
+          {$HIDETRAILER}     <filename>text.xml</filename>
+           {$HIDETRAILER}  </object>
+            <button keepAspectRatio="true" id="button01">
+               <action>{$JumpToSelectThisGame}</action>
+              <filename>frame.xml</filename>
+              <parameter highlighted="#008000" selected="#008000" name="stroke" normal="#000000"/>
+              <parameter highlighted="none" selected="none" name="fill" normal="none"/>
+            </button>
+            <button displayVideoFrame="false" keepAspectRatio="true" id="button03">
+              <action>
+			    jump vmgm menu {$PAGE};
+			  </action>
+              <filename>frame.xml</filename>
+              <parameter highlighted="#008000" selected="#008000" name="stroke" normal="none"/>
+              <parameter highlighted="none" selected="none" name="fill" normal="none"/>
+            </button>
+         
+		 
+		  </menu>  </vob>
+      </pgc>

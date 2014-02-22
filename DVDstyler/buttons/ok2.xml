@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- Created by Gustavo Rezende -->
+<button>
+	<title>Ok</title>
+	<svg width="30" height="30" viewBox="0 0 50 50">
+		<path id="box" style="fill:none;stroke:none;stroke-width:4" d="M2,2 L48,2 L48,48 L2,48 z" />
+		<path id="v" style="fill:#00ff00;stroke:none" d="M8,16 L20,32 L36,8 L42,8 L20,44 L8,24 z" />
+	</svg>
+	<parameters>
+		<parameter>
+			<title>Box color</title>
+			<name>bc</name>
+			<type>colour</type>
+			<element>box</element>
+			<attribute>stroke</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#80FF80</highlighted>
+
+				<selected>#ffffff</selected>
+			</default-value>
+		</parameter>
+		<parameter>
+			<title>V color</title>
+			<name>vc</name>
+			<type>colour</type>
+			<element>v</element>
+			<attribute>fill</attribute>
+		</parameter>
+	</parameters>
+</button>

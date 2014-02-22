@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<button previewHighlighted="true">
+  <title>Underlined text</title>
+  <svg width="8" height="8">
+    <text id="text" x="50%" y="78%" style="font-size:26;font-style:normal;font-weight:normal;"
+          text-anchor="middle" fill="#FFFFFF">button</text>
+	<rect id="underline" x="0" y="78%" width="100%" height="2" fill="none" transform="translate(0,2)"/>
+  </svg>
+  <parameters>
+    <parameter>
+      <title>Label</title>
+      <name>text</name>
+      <type>text</type>
+      <element>text</element>
+    </parameter>
+	<parameter>
+      <title>Text colour</title>
+      <name>text_fill</name>
+      <type>colour</type>
+      <element>text</element>
+	  <attribute>fill</attribute>
+    </parameter>
+	<parameter>
+      <title>Underline colour</title>
+      <name>underlineFill</name>
+      <type>colour</type>
+      <element>underline</element>
+	  <attribute>fill</attribute>
+	  <changeable/>
+	  <default-value>
+	     <highlighted>#FF0000</highlighted>
+		 <selected>#640000</selected>
+	  </default-value>
+    </parameter>
+	<parameter>
+      <title>Underline thickness</title>
+      <name>underlineHeight</name>
+      <type>integer</type>
+      <element>underline</element>
+	  <attribute>height</attribute>
+    </parameter>
+	<parameter>
+      <title>Underline offset</title>
+      <name>underlineOffset</name>
+      <type>integer(-999,999)</type>
+      <element>underline</element>
+	  <attribute>transform#2</attribute>
+    </parameter>
+  </parameters>
+  <init-parameter>text</init-parameter>
+  <default-size>
+    <width>8|text+8</width>
+    <height>8|text+30%</height>
+  </default-size>
+  <min-size>
+    <width>8|text</width>
+    <height>8|text+30%</height>
+  </min-size>
+</button>

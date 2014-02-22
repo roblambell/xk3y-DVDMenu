@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<button>
+	<!-- Based on image created by jphandrigan -->
+	<title>Home</title>
+	<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 128 128">
+		<g id="main" transform="matrix(0.368667,0,0,0.368667,-39.728,-113.974)" style="fill:#006680">
+			<path d="m 374.93731,485.15661 l 0,0 z m 0,0 l -95.44898,-84.53005 l -95.50394,84.56669 l 0,120.84098 c 0,3.12083 2.52183,5.62434 5.64267,5.62434 l 59.68767,0 0,-52.98243 c 0,-3.12085 2.50351,-5.64266 5.62434,-5.64266 l 49.04356,0 c 3.12081,0 5.62434,2.52183 5.62434,5.64266 l 0,52.98243 59.70599,0 c 3.12083,0 5.62436,-2.5035 5.62435,-5.62434 l 0,-120.87762 z m -190.95292,0.0366 0,0 z" />
+			<path d="m 278.93445,354.3665 l -135.45241,119.9373 l 14.26836,16.09692 l 121.73816,-107.80227 l 121.71045,107.80227 l 14.24065,-16.09692 l -135.4247,-119.9373 l -0.5264,0.60952 l -0.55411,-0.60952 z" />
+			<path d="m 183.98439,371.63102 l 34.33756,0 l -0.29922,20.33769 l -34.03834,30.74989 l 0,-51.08758 z" />
+		</g>
+	</svg>
+	<parameters>
+		<parameter>
+			<title>Colour</title>
+			<name>fill</name>
+			<type>colour</type>
+			<element>main</element>
+			<attribute>fill</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#0099C0</highlighted>
+				<selected>#FFFFFF</selected>
+			</default-value>
+		</parameter>
+	</parameters>
+</button>

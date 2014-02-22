@@ -1,0 +1,68 @@
+﻿<pgc>
+        <vob>
+          <menu rememberLastButton="-1" aspectRatio="1" videoFormat="PAL">
+            <svg width="720" height="540">
+              <rect style="fill:#000000;" width="720" height="540" id="backgroundColour"/>
+              <image xlink:href="media\Background.jpg" width="720" height="540" id="background"/>
+              <defs id="defs">
+                <svg id="s_buttonA">
+                  <rect width="100%" height="100%" style="fill:none;fill-opacity:1;" id="background" y="0" rx="5" ry="5" x="0"/>
+                  <text style="dominant-baseline:middle;fill:#ffffff;font-family:MS Shell Dlg 2;font-size:26;font-style:normal;font-weight:normal;text-anchor:middle;" y="50%" id="text" x="50%">A</text>
+                </svg>
+				<svg id="s_buttonD">
+                  <rect width="100%" height="100%" style="fill:none;fill-opacity:1;" id="background" y="0" rx="5" ry="5" x="0"/>
+                  <text style="dominant-baseline:middle;fill:#ffffff;font-family:MS Shell Dlg 2;font-size:26;font-style:normal;font-weight:normal;text-anchor:middle;" y="50%" id="text" x="50%">D</text>
+                </svg>
+				<svg id="s_buttonG">
+                  <rect width="100%" height="100%" style="fill:none;fill-opacity:1;" id="background" y="0" rx="5" ry="5" x="0"/>
+                  <text style="dominant-baseline:middle;fill:#ffffff;font-family:MS Shell Dlg 2;font-size:26;font-style:normal;font-weight:normal;text-anchor:middle;" y="50%" id="text" x="50%">G</text>
+                </svg>
+				<svg id="s_buttonJ">
+                  <rect width="100%" height="100%" style="fill:none;fill-opacity:1;" id="background" y="0" rx="5" ry="5" x="0"/>
+                  <text style="dominant-baseline:middle;fill:#ffffff;font-family:MS Shell Dlg 2;font-size:26;font-style:normal;font-weight:normal;text-anchor:middle;" y="50%" id="text" x="50%">J</text>
+                </svg>
+				<svg id="s_buttonM">
+                  <rect width="100%" height="100%" style="fill:none;fill-opacity:1;" id="background" y="0" rx="5" ry="5" x="0"/>
+                  <text style="dominant-baseline:middle;fill:#ffffff;font-family:MS Shell Dlg 2;font-size:26;font-style:normal;font-weight:normal;text-anchor:middle;" y="50%" id="text" x="50%">M</text>
+                </svg>
+				<svg id="s_buttonP">
+                  <rect width="100%" height="100%" style="fill:none;fill-opacity:1;" id="background" y="0" rx="5" ry="5" x="0"/>
+                  <text style="dominant-baseline:middle;fill:#ffffff;font-family:MS Shell Dlg 2;font-size:26;font-style:normal;font-weight:normal;text-anchor:middle;" y="50%" id="text" x="50%">P</text>
+                </svg>
+				<svg id="s_buttonT">
+                  <rect width="100%" height="100%" style="fill:none;fill-opacity:1;" id="background" y="0" rx="5" ry="5" x="0"/>
+                  <text style="dominant-baseline:middle;fill:#ffffff;font-family:MS Shell Dlg 2;font-size:26;font-style:normal;font-weight:normal;text-anchor:middle;" y="50%" id="text" x="50%">T</text>
+                </svg>
+				<svg id="s_buttonW">
+                  <rect width="100%" height="100%" style="fill:none;fill-opacity:1;" id="background" y="0" rx="5" ry="5" x="0"/>
+                  <text style="dominant-baseline:middle;fill:#ffffff;font-family:MS Shell Dlg 2;font-size:26;font-style:normal;font-weight:normal;text-anchor:middle;" y="50%" id="text" x="50%">W</text>
+                </svg>
+				<svg id="s_obj01">
+                  <rect style="fill:none;" width="100%" y="0" height="100%" id="background" x="0"/>
+                  <text style="dominant-baseline:middle;fill:#ffffff;stroke:none;stroke-width:1;text-anchor:middle;" y="50%" id="text" x="50%">Jump to:</text>
+                </svg>
+              </defs>
+              <g id="objects">
+                <use xlink:href="#s_obj01" width="595" y="100" height="28" id="obj01" x="68"/>
+              </g>
+              <g id="buttons">
+                <use xlink:href="#s_buttonA" width="24" y="150" height="27" id="buttonA" x="148"/>
+				<use xlink:href="#s_buttonD" width="24" y="240" height="27" id="buttonD" x="148"/>
+				<use xlink:href="#s_buttonG" width="24" y="330" height="27" id="buttonG" x="148"/>
+			
+				<use xlink:href="#s_buttonJ" width="24" y="150" height="27" id="buttonJ" x="348"/>
+				<use xlink:href="#s_buttonM" width="24" y="240" height="27" id="buttonM" x="348"/>
+				<use xlink:href="#s_buttonP" width="24" y="330" height="27" id="buttonP" x="348"/>
+				<use xlink:href="#s_buttonT" width="24" y="180" height="27" id="buttonT" x="548"/>
+				<use xlink:href="#s_buttonW" width="24" y="270" height="27" id="buttonW" x="548"/>
+				
+              </g>
+            </svg>
+           {$alphaActions}
+			 
+            <object id="obj01">
+              <filename>text.xml</filename>
+            </object>
+          </menu>
+        </vob>
+      </pgc>

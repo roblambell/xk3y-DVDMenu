@@ -1,0 +1,27 @@
+﻿ <titleset>
+    <menus>
+      <video aspect="16:9" widescreen="nopanscan"/>
+      <audio lang="EN"/>
+      <subpicture lang="EN"/>
+      <pgc>
+        <vob>
+          <menu rememberLastButton="-1" aspectRatio="2" videoFormat="PAL">
+            <svg width="720" height="405">
+              <rect style="fill:#000000;" width="720" height="405" id="backgroundColour"/>
+              <defs id="defs"/>
+              <g id="objects"/>
+              <g id="buttons"/>
+            </svg>
+          </menu>
+        </vob>
+        <pre>{$TITLESETINDEX}</pre>
+      </pgc>
+	  {$TITLESETPGC}
+	  </menus>
+		  
+		 <titles>
+      <video aspect="16:9"  widescreen="nopanscan"/>
+      <audio lang="EN"/>
+      {$TITLESETTRAILERS}
+    </titles>
+  </titleset>

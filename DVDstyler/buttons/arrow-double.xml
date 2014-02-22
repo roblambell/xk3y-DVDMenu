@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- Created by Gustavo Rezende -->
+<button>
+	<title>Double Arrow</title>
+	<svg width="50" height="50" viewBox="0 0 50 50">
+		<g id="main" transform="rotate(0,25,25)">
+			<path id="arrow1" style="fill:#00A859;stroke:none" d="M0,0 L25,25 L0,50 L10,25 z" />
+			<path id="arrow2" style="fill:#00A859;stroke:none" d="M25,0 L50,25 L25,50 L35,25 z" />
+		</g>
+	</svg>
+	<parameters>
+		<parameter>
+			<title>Rotation</title>
+			<name>rotation</name>
+			<type>integer(0,360)</type>
+			<element>main</element>
+			<attribute>transform#1</attribute>
+		</parameter>
+		<parameter>
+			<title>Arrow color 1</title>
+			<name>ac1</name>
+			<type>colour</type>
+			<element>arrow1</element>
+			<attribute>fill</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#ED3237</highlighted>
+				<selected>#ffffff</selected>
+			</default-value>
+		</parameter>
+		<parameter>
+			<title>Arrow color 2</title>
+			<name>s2</name>
+			<type>colour</type>
+			<element>arrow2</element>
+			<attribute>fill</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#ED3237</highlighted>
+				<selected>#ffffff</selected>
+			</default-value>
+		</parameter>
+	</parameters>
+</button>

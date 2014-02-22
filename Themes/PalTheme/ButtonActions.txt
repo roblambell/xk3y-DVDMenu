@@ -1,0 +1,14 @@
+<button keepAspectRatio="true" id="button{$PAGEINDEX}">
+              <action>{$JumpToSelectThisGame}</action>
+              <filename>frame.xml</filename>
+              <parameter highlighted="#008000" selected="#008000" name="stroke" normal="#000000"/>
+              <parameter highlighted="none" selected="none" name="fill" normal="none"/>
+            </button>
+
+<button keepAspectRatio="true" id="button{$PAGEINDEX}b">
+              <action>{$JumpToGameDetails}</action>
+               <filename>frame.xml</filename>
+              <parameter highlighted="#008000" selected="#008000" name="stroke" normal="#000000"/>
+              <parameter highlighted="none" selected="none" name="fill" normal="none"/>5
+            </button>
+

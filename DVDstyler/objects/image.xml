@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<object>
+  <title>Image</title>
+  <svg width="8" height="8">
+    <image id="image" width="100%" height="100%" opacity="1.0"/>
+  </svg>
+  <parameters>
+    <parameter>
+      <title>Image</title>
+      <name>href</name>
+      <type>image</type>
+      <element>image</element>
+      <attribute>xlink:href</attribute>
+    </parameter>
+    <parameter>
+      <title>Opacity</title>
+      <name>opacity</name>
+      <type>string</type>
+      <element>image</element>
+      <attribute>opacity</attribute>
+    </parameter>
+  </parameters>
+  <init-parameter>href</init-parameter>
+  <default-size keepAspectRatio="true">
+    <element>image</element>
+  </default-size>
+</object>

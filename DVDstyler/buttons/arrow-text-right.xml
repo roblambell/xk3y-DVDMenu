@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by Gustavo Rezende -->
+<button>
+  <title>Text Arrow Right</title>
+  <svg width="190" height="50" viewBox="0 0 190 50">
+    <path id="arrow" style="fill:#ffffff" d="M2,10 L140,10 L140,2 L188,25 L140,48 L140,40 L2,40 z"/>
+    <path id="arrow2" style="fill:none;stroke:#fff200;stroke-width:2" d="M2,10 L140,10 L140,2 L188,25 L140,48 L140,40 L2,40 z"/>
+    <text id="text" x="65" y="25"
+ text-anchor="middle" dominant-baseline="middle" fill="#000000">Text</text>
+  </svg>
+  <parameters>
+    <parameter>
+      <title>Text</title>
+      <name>tx</name>
+      <type>text</type>
+      <element>text</element>
+    </parameter>
+    <parameter>
+      <title>Text color</title>
+      <name>tc</name>
+      <type>colour</type>
+      <element>text</element>
+      <attribute>fill</attribute>
+    </parameter>
+    <parameter>
+      <title>Arrow color</title>
+      <name>ac</name>
+      <type>colour</type>
+      <element>arrow</element>
+      <attribute>fill</attribute>
+    </parameter>
+    <parameter>
+      <title>Stroke color</title>
+      <name>sc</name>
+      <type>colour</type>
+      <element>arrow2</element>
+      <attribute>stroke</attribute>
+      <changeable/>
+        <default-value>
+        <highlighted>#ff8000</highlighted>
+        <selected>#ff0000</selected>
+      </default-value>
+    </parameter>
+  </parameters>
+  <init-parameter>Text</init-parameter>
+  <default-size>
+    <element>text</element>
+    <width>120</width>
+    <height>40</height>
+  </default-size>
+  <min-size>
+    <element>text</element>
+    <width>10</width>
+    <height>10</height>
+  </min-size>
+</button>

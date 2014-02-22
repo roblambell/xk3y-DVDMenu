@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- Created by Gustavo Rezende -->
+<button>
+	<title>Pill 3</title>
+	<svg width="200" height="50" viewBox="0 0 200 50">
+		<defs>
+			<linearGradient id="gradient1" x1=".5" y1="0" x2=".5" y2="1">
+				<stop id="st1" offset="0%" stop-color="#000000" stop-opacity=".5" />
+				<stop id="st2" offset="30%" stop-color="#ffffff" stop-opacity=".5" />
+				<stop id="st3" offset="100%" stop-color="#000000" stop-opacity=".5" />
+			</linearGradient>
+		</defs>
+		<rect id="box1" x="2" y="2" rx="10" ry="10" width="196" height="46"
+			fill="#ff8000" stroke="#000000" stroke-width="2" />
+		<rect id="box2" x="2" y="2" rx="10" ry="10" width="196" height="46"
+			fill="url(#gradient1)" />
+		<text style="text-anchor:middle;dominant-baseline:middle;fill:#000000;stroke:#000000;stroke-width:1;stroke-opacity:.8"
+			id="text" x="100" y="25">Text</text>
+	</svg>
+	<parameters>
+		<parameter>
+			<title>Button color</title>
+			<name>bc</name>
+			<type>colour</type>
+			<element>box1</element>
+			<attribute>fill</attribute>
+		</parameter>
+		<parameter>
+			<title>Text</title>
+			<name>tx</name>
+			<type>text</type>
+			<element>text</element>
+		</parameter>
+		<parameter>
+			<title>Text color</title>
+			<name>tc</name>
+			<type>colour</type>
+			<element>text</element>
+			<attribute>fill</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#ff0000</highlighted>
+				<selected>#ffffff</selected>
+			</default-value>
+		</parameter>
+	</parameters>
+	<init-parameter>Text</init-parameter>
+	<default-size>
+		<element>text</element>
+		<width>150</width>
+		<height>40</height>
+	</default-size>
+	<min-size>
+		<element>text</element>
+		<width>10</width>
+		<height>10</height>
+	</min-size>
+</button>

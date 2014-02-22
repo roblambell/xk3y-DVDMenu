@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dvdstyler videoBitrate="3000" name="DVD" aspectRatio="2" audioFormat="3" videoFormat="2" capacity="0" emptyMenu="1" format="4" isoFile="{$APPPATH}dvd.iso" jumppad="0">
+  <vmgm>
+       <menus>
+      <video aspect="16:9" widescreen="nopanscan"/>
+      <audio lang="EN"/>
+      <subpicture lang="EN"/>
+     {$PGCS}
+    </menus>
+  </vmgm>
+ {$TITLESETS}
+</dvdstyler>

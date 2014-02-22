@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<button>
+  <title>Arrow</title>
+  <svg width="48" height="48" viewBox="0 0 508 508">
+  <path
+     style="fill:#ffffff;stroke:#1c6772;stroke-width:5"
+     d="M305.753,281.376c0,0-18.858-18.856-27.854-27.851c7.943-7.944,21.152-21.153,21.152-21.153c1.913-1.913,2.929-4.471,2.929-7.073c0-1.289-0.249-2.588-0.762-3.825c-1.548-3.736-5.193-6.173-9.238-6.173 l-76.863,0c-5.523,0-10,4.477-10,10v76.867c0,4.045,2.437,7.691,6.173,9.239c3.737,1.548,8.039,0.691,10.898-2.169c0,0,13.208-13.211,21.152-21.155c8.996,8.996,27.852,27.854,27.852,27.854c1.875,1.876,4.419,2.93,7.071,2.93s5.195-1.054,7.071-2.929l20.42-20.42 c1.875-1.876,2.929-4.419,2.929-7.071s-1.054-5.196-2.93-7.071z"
+     id="arrow"
+     transform="matrix(-0.324817,3.44579,-3.45101,0.37623,1246.27,-720.412)"/>
+  </svg>
+  <parameters>
+    <parameter>
+      <title>Outline colour</title>
+      <name>mount</name>
+      <type>colour</type>
+      <element>arrow</element>
+	  <attribute>stroke</attribute>
+      <changeable/>
+	  <default-value>
+	     <highlighted>#1c6772</highlighted>
+		 <selected>#1c6772</selected>
+	  </default-value>
+    </parameter>
+	<parameter>
+      <title>Arrow colour</title>
+      <name>arrow</name>
+      <type>colour</type>
+      <element>arrow</element>
+	  <attribute>fill</attribute>
+	  <changeable/>
+	  <default-value>
+	     <highlighted>#30ACBF</highlighted>
+		 <selected>#0000FF</selected>
+	  </default-value>
+    </parameter>
+  </parameters>
+</button>

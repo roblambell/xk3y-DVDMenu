@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- Created by Gustavo Rezende -->
+<button>
+	<title>Simple Arrow</title>
+	<svg width="110" height="50" viewBox="-5 -5 110 50">
+		<path id="arrow" transform="rotate(0,50,20)" style="fill:#000000;stroke:#ffffff;stroke-width:3"
+			d="M0,10 L50,10 L50,0 L100,20 L50,40 L50,30 L0,30z" />
+	</svg>
+	<parameters>
+		<parameter>
+			<title>Rotation</title>
+			<name>rotation</name>
+			<type>integer(0,360)</type>
+			<element>arrow</element>
+			<attribute>transform#1</attribute>
+		</parameter>
+		<parameter>
+			<title>Stroke color</title>
+			<name>sc</name>
+			<type>colour</type>
+			<element>arrow</element>
+			<attribute>stroke</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#ffffff</highlighted>
+				<selected>#ffffff</selected>
+			</default-value>
+		</parameter>
+		<parameter>
+			<title>Arrow color</title>
+			<name>ac</name>
+			<type>colour</type>
+			<element>arrow</element>
+			<attribute>fill</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#505050</highlighted>
+				<selected>#ffffff</selected>
+			</default-value>
+		</parameter>
+	</parameters>
+</button>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- Created by Gustavo Rezende -->
+<button>
+	<title>Blue Arrow</title>
+	<svg width="40" height="40" viewBox="-2 -2 54 54">
+		<defs>
+			<radialGradient id="gradient1" gradientUnits="userSpaceOnUse"
+				cx="25" cy="15" r="25" fx="25" fy="15">
+				<stop id="st1a" offset="0%" stop-color="#ffffff" stop-opacity=".5" />
+				<stop id="st2a" offset="100%" stop-color="#000000" stop-opacity=".5" />
+			</radialGradient>
+			<linearGradient id="gradient2" gradientUnits="userSpaceOnUse"
+				x1="25" y1="3" x2="25" y2="47">
+				<stop id="st3" offset="0%" stop-opacity=".8" stop-color="#000000" />
+				<stop id="st4" offset="100%" stop-opacity=".8" stop-color="#ffffff" />
+			</linearGradient>
+		</defs>
+		<circle id="circle1" cx="25" cy="25" r="23" fill="#00AFEF"
+			stroke="#ffffff" stroke-width="2" />
+		<circle id="circle2" cx="25" cy="25" r="23" fill="url(#gradient1)" />
+		<path id="arrow" transform="rotate(0,25,25)"
+			style="fill:#ffffff;stroke:url(#gradient2);stroke-width:1" d="M9,21 L28,21 L20,9 L30,9 L41,25 L30,41 L20,41 L28,29 L9,29 z" />
+	</svg>
+	<parameters>
+		<parameter>
+			<title>Rotation</title>
+			<name>rotation</name>
+			<type>integer(0,360)</type>
+			<element>arrow</element>
+			<attribute>transform#1</attribute>
+		</parameter>
+		<parameter>
+			<title>Circle color</title>
+			<name>bc</name>
+			<type>colour</type>
+			<element>circle1</element>
+			<attribute>fill</attribute>
+		</parameter>
+		<parameter>
+			<title>Stroke color</title>
+			<name>sc</name>
+			<type>colour</type>
+			<element>circle1</element>
+			<attribute>stroke</attribute>
+		</parameter>
+		<parameter>
+			<title>Arrow color</title>
+			<name>ac</name>
+			<type>colour</type>
+			<element>arrow</element>
+			<attribute>fill</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#FFF212</highlighted>
+				<selected>#ED3237</selected>
+			</default-value>
+		</parameter>
+	</parameters>
+</button>

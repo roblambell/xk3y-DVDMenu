@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- Created by Gustavo Rezende -->
+<button>
+	<title>3D Arrow Right</title>
+	<svg width="39" height="25" viewBox="0 0 78 50">
+		<path id="shadow" style="fill:#505050;fill-opacity:1"
+			d="M2,16 L56,16 L56,2 L78,26 L56,50 L56,36 L2,36 z" />
+		<path id="arrowa" style="fill:#ff7f2a" d="M0,14 L54,14 L54,0 L76,24 L0,24 z" />
+		<path id="arrowb" style="fill:#d45500" d="M0,24 L76,24 L54,48 L54,34 L0,34 z" />
+		<path id="stroke" style="fill:none;stroke:#000000;stroke-linejoin:round;stroke-width:2"
+			d="M0,14 L54,14 L54,0 L76,24 L54,48 L54,34 L0,34 z" />
+	</svg>
+	<parameters>
+		<parameter>
+			<title>Color of upper part</title>
+			<name>uc</name>
+			<type>colour</type>
+			<element>arrowa</element>
+			<attribute>fill</attribute>
+		</parameter>
+		<parameter>
+			<title>Color of bottom part</title>
+			<name>bc</name>
+			<type>colour</type>
+			<element>arrowb</element>
+			<attribute>fill</attribute>
+		</parameter>
+		<parameter>
+			<title>Stroke color</title>
+			<name>sc</name>
+			<type>colour</type>
+			<element>stroke</element>
+			<attribute>stroke</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#505050</highlighted>
+				<selected>#ffffff</selected>
+			</default-value>
+		</parameter>
+		<parameter>
+			<title>Shadow</title>
+			<name>sw</name>
+			<type>colour</type>
+			<element>shadow</element>
+			<attribute>fill</attribute>
+		</parameter>
+	</parameters>
+</button>

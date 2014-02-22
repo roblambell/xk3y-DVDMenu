@@ -1,0 +1,14 @@
+ <pgc>
+        <vob>
+          <menu rememberLastButton="-1" aspectRatio="2" videoFormat="PAL">
+            <svg width="720" height="405">
+              <rect style="fill:#000000;" width="720" height="405" id="backgroundColour"/>
+              <image xlink:href="media\Background.jpg" width="720" height="405" id="background"/>
+			   
+    {$CONTENT}
+
+
+	</menu>
+        </vob>
+		
+      </pgc>

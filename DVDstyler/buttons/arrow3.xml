@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<button>
+	<title>Circle Arrow</title>
+	<svg width="40" height="40" viewBox="0 0 508 508">
+		<g id="main" transform="rotate(0,254,254)">
+			<path id="circle"
+				d="M 23.921338,256.46367 C 23.921338,384.09267 126.82202,487.93573 253.30356,487.93573 C 379.7813,487.93573 482.68578,384.09267 482.68578,256.46367 C 482.68578,128.83085 379.7813,24.993529 253.30356,24.993529 C 126.82202,24.993529 23.921338,128.83085 23.921338,256.46367 z "
+				style="fill:#a4c9ee;fill-opacity:0.7;stroke:none;stroke-width:1;stroke-opacity:1" />
+			<path id="ring"
+				d="M 464.80718,256.73142 C 464.80718,373.32369 370.28948,467.84139 253.69926,467.84139 C 137.10698,467.84139 42.591331,373.32574 42.591331,256.73142 C 42.591331,140.13915 137.10698,45.623496 253.69926,45.623496 C 370.28744,45.623496 464.80718,140.13915 464.80718,256.73142 z "
+				style="fill:none;fill-rule:evenodd;stroke:#1c6671;stroke-width:16;stroke-opacity:1" />
+			<path id="arrow"
+				d="M 161.77426,307.78244 C 161.77426,307.78244 214.75635,306.8496 240.0308,306.40454 C 240.42398,328.7232 241.07545,365.83627 241.07545,365.83627 C 241.1698,371.21119 243.42419,376.19406 247.14375,379.78529 C 248.98638,381.56434 251.18696,383.00125 253.66329,383.9752 C 261.14042,386.91868 269.65487,385.07165 275.23769,379.28933 L 381.32247,269.41367 C 388.9452,261.51854 388.7244,248.9396 380.82927,241.31687 L 270.94789,135.22657 C 265.16557,129.64374 256.59011,128.0953 249.22089,131.29939 C 241.85029,134.50491 237.13784,141.83744 237.28028,149.87169 C 237.28028,149.87169 237.93598,186.98609 238.32778,209.30619 C 213.0519,209.74987 160.06971,210.67709 160.06971,210.67709 C 154.80013,210.76818 149.78226,212.95012 146.12203,216.74115 C 142.46179,220.53219 140.45868,225.62211 140.54978,230.89169 L 141.55689,288.26536 C 141.6508,293.53489 143.83131,298.55138 147.62234,302.21162 C 151.41337,305.87186 156.50473,307.87634 161.77426,307.78244 L 161.77426,307.78244 z "
+				style="fill:#ffffff;stroke:#1c6772;stroke-width:5" />
+		</g>
+	</svg>
+	<parameters>
+		<parameter>
+			<title>Rotation</title>
+			<name>rotation</name>
+			<type>integer(0,360)</type>
+			<element>main</element>
+			<attribute>transform#1</attribute>
+		</parameter>
+		<parameter>
+			<title>Colour of the circle</title>
+			<name>circle</name>
+			<type>colour</type>
+			<element>circle</element>
+			<attribute>fill</attribute>
+		</parameter>
+		<parameter>
+			<title>Ring colour</title>
+			<name>ring</name>
+			<type>colour</type>
+			<element>ring</element>
+			<attribute>stroke</attribute>
+		</parameter>
+		<parameter>
+			<title>Arrow colour</title>
+			<name>arrow</name>
+			<type>colour</type>
+			<element>arrow</element>
+			<attribute>fill</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#1D6772</highlighted>
+				<selected>#0000FF</selected>
+			</default-value>
+		</parameter>
+	</parameters>
+</button>

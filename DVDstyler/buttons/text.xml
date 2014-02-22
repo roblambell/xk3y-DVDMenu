@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<button>
+  <title>Text</title>
+  <svg width="8" height="8">
+	<rect id="background" x="0" y="0" width="100%" height="100%" fill="none"/>
+    <text id="text" x="50%" y="50%"
+          text-anchor="middle" dominant-baseline="middle"
+          fill="#FFFFFF">button</text>
+  </svg>
+  <parameters>
+    <parameter>
+      <title>Label</title>
+      <name>text</name>
+      <type>text</type>
+      <element>text</element>
+    </parameter>
+	<parameter>
+      <title>Text colour</title>
+      <name>text_fill</name>
+      <type>colour</type>
+      <element>text</element>
+	  <attribute>fill</attribute>
+	  <changeable/>
+	  <default-value>
+	     <highlighted>#0000FF</highlighted>
+		 <selected>#FF0000</selected>
+	  </default-value>
+    </parameter>
+	<parameter>
+      <title>Background colour</title>
+      <name>bg_fill</name>
+      <type>colour</type>
+      <element>background</element>
+	  <attribute>fill</attribute>
+	  <changeable/>
+	  <default-value>
+	     <highlighted>none</highlighted>
+		 <selected>none</selected>
+	  </default-value>
+    </parameter>
+  </parameters>
+  <init-parameter>text</init-parameter>
+  <default-size>
+    <element>text</element>
+    <width>8</width>
+    <height>8</height>
+  </default-size>
+  <min-size>
+    <element>text</element>
+    <width>8</width>
+    <height>8</height>
+  </min-size>
+</button>

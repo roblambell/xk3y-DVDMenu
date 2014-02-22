@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- Created by Gustavo Rezende -->
+<button>
+	<title>Cancel</title>
+	<svg width="30" height="30" viewBox="0 0 50 50">
+		<path id="box" style="fill:none;stroke:none;stroke-width:4" d="M2,2 L48,2 L48,48 L2,48 z" />
+		<path id="x" style="fill:#FF0000;stroke:none"
+			d="M8,8 L16,8 L24,20 L34,8 L42,8 L30,26 L40,42 L32,42 L24,30 L16,42 L8,42 L18,26 z" />
+	</svg>
+	<parameters>
+		<parameter>
+			<title>Box color</title>
+			<name>bc</name>
+			<type>colour</type>
+			<element>box</element>
+			<attribute>stroke</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#FF8080</highlighted>
+				<selected>#ffffff</selected>
+			</default-value>
+		</parameter>
+		<parameter>
+			<title>X color</title>
+			<name>xc</name>
+			<type>colour</type>
+			<element>x</element>
+			<attribute>fill</attribute>
+		</parameter>
+	</parameters>
+</button>

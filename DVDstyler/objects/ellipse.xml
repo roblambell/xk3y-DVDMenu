@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<object>
+  <title>Ellipse</title>
+  <svg width="80" height="50">
+	<ellipse id="ellipse" cx="50%" cy="50%" rx="40%" ry="40%"
+             stroke="#FFFFFF" stroke-width="5"
+             fill="#8080EF" fill-opacity="1.0"/>
+  </svg>
+  <parameters>
+    <parameter>
+      <title>Outline width</title>
+      <name>stroke-width</name>
+      <type>integer</type>
+      <element>ellipse</element>
+	  <attribute>stroke-width</attribute>
+    </parameter>
+	<parameter>
+      <title>Outline colour</title>
+      <name>stroke</name>
+      <type>colour</type>
+      <element>ellipse</element>
+	  <attribute>stroke</attribute>
+    </parameter>
+	<parameter>
+      <title>Inner colour</title>
+      <name>fill</name>
+      <type>colour</type>
+      <element>ellipse</element>
+	  <attribute>fill</attribute>
+    </parameter>
+    <parameter>
+      <title>Opacity</title>
+      <name>opacity</name>
+      <type>string</type>
+      <element>ellipse</element>
+      <attribute>fill-opacity</attribute>
+    </parameter>
+  </parameters>
+  <min-size>
+    <width>8</width>
+    <height>8</height>
+  </min-size>
+</object>

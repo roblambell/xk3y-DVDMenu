@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<button>
+  <title>Frame</title>
+  <svg>
+    <image id="image" x="10%" y="10%" width="80%" height="80%" opacity="1.0"/>
+	<rect id="rect" x="10%" y="10%" width="80%" height="80%"
+      rx="5" ry="5" stroke="#FFFFFF" stroke-width="5" fill="none"/>
+  </svg>
+  <parameters>
+    <parameter>
+      <title>Image</title>
+      <name>href</name>
+      <type>image</type>
+      <element>image</element>
+      <attribute>xlink:href</attribute>
+    </parameter>
+    <parameter>
+      <title>Image opacity</title>
+      <name>opacity</name>
+      <type>decimal</type>
+      <element>image</element>
+      <attribute>opacity</attribute>
+    </parameter>
+    <parameter>
+      <title>Rx</title>
+      <name>rx</name>
+      <type>integer</type>
+      <element>rect</element>
+	  <attribute>rx</attribute>
+    </parameter>
+    <parameter>
+      <title>Ry</title>
+      <name>ry</name>
+      <type>integer</type>
+      <element>rect</element>
+	  <attribute>ry</attribute>
+    </parameter>
+    <parameter>
+      <title>Border width</title>
+      <name>stroke-width</name>
+      <type>integer</type>
+      <element>rect</element>
+	  <attribute>stroke-width</attribute>
+    </parameter>
+	<parameter>
+      <title>Border colour</title>
+      <name>stroke</name>
+      <type>colour</type>
+      <element>rect</element>
+	  <attribute>stroke</attribute>
+	  <changeable/>
+	  <default-value>
+	     <highlighted>#0000FF</highlighted>
+		 <selected>#FF0000</selected>
+	  </default-value>
+    </parameter>
+	<parameter>
+      <title>Inner colour</title>
+      <name>fill</name>
+      <type>colour</type>
+      <element>rect</element>
+	  <attribute>fill</attribute>
+	  <changeable/>
+	  <default-value>
+	     <highlighted>none</highlighted>
+		 <selected>none</selected>
+	  </default-value>
+    </parameter>
+  </parameters>
+  <init-parameter>href</init-parameter>
+  <default-size>
+    <width>160</width>
+    <height>120</height>
+  </default-size>
+  <min-size>
+    <width>8</width>
+    <height>8</height>
+  </min-size>
+</button>

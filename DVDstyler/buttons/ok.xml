@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<button>
+  <title>OK</title>
+  <svg width="48" height="48" viewBox="12 12 144 144">
+  <g id="button" style="fill:#539c3b;stroke:#0c482b;stroke-width:2;">
+    <path d="M 66.8815 73.5265 C 71.2964 78.0037 73.2596 79.9409 79.4971 86.9468 C 85.4033 93.5707 85.9959 95.465 91.869 104.749 L 88.1023 107.751 C 82.2572 99.9539 82.4402 99.479 76.78 92.8584 L 62.4694 77.0077 L 66.8815 73.5265 z"
+          transform="matrix(2.01519,0,0,2.01519,-104.295,-85.0585)"/>
+    <path d="M 86.078 89.2022 C 71.0432 101.063 61.0665 114.762 46.7762 130.744 L 41.6946 127.243 C 55.9372 108.272 63.811 98.2898 85.79 82.242 L 86.078 89.2022 z"
+          transform="matrix(1.67487,0,0,1.85521,-0.932201,-110.944)"/>
+  </g>
+  </svg>
+  <parameters>
+	<parameter>
+      <title>Fill colour</title>
+      <name>fill</name>
+      <type>colour</type>
+      <element>button</element>
+	  <attribute>fill</attribute>
+	  <changeable/>
+	  <default-value>
+	     <highlighted>#00FF00</highlighted>
+		 <selected>#FFFFFF</selected>
+	  </default-value>
+    </parameter>
+    <parameter>
+      <name>stroke</name>
+      <title>Outline colour</title>
+      <type>colour</type>
+      <element>button</element>
+	  <attribute>stroke</attribute>
+	  <changeable/>
+	  <default-value>
+	     <highlighted>#0C482B</highlighted>
+		 <selected>#0C482B</selected>
+	  </default-value>
+    </parameter>
+  </parameters>
+</button>

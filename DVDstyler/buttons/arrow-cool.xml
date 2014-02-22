@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- Created by Gustavo Rezende -->
+<button>
+	<title>Cool Arrow</title>
+	<svg width="60" height="53" viewBox="-30 -10 90 80">
+		<defs>
+		<radialGradient id="gradient" gradientUnits="userSpaceOnUse" cx="10" cy="25" r="20" fx="10" fy="25">
+        <stop id="st1" offset="0%" stop-color="#ffffff"/>
+        <stop id="st2" offset="100%" stop-color="#0000ff"/>
+      </radialGradient>
+		</defs>
+		<path id="arrow" transform="rotate(0,15,30)" style="fill:#ffcc00" d="M15,60 L15,0 L55,30 z" />
+		<circle id="circle" style="fill:url(#gradient)" cx="15" cy="30" r="15" />
+	</svg>
+	<parameters>
+		<parameter>
+			<title>Rotation</title>
+			<name>rotation</name>
+			<type>integer(0,360)</type>
+			<element>arrow</element>
+			<attribute>transform#1</attribute>
+		</parameter>
+		<parameter>
+			<title>Color 1</title>
+			<name>c1</name>
+			<type>colour</type>
+			<element>st1</element>
+			<attribute>stop-color</attribute>
+		</parameter>
+		<parameter>
+			<title>Color 2</title>
+			<name>c2</name>
+			<type>colour</type>
+			<element>st2</element>
+			<attribute>stop-color</attribute>
+		</parameter>
+		<parameter>
+			<title>Arrow color</title>
+			<name>ac</name>
+			<type>colour</type>
+			<element>arrow</element>
+			<attribute>fill</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#ff6600</highlighted>
+				<selected>#ffffff</selected>
+			</default-value>
+		</parameter>
+	</parameters>
+</button>

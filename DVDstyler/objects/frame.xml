@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<object>
+  <title>Frame</title>
+  <svg width="50" height="50">
+	<rect id="rect" x="10%" y="10%" width="80%" height="80%"
+      rx="5" ry="5" stroke="#FFFFFF" stroke-width="5" fill="none"/>
+  </svg>
+  <parameters>
+    <parameter>
+      <title>Rx</title>
+      <name>rx</name>
+      <type>integer</type>
+      <element>rect</element>
+	  <attribute>rx</attribute>
+    </parameter>
+    <parameter>
+      <title>Ry</title>
+      <name>ry</name>
+      <type>integer</type>
+      <element>rect</element>
+	  <attribute>ry</attribute>
+    </parameter>
+    <parameter>
+      <title>Outline width</title>
+      <name>stroke-width</name>
+      <type>integer</type>
+      <element>rect</element>
+	  <attribute>stroke-width</attribute>
+    </parameter>
+	<parameter>
+      <title>Outline colour</title>
+      <name>stroke</name>
+      <type>colour</type>
+      <element>rect</element>
+	  <attribute>stroke</attribute>
+    </parameter>
+	<parameter>
+      <title>Inner colour</title>
+      <name>fill</name>
+      <type>colour</type>
+      <element>rect</element>
+	  <attribute>fill</attribute>
+    </parameter>
+  </parameters>
+  <min-size>
+    <width>8</width>
+    <height>8</height>
+  </min-size>
+</object>

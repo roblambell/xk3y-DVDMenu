@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<button previewHighlighted="true">
+  <title>Text with square</title>
+  <svg width="8" height="8">
+	<rect id="square" x="10" y="50%" width="10" height="10" fill="none" transform="translate(0,-5)"/>
+    <text id="text" x="30" y="50%" style="font-size:26;font-style:normal;font-weight:normal;"
+          text-anchor="left" dominant-baseline="middle" fill="#FFFFFF">button</text>
+  </svg>
+  <parameters>
+    <parameter>
+      <title>Label</title>
+      <name>text</name>
+      <type>text</type>
+      <element>text</element>
+    </parameter>
+	<parameter>
+      <title>Text colour</title>
+      <name>text_fill</name>
+      <type>colour</type>
+      <element>text</element>
+	  <attribute>fill</attribute>
+    </parameter>
+	<parameter>
+      <title>Square colour</title>
+      <name>squareFill</name>
+      <type>colour</type>
+      <element>square</element>
+	  <attribute>fill</attribute>
+	  <changeable/>
+	  <default-value>
+	     <highlighted>#FF0000</highlighted>
+		 <selected>#640000</selected>
+	  </default-value>
+    </parameter>
+  </parameters>
+  <init-parameter>text</init-parameter>
+  <default-size>
+    <width>8|text+38</width>
+    <height>8|text+8</height>
+  </default-size>
+  <min-size>
+    <width>8|text+30</width>
+    <height>8|text</height>
+  </min-size>
+</button>

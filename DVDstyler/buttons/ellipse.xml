@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<button>
+  <title>Ellipse</title>
+  <svg width="80" height="50">
+	<ellipse id="ellipse" cx="50%" cy="50%" rx="40%" ry="40%"
+             stroke="#FFFFFF" stroke-width="5" fill="none"/>
+  </svg>
+  <parameters>
+    <parameter>
+      <title>Outline width</title>
+      <name>stroke-width</name>
+      <type>integer</type>
+      <element>ellipse</element>
+	  <attribute>stroke-width</attribute>
+    </parameter>
+	<parameter>
+      <title>Outline colour</title>
+      <name>stroke</name>
+      <type>colour</type>
+      <element>ellipse</element>
+	  <attribute>stroke</attribute>
+	  <changeable/>
+	  <default-value>
+	     <highlighted>#0000FF</highlighted>
+		 <selected>#FF0000</selected>
+	  </default-value>
+    </parameter>
+	<parameter>
+      <title>Inner colour</title>
+      <name>fill</name>
+      <type>colour</type>
+      <element>background</element>
+	  <attribute>fill</attribute>
+	  <changeable/>
+	  <default-value>
+	     <highlighted>none</highlighted>
+		 <selected>none</selected>
+	  </default-value>
+    </parameter>
+  </parameters>
+  <min-size>
+    <width>8</width>
+    <height>8</height>
+  </min-size>
+</button>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<button>
+  <title>Cancel</title>
+  <svg width="48" height="48" viewBox="14 10 144 144">
+  <g id="button" style="fill:#a42a2a;stroke:#7d0e0e;stroke-width:2">
+    <path
+       d="M 62.5183 70.676 C 66.6661 73.8177 75.8903 85.4223 82.1278 92.4282 C 88.034 99.5862 91.2126 103.934 98.4211 113.485 L 96.2144 114.927 C 90.3693 107.13 85.8722 100.727 80.212 94.1064 C 75.9701 89.3468 72.4538 86.181 68.0148 80.8586 L 60.6447 72.4199 L 62.5183 70.676 z "
+       transform="matrix(2.61979,0,0,2.61979,-126.179,-162.19)"/>
+    <path
+       d="M 111.059 75.6485 C 102.406 79.0365 96.7979 82.7968 92.4992 85.7984 C 75.6104 98.9073 59.5649 113.745 45.2746 129.727 L 41.6946 127.243 C 55.9372 108.272 72.6717 95.1336 89.225 82.4041 C 94.773 78.5579 101.769 74.0373 110.771 71.2531 L 111.059 75.6485 z "
+       transform="matrix(1.752,0,0,1.94064,-47.3001,-110.777)"/>
+  </g>
+  </svg>
+  <parameters>
+	<parameter>
+      <title>Fill colour</title>
+      <name>fill</name>
+      <type>colour</type>
+      <element>button</element>
+	  <attribute>fill</attribute>
+	  <changeable/>
+	  <default-value>
+	     <highlighted>#FF0000</highlighted>
+		 <selected>#FFFFFF</selected>
+	  </default-value>
+    </parameter>
+    <parameter>
+      <title>Outline colour</title>
+      <name>stroke</name>
+      <type>colour</type>
+      <element>button</element>
+	  <attribute>stroke</attribute>
+	  <changeable/>
+	  <default-value>
+	     <highlighted>#CD0000</highlighted>
+		 <selected>#E5E5E5</selected>
+	  </default-value>
+    </parameter>
+  </parameters>
+</button>

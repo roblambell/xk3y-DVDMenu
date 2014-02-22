@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<button>
+  <title>Star Arrow</title>
+  <svg width="50" height="50" viewBox="0 0 50 50">
+    <g id="main" transform="rotate(0,25,25)">
+	  <path
+	    id="star"
+	    style="fill:#ffff00;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+	    d="M 47.512674,24.833446 L 32.638939,32.208158 L 30.281904,48.641623 L 18.671899,36.774772 L 2.3143806,39.611318 L 10.012738,24.902488 L 2.2602716,10.222105 L 18.628123,12.9984 L 30.194353,1.0888782 L 32.611884,17.513553 L 47.512674,24.833446 z " />
+	  <path
+	    style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+	    d="M 47.678538,24.833139 L 40.119671,28.640505 L 32.560804,32.447873 L 32.546837,24.860999 L 32.532868,17.274125 L 40.105702,21.053633 L 47.678538,24.833139 z " />
+	  <path
+	    id="triangle"
+	    style="fill:#13ec00;fill-opacity:1;fill-rule:evenodd;stroke:none;"
+	    d="M 46.696006,24.820392 L 39.87288,28.257169 L 33.049754,31.693947 L 33.037146,24.84554 L 33.024537,17.997133 L 39.86027,21.408764 L 46.696006,24.820392 z " />
+    </g>
+  </svg>
+  <parameters>
+    <parameter>
+      <title>Rotation</title>
+      <name>rotation</name>
+      <type>integer(0,360)</type>
+      <element>main</element>
+	  <attribute>transform#1</attribute>
+    </parameter>
+    <parameter>
+      <title>Colour of the star</title>
+      <name>star</name>
+      <type>colour</type>
+      <element>star</element>
+      <attribute>fill</attribute>
+    </parameter>
+    <parameter>
+      <title>Colour of the triangle</title>
+      <name>triangle</name>
+      <type>colour</type>
+      <element>triangle</element>
+      <attribute>fill</attribute>
+      <changeable/>
+      <default-value>
+         <highlighted>#FF0000</highlighted>
+         <selected>#FF0000</selected>
+      </default-value>
+    </parameter>
+  </parameters>
+</button>

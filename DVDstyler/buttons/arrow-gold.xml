@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- Created by Gustavo Rezende -->
+<button>
+	<title>Golden Arrow</title>
+	<svg width="30" height="30" viewBox="0 0 60 60">
+		<defs>
+			<linearGradient id="gradient1" gradientUnits="userSpaceOnUse"
+				x1="0" y1="0" x2="40" y2="40">
+				<stop id="st1a" offset="0%" stop-color="#FFDD21" />
+				<stop id="st2a" offset="100%" stop-color="#978526" />
+			</linearGradient>
+			<linearGradient id="gradient2" gradientUnits="userSpaceOnUse"
+				x1="9" y1="9" x2="37" y2="37">
+				<stop id="st1b" offset="0%" stop-color="#978526" />
+				<stop id="st2b" offset="100%" stop-color="#FFDD21" />
+			</linearGradient>
+		</defs>
+		<g id="main" transform="rotate(0,30,30)">
+			<path id="arrow1" style="fill:url(#gradient1)" d="M0,0 L60,30 L0,60 L15,30 z" />
+			<path id="arrow2" style="fill:url(#gradient2)" d="M10,10 L51,30 L10,50 L20,30 z" />
+			<path id="arrow3" style="fill:none;fill-opacity:.5" d="M10,10 L51,30 L10,50 L20,30 z" />
+		</g>
+	</svg>
+	<parameters>
+		<parameter>
+			<title>Rotation</title>
+			<name>rotation</name>
+			<type>integer(0,360)</type>
+			<element>main</element>
+			<attribute>transform#1</attribute>
+		</parameter>
+		<parameter>
+			<title>Arrow color</title>
+			<name>ac</name>
+			<type>colour</type>
+			<element>arrow3</element>
+			<attribute>fill</attribute>
+			<changeable />
+			<default-value>
+				<highlighted>#ffffff</highlighted>
+				<selected>#FF0000</selected>
+			</default-value>
+		</parameter>
+	</parameters>
+</button>
