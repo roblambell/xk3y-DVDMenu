@@ -141,6 +141,7 @@
             this.Log.Size = new System.Drawing.Size(339, 145);
             this.Log.TabIndex = 40;
             this.Log.TextChanged += new System.EventHandler(this.Log_TextChanged);
+            this.Log.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Log_KeyDown);
             // 
             // progressBar1
             // 

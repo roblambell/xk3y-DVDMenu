@@ -895,5 +895,14 @@ namespace xk3yDVDMenu
             senderComboBox.DropDownWidth = width;
         }
 
+        private void Log_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Ctrl+A support
+            if (e.Control & e.KeyCode == Keys.A)
+            {
+                Log.SelectAll();
+            }
+        }
+
     }
 }
