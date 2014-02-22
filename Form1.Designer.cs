@@ -61,11 +61,13 @@
             // 
             this.cmbDrive.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDrive.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.cmbDrive.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbDrive.FormattingEnabled = true;
             this.cmbDrive.Location = new System.Drawing.Point(53, 12);
             this.cmbDrive.Name = "cmbDrive";
-            this.cmbDrive.Size = new System.Drawing.Size(179, 21);
+            this.cmbDrive.Size = new System.Drawing.Size(179, 22);
             this.cmbDrive.TabIndex = 6;
+            this.cmbDrive.DropDown += new System.EventHandler(this.cmbDrive_DropDown);
             // 
             // btScan
             // 
@@ -109,10 +111,11 @@
             // 
             this.cmbTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTheme.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.cmbTheme.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbTheme.FormattingEnabled = true;
             this.cmbTheme.Location = new System.Drawing.Point(53, 39);
             this.cmbTheme.Name = "cmbTheme";
-            this.cmbTheme.Size = new System.Drawing.Size(179, 21);
+            this.cmbTheme.Size = new System.Drawing.Size(179, 22);
             this.cmbTheme.TabIndex = 14;
             // 
             // label3

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -56,15 +57,26 @@ namespace xk3yDVDMenu
 
         private void LoadDisks()
         {
-            
-            Log.Text += "Loading disk drives" + Environment.NewLine;
-            IEnumerable<string> driveList = from d in DriveInfo.GetDrives() select d.Name;
+
+            DriveInfo[] drives = DriveInfo.GetDrives();
+            Log.Text += "Found " + drives.Count() + " windows drives." + Environment.NewLine;
+
             cmbDrive.Items.Clear();
-            foreach (string item in driveList)
+            foreach (var drive in drives)
             {
-                cmbDrive.Items.Add(item);
+                if (drive.IsReady == true)
+                {
+                    string optionText = string.Format("({0}) {1} ({2}) {3}",
+                        drive.Name.Substring(0, 2),
+                        (drive.VolumeLabel.Length > 0 ? drive.VolumeLabel : "Unknown"),
+                        GetBytesReadable(drive.TotalSize),
+                        drive.DriveType
+                        );
+                cmbDrive.Items.Add(optionText);
+                }
             }
             cmbDrive.SelectedIndex = 0;
+
         }
 
 
@@ -173,13 +185,17 @@ namespace xk3yDVDMenu
             startupPath[2] = cmbTheme.SelectedItem;
             startupPath[3] = "\\";
             string themepath = string.Concat(startupPath);
-            log.Text = string.Concat(log.Text, "Finding ISO", Environment.NewLine);
-            Values.Add("DRIVE", cmbDrive.SelectedItem);
+
+            log.Text = string.Concat(log.Text, "Finding ISOs", Environment.NewLine);
+            
+            Values.Add("DRIVE", cmbDrive.SelectedItem.ToString().Substring(1, 2));
             ArrIsolist.Clear();
+
             if (Directory.Exists(string.Concat(Values["DRIVE"], "\\games\\")))
             {
                 DirSearch(string.Concat(Values["DRIVE"], "\\games\\"));
             }
+
             if (ArrIsolist.Count != 0)
             {
                 TextBox log1 = Log;
@@ -227,8 +243,7 @@ namespace xk3yDVDMenu
                 string pgcs = "";
 
 
-                ISO[] orderedISO =
-                    (from ISO d in ArrIsolist orderby d.Gamename select d).ToArray();
+                ISO[] orderedISO = (from ISO d in ArrIsolist orderby d.Gamename select d).ToArray();
                 LoadGameDetails(orderedISO, buttonCount);
                 string titleSets = CreateDvdStylerTitleSets(orderedISO, TitlesetLimit, themepath);
 
@@ -445,12 +460,14 @@ namespace xk3yDVDMenu
 
         private void LoadThemes()
         {
-            Log.Text += "Loading themes from path:" + Application.StartupPath + "\\themes\\" + Environment.NewLine;
+            var themePaths = new DirectoryInfo(Application.StartupPath + "\\themes\\");
+            var themeList = themePaths.GetDirectories();
+
+            Log.Text += "Found " + themeList.Count() + (themeList.Count() == 1 ? " theme." : " themes.") + Environment.NewLine;
+
             cmbTheme.Items.Clear();
-            var themepaths = new DirectoryInfo(Application.StartupPath + "\\themes\\");
-            foreach (DirectoryInfo folder in themepaths.GetDirectories())
+            foreach (DirectoryInfo folder in themeList)
             {
-                Log.Text += "Found theme:" + folder.Name + Environment.NewLine;
                 cmbTheme.Items.Add(folder.Name);
             }
             cmbTheme.SelectedIndex = 0;
@@ -459,7 +476,7 @@ namespace xk3yDVDMenu
 
         private void LoadPlugins()
         {
-            //Todo: Working on plugin support for scrappers
+            // TODO: Working on plugin support for scrappers
             FileInfo[] filelist = new DirectoryInfo(Application.StartupPath + "\\plugins\\").GetFiles("*.dll");
             foreach (FileInfo F in filelist)
             {
@@ -503,11 +520,58 @@ namespace xk3yDVDMenu
             }
         }
 
+        // Returns the human-readable file size for an arbitrary, 64-bit file size 
+        // The default format is "0.## XB", e.g. "4.2 KB" or "1.43 GB"
+        public static string GetBytesReadable(long i)
+        {
+            string sign = (i < 0 ? "-" : "");
+            double readable = (i < 0 ? -i : i);
+            string suffix;
+            if (i >= 0x1000000000000000) // Exabyte
+            {
+                suffix = "EB";
+                readable = (double)(i >> 50);
+            }
+            else if (i >= 0x4000000000000) // Petabyte
+            {
+                suffix = "PB";
+                readable = (double)(i >> 40);
+            }
+            else if (i >= 0x10000000000) // Terabyte
+            {
+                suffix = "TB";
+                readable = (double)(i >> 30);
+            }
+            else if (i >= 0x40000000) // Gigabyte
+            {
+                suffix = "GB";
+                readable = (double)(i >> 20);
+            }
+            else if (i >= 0x100000) // Megabyte
+            {
+                suffix = "MB";
+                readable = (double)(i >> 10);
+            }
+            else if (i >= 0x400) // Kilobyte
+            {
+                suffix = "KB";
+                readable = (double)i;
+            }
+            else
+            {
+                return i.ToString(sign + "0 B"); // Byte
+            }
+            readable /= 1024;
+
+            return sign + readable.ToString("0.## ") + suffix;
+        }
+
         private void Form1Load(object sender, EventArgs e)
         {
+            Log.Text += "xk3y DVDMenu Tool" + Environment.NewLine + Environment.NewLine;
+
             // TODO: This one creates error, cannot find plugin - will add plugin support in next build - Diag
             //LoadPlugins();
-
 
             LoadDisks();
             LoadThemes();
@@ -727,6 +791,32 @@ namespace xk3yDVDMenu
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("http://k3yforums.com/");
+        }
+
+        private void cmbDrive_DropDown(object sender, EventArgs e)
+        {
+            // Extend width of list beyond the ComboBox control as needed 
+            ComboBox senderComboBox = (ComboBox)sender;
+            int width = senderComboBox.DropDownWidth;
+            Graphics g = senderComboBox.CreateGraphics();
+            Font font = senderComboBox.Font;
+            int vertScrollBarWidth =
+                (senderComboBox.Items.Count > senderComboBox.MaxDropDownItems)
+                ? SystemInformation.VerticalScrollBarWidth : 0;
+            int newWidth;
+
+            foreach (string s in ((ComboBox)sender).Items)
+            {
+                newWidth = (int)g.MeasureString(s, font).Width
+                    + vertScrollBarWidth;
+
+                if (width < newWidth)
+                {
+                    width = newWidth;
+                }
+            }
+
+            senderComboBox.DropDownWidth = width;
         }
     }
 }
