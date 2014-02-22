@@ -30,21 +30,21 @@
         {
             System.Windows.Forms.Label label1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.cmbDrive = new System.Windows.Forms.ComboBox();
-            this.btScan = new System.Windows.Forms.Button();
-            this.btDVDStyle = new System.Windows.Forms.Button();
-            this.btCopy = new System.Windows.Forms.Button();
-            this.cmbTheme = new System.Windows.Forms.ComboBox();
+            this.comboBoxDriveList = new System.Windows.Forms.ComboBox();
+            this.buttonPrepareXML = new System.Windows.Forms.Button();
+            this.buttonGenerateDVDMenu = new System.Windows.Forms.Button();
+            this.buttonCopyToDrive = new System.Windows.Forms.Button();
+            this.comboBoxThemeList = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.Log = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.chkArtwork = new System.Windows.Forms.CheckBox();
             this.chkTraillers = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -57,66 +57,66 @@
             label1.TabIndex = 5;
             label1.Text = "Drive:";
             // 
-            // cmbDrive
+            // comboBoxDriveList
             // 
-            this.cmbDrive.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbDrive.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.cmbDrive.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbDrive.FormattingEnabled = true;
-            this.cmbDrive.Location = new System.Drawing.Point(53, 12);
-            this.cmbDrive.Name = "cmbDrive";
-            this.cmbDrive.Size = new System.Drawing.Size(179, 22);
-            this.cmbDrive.TabIndex = 6;
-            this.cmbDrive.DropDown += new System.EventHandler(this.cmbDrive_DropDown);
+            this.comboBoxDriveList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDriveList.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.comboBoxDriveList.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxDriveList.FormattingEnabled = true;
+            this.comboBoxDriveList.Location = new System.Drawing.Point(53, 12);
+            this.comboBoxDriveList.Name = "comboBoxDriveList";
+            this.comboBoxDriveList.Size = new System.Drawing.Size(179, 22);
+            this.comboBoxDriveList.TabIndex = 6;
+            this.comboBoxDriveList.DropDown += new System.EventHandler(this.comboBoxDriveList_DropDown);
             // 
-            // btScan
+            // buttonPrepareXML
             // 
-            this.btScan.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btScan.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btScan.Location = new System.Drawing.Point(8, 117);
-            this.btScan.Name = "btScan";
-            this.btScan.Size = new System.Drawing.Size(109, 37);
-            this.btScan.TabIndex = 7;
-            this.btScan.Text = "Prepare Games Library";
-            this.btScan.UseVisualStyleBackColor = false;
-            this.btScan.Click += new System.EventHandler(this.Button1Click);
+            this.buttonPrepareXML.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.buttonPrepareXML.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonPrepareXML.Location = new System.Drawing.Point(8, 117);
+            this.buttonPrepareXML.Name = "buttonPrepareXML";
+            this.buttonPrepareXML.Size = new System.Drawing.Size(109, 37);
+            this.buttonPrepareXML.TabIndex = 7;
+            this.buttonPrepareXML.Text = "Prepare Games Library";
+            this.buttonPrepareXML.UseVisualStyleBackColor = false;
+            this.buttonPrepareXML.Click += new System.EventHandler(this.buttonPrepareXML_Click);
             // 
-            // btDVDStyle
+            // buttonGenerateDVDMenu
             // 
-            this.btDVDStyle.Enabled = false;
-            this.btDVDStyle.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btDVDStyle.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btDVDStyle.Location = new System.Drawing.Point(123, 117);
-            this.btDVDStyle.Name = "btDVDStyle";
-            this.btDVDStyle.Size = new System.Drawing.Size(109, 37);
-            this.btDVDStyle.TabIndex = 8;
-            this.btDVDStyle.Text = "Generate\r\nDVDMenu";
-            this.btDVDStyle.UseVisualStyleBackColor = false;
-            this.btDVDStyle.Click += new System.EventHandler(this.Button2Click);
+            this.buttonGenerateDVDMenu.Enabled = false;
+            this.buttonGenerateDVDMenu.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.buttonGenerateDVDMenu.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonGenerateDVDMenu.Location = new System.Drawing.Point(123, 117);
+            this.buttonGenerateDVDMenu.Name = "buttonGenerateDVDMenu";
+            this.buttonGenerateDVDMenu.Size = new System.Drawing.Size(109, 37);
+            this.buttonGenerateDVDMenu.TabIndex = 8;
+            this.buttonGenerateDVDMenu.Text = "Generate\r\nDVDMenu";
+            this.buttonGenerateDVDMenu.UseVisualStyleBackColor = false;
+            this.buttonGenerateDVDMenu.Click += new System.EventHandler(this.buttonGenerateDVDMenu_Click);
             // 
-            // btCopy
+            // buttonCopyToDrive
             // 
-            this.btCopy.Enabled = false;
-            this.btCopy.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btCopy.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btCopy.Location = new System.Drawing.Point(238, 117);
-            this.btCopy.Name = "btCopy";
-            this.btCopy.Size = new System.Drawing.Size(109, 37);
-            this.btCopy.TabIndex = 9;
-            this.btCopy.Text = "Copy DVDMenu\r\nto drive";
-            this.btCopy.UseVisualStyleBackColor = false;
-            this.btCopy.Click += new System.EventHandler(this.Button3Click);
+            this.buttonCopyToDrive.Enabled = false;
+            this.buttonCopyToDrive.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.buttonCopyToDrive.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonCopyToDrive.Location = new System.Drawing.Point(238, 117);
+            this.buttonCopyToDrive.Name = "buttonCopyToDrive";
+            this.buttonCopyToDrive.Size = new System.Drawing.Size(109, 37);
+            this.buttonCopyToDrive.TabIndex = 9;
+            this.buttonCopyToDrive.Text = "Copy DVDMenu\r\nto drive";
+            this.buttonCopyToDrive.UseVisualStyleBackColor = false;
+            this.buttonCopyToDrive.Click += new System.EventHandler(this.buttonCopyToDrive_Click);
             // 
-            // cmbTheme
+            // comboBoxThemeList
             // 
-            this.cmbTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbTheme.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.cmbTheme.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbTheme.FormattingEnabled = true;
-            this.cmbTheme.Location = new System.Drawing.Point(53, 39);
-            this.cmbTheme.Name = "cmbTheme";
-            this.cmbTheme.Size = new System.Drawing.Size(179, 22);
-            this.cmbTheme.TabIndex = 14;
+            this.comboBoxThemeList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxThemeList.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.comboBoxThemeList.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxThemeList.FormattingEnabled = true;
+            this.comboBoxThemeList.Location = new System.Drawing.Point(53, 39);
+            this.comboBoxThemeList.Name = "comboBoxThemeList";
+            this.comboBoxThemeList.Size = new System.Drawing.Size(179, 22);
+            this.comboBoxThemeList.TabIndex = 14;
             // 
             // label3
             // 
@@ -184,46 +184,49 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Download from Xbox.com";
             // 
-            // pictureBox1
+            // pictureBoxLogo
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(25)))), ((int)(((byte)(23)))));
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(241, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Padding = new System.Windows.Forms.Padding(5);
-            this.pictureBox1.Size = new System.Drawing.Size(106, 50);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 21;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            this.pictureBoxLogo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(25)))), ((int)(((byte)(23)))));
+            this.pictureBoxLogo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxLogo.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxLogo.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxLogo.Image")));
+            this.pictureBoxLogo.Location = new System.Drawing.Point(241, 12);
+            this.pictureBoxLogo.Name = "pictureBoxLogo";
+            this.pictureBoxLogo.Padding = new System.Windows.Forms.Padding(5);
+            this.pictureBoxLogo.Size = new System.Drawing.Size(106, 50);
+            this.pictureBoxLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxLogo.TabIndex = 21;
+            this.pictureBoxLogo.TabStop = false;
+            this.pictureBoxLogo.Click += new System.EventHandler(this.pictureBoxLogo_Click);
+            this.pictureBoxLogo.MouseHover += new System.EventHandler(this.pictureBoxLogo_MouseHover);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(353, 341);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pictureBoxLogo);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.Log);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.cmbTheme);
-            this.Controls.Add(this.btCopy);
-            this.Controls.Add(this.btDVDStyle);
-            this.Controls.Add(this.btScan);
-            this.Controls.Add(this.cmbDrive);
+            this.Controls.Add(this.comboBoxThemeList);
+            this.Controls.Add(this.buttonCopyToDrive);
+            this.Controls.Add(this.buttonGenerateDVDMenu);
+            this.Controls.Add(this.buttonPrepareXML);
+            this.Controls.Add(this.comboBoxDriveList);
             this.Controls.Add(label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "xk3y DVDMenu Tool";
             this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
             this.Load += new System.EventHandler(this.Form1Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -231,18 +234,18 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox cmbDrive;
-        private System.Windows.Forms.Button btScan;
-        private System.Windows.Forms.Button btDVDStyle;
-        private System.Windows.Forms.Button btCopy;
-        private System.Windows.Forms.ComboBox cmbTheme;
+        private System.Windows.Forms.ComboBox comboBoxDriveList;
+        private System.Windows.Forms.Button buttonPrepareXML;
+        private System.Windows.Forms.Button buttonGenerateDVDMenu;
+        private System.Windows.Forms.Button buttonCopyToDrive;
+        private System.Windows.Forms.ComboBox comboBoxThemeList;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox Log;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.CheckBox chkArtwork;
         private System.Windows.Forms.CheckBox chkTraillers;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBoxLogo;
     }
 }
 

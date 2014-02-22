@@ -12,6 +12,7 @@ using System.Text;
 using System.Web;
 using System.Windows.Forms;
 using Ini;
+using Microsoft.Win32;
 using XkeyBrew.Utils.DvdReader;
 
 namespace xk3yDVDMenu
@@ -33,8 +34,11 @@ namespace xk3yDVDMenu
                                                 new[] {"W", "X", "Y", "Z"}
                                             };
 
-        public ArrayList ArrIsolist = new ArrayList();
+        public ArrayList GameISOs = new ArrayList();
         public Dictionary<string, object> Values = new Dictionary<string, object>();
+
+        public string PathToDVDStyler;
+        public string WorkingDirectory;
 
         public Form1()
         {
@@ -59,23 +63,50 @@ namespace xk3yDVDMenu
         {
 
             DriveInfo[] drives = DriveInfo.GetDrives();
-            Log.Text += "Found " + drives.Count() + " windows drives." + Environment.NewLine;
+            Log.Text += "Found " + drives.Count() + (drives.Count() == 1 ? " windows drive." : " windows drives.") + Environment.NewLine;
 
-            cmbDrive.Items.Clear();
+            comboBoxDriveList.Items.Clear();
             foreach (var drive in drives)
             {
                 if (drive.IsReady == true)
                 {
-                    string optionText = string.Format("({0}) {1} ({2}) {3}",
+                    string driveLabel;
+
+                    if (drive.VolumeLabel.Length > 0)
+                    {
+                        driveLabel = drive.VolumeLabel;
+                    }
+                    else
+                    {
+                        switch (drive.DriveType)
+                        {
+                            case DriveType.CDRom:
+                                driveLabel = "CD Drive";
+                                break;
+                            case DriveType.Fixed:
+                                driveLabel = "Local Disk";
+                                break;
+                            case DriveType.Network:
+                                driveLabel = "Network Drive";
+                                break;
+                            case DriveType.Removable:
+                                driveLabel = "Removable Disk";
+                                break;
+                            default:
+                                driveLabel = "Unknown";
+                                break;
+                        }
+                    }
+
+                    string optionText = string.Format("({0}) {1} ({2})",
                         drive.Name.Substring(0, 2),
-                        (drive.VolumeLabel.Length > 0 ? drive.VolumeLabel : "Unknown"),
-                        GetBytesReadable(drive.TotalSize),
-                        drive.DriveType
+                        driveLabel,
+                        GetBytesReadable(drive.TotalSize)
                         );
-                cmbDrive.Items.Add(optionText);
+                comboBoxDriveList.Items.Add(optionText);
                 }
             }
-            cmbDrive.SelectedIndex = 0;
+            comboBoxDriveList.SelectedIndex = 0;
 
         }
 
@@ -99,7 +130,7 @@ namespace xk3yDVDMenu
                 Values["TITLESETPGC"] = string.Empty;
 
                 IEnumerable<ISO> titlesetIso =
-                    (from ISO d in ArrIsolist orderby d.Gamename select d).Skip(currentTitleSet*titlesetIsoLimit).Take(
+                    (from ISO d in GameISOs orderby d.Gamename select d).Skip(currentTitleSet*titlesetIsoLimit).Take(
                         titlesetIsoLimit).ToArray();
                 string titlesetindex = "if (g0 == 1) jump menu 2;";
                 for (int i = 1; i < titlesetIso.Count()*2; i++)
@@ -174,29 +205,32 @@ namespace xk3yDVDMenu
             }
         }
 
-        private void CreateDVDStyleXML()
+        private void FetchGameDataAndCreateProject()
         {
             TextBox log = Log;
-            log.Text = string.Concat(log.Text, "Creating dvds", Environment.NewLine);
+            //log.Text = string.Concat(log.Text, "Creating dvds", Environment.NewLine);
             Values.Clear();
             var startupPath = new object[4];
             startupPath[0] = Application.StartupPath;
             startupPath[1] = "\\themes\\";
-            startupPath[2] = cmbTheme.SelectedItem;
+            startupPath[2] = comboBoxThemeList.SelectedItem;
             startupPath[3] = "\\";
             string themepath = string.Concat(startupPath);
 
             log.Text = string.Concat(log.Text, "Finding ISOs", Environment.NewLine);
             
-            Values.Add("DRIVE", cmbDrive.SelectedItem.ToString().Substring(1, 2));
-            ArrIsolist.Clear();
+            Values.Add("DRIVE", comboBoxDriveList.SelectedItem.ToString().Substring(1, 2));
 
+            GameISOs.Clear();
             if (Directory.Exists(string.Concat(Values["DRIVE"], "\\games\\")))
             {
-                DirSearch(string.Concat(Values["DRIVE"], "\\games\\"));
+                // Populates ArrIsolist
+                RecursiveISOSearch(string.Concat(Values["DRIVE"], "\\games\\"));
             }
 
-            if (ArrIsolist.Count != 0)
+            Log.Text += "Found " + GameISOs.Count + (GameISOs.Count == 1 ? " ISO." : " ISOs.") + Environment.NewLine;
+
+            if (GameISOs.Count > 0)
             {
                 TextBox log1 = Log;
                 log1.Text = string.Concat(log1.Text, "Set init", Environment.NewLine);
@@ -224,7 +258,7 @@ namespace xk3yDVDMenu
                 string pgc = (new StreamReader(string.Concat(themepath, "PGC.txt"))).ReadToEnd();
                 int buttonCount =
                     (from d in new DirectoryInfo(themepath).GetFiles("ButtonLocation*.txt") select d).Count();
-                double totalPageCount = Math.Ceiling(ArrIsolist.Count/(double) buttonCount);
+                double totalPageCount = Math.Ceiling(GameISOs.Count/(double) buttonCount);
                 Values.Add("TotalPageCount", totalPageCount);
                 string buttonDef = (new StreamReader(string.Concat(themepath, "ButtonStyle.txt"))).ReadToEnd();
                 string objDef = (new StreamReader(string.Concat(themepath, "GAMEOBJ.txt"))).ReadToEnd();
@@ -243,7 +277,7 @@ namespace xk3yDVDMenu
                 string pgcs = "";
 
 
-                ISO[] orderedISO = (from ISO d in ArrIsolist orderby d.Gamename select d).ToArray();
+                ISO[] orderedISO = (from ISO d in GameISOs orderby d.Gamename select d).ToArray();
                 LoadGameDetails(orderedISO, buttonCount);
                 string titleSets = CreateDvdStylerTitleSets(orderedISO, TitlesetLimit, themepath);
 
@@ -258,7 +292,7 @@ namespace xk3yDVDMenu
                     Values["PAGE"] = i + 1;
                     Values["PAGEINDEX"] = 0;
                     IEnumerable<ISO> pageIso =
-                        (from ISO d in ArrIsolist orderby d.Gamename select d).Skip(i*buttonCount).Take(buttonCount);
+                        (from ISO d in GameISOs orderby d.Gamename select d).Skip(i*buttonCount).Take(buttonCount);
                     foreach (ISO d in pageIso)
                     {
                         Application.DoEvents();
@@ -385,21 +419,21 @@ namespace xk3yDVDMenu
                 }
                 dvdFile.Close();
                 MessageBox.Show("Done! Start step 2");
-                btScan.Enabled = false;
-                btDVDStyle.Enabled = true;
-                btCopy.Enabled = false;
+                buttonPrepareXML.Enabled = false;
+                buttonGenerateDVDMenu.Enabled = true;
+                buttonCopyToDrive.Enabled = false;
             }
             else
             {
                 MessageBox.Show("No Games found");
-                cmbDrive.Enabled = true;
+                comboBoxDriveList.Enabled = true;
             }
         }
 
         private int FirstLocationAlpha(string letter, int buttonCount)
         {
             ISO[] orderedISO =
-                (from ISO d in ArrIsolist orderby d.Gamename select d).ToArray();
+                (from ISO d in GameISOs orderby d.Gamename select d).ToArray();
 
             int num = 0;
             while (num < orderedISO.Length)
@@ -434,7 +468,7 @@ namespace xk3yDVDMenu
                 int i = 0;
 
                 ISO[] orderedISO =
-                    (from ISO d in ArrIsolist orderby d.Gamename select d).ToArray();
+                    (from ISO d in GameISOs orderby d.Gamename select d).ToArray();
 
                 foreach (var sector in sectors)
                 {
@@ -465,14 +499,50 @@ namespace xk3yDVDMenu
 
             Log.Text += "Found " + themeList.Count() + (themeList.Count() == 1 ? " theme." : " themes.") + Environment.NewLine;
 
-            cmbTheme.Items.Clear();
+            comboBoxThemeList.Items.Clear();
             foreach (DirectoryInfo folder in themeList)
             {
-                cmbTheme.Items.Add(folder.Name);
+                comboBoxThemeList.Items.Add(folder.Name);
             }
-            cmbTheme.SelectedIndex = 0;
+            comboBoxThemeList.SelectedIndex = 0;
         }
 
+        private void CheckDVDStyler()
+        {
+            PathToDVDStyler = ProgramFilesx86() + "\\DVDStyler\\bin\\DVDStyler.exe";
+
+            if (File.Exists(PathToDVDStyler))
+            {
+                // DVDStyler doesn't store version info in its executable...
+                //var versionInfo = FileVersionInfo.GetVersionInfo(pathToDVDStyler);
+                //string version = versionInfo.ProductVersion;
+
+                string version = (string)Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\DVDStyler", "Version", "is installed");
+
+                Log.Text += "DVDStyler " + version + Environment.NewLine;
+            }
+            else
+            {
+                Log.Text += "DVDStyler not found. Please install to:" + Environment.NewLine;
+                Log.Text += PathToDVDStyler + Environment.NewLine;
+            }
+
+        }
+
+        private void SetupWorkingDirectory()
+        {
+            // Current User Roaming App Data - equivalent to %AppData% if set
+            string pathToRoamingAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+            // Combine the App Data\Roaming path with our desired directory name
+            WorkingDirectory = Path.Combine(pathToRoamingAppData, "xk3yDVDMenu");
+
+            if (!Directory.Exists(WorkingDirectory))
+            {
+                Directory.CreateDirectory(WorkingDirectory);
+            }
+             
+        }
 
         private void LoadPlugins()
         {
@@ -566,26 +636,42 @@ namespace xk3yDVDMenu
             return sign + readable.ToString("0.## ") + suffix;
         }
 
+        static string ProgramFilesx86()
+        {
+            if (8 == IntPtr.Size
+                || (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
+            {
+                return Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+            }
+
+            return Environment.GetEnvironmentVariable("ProgramFiles");
+        }
+
         private void Form1Load(object sender, EventArgs e)
         {
-            Log.Text += "xk3y DVDMenu Tool" + Environment.NewLine + Environment.NewLine;
+            Log.Text += "xk3y DVDMenu Tool" + Environment.NewLine;
+            CheckDVDStyler();
+            SetupWorkingDirectory();
+
+            Log.Text += Environment.NewLine;
 
             // TODO: This one creates error, cannot find plugin - will add plugin support in next build - Diag
             //LoadPlugins();
-
             LoadDisks();
             LoadThemes();
+
+            Log.Text += Environment.NewLine;
         }
 
 
-        private void DirSearch(string sDir)
+        private void RecursiveISOSearch(string sDir)
         {
             foreach (FileInfo f in new DirectoryInfo(sDir).GetFiles("*.ISO"))
             {
-                ArrIsolist.Add(new ISO
+                GameISOs.Add(new ISO
                                    {
                                        Filename = f.Name,
-                                       Gamename = f.Name.Replace(".iso", ""),
+                                       Gamename = f.Name.Replace(".iso", "").Replace(".ISO", ""),
                                        Path = f.FullName,
                                        IsoFile = f,
                                        Log = Log,
@@ -596,22 +682,22 @@ namespace xk3yDVDMenu
             {
                 foreach (string d in Directory.GetDirectories(sDir))
                 {
-                    DirSearch(d);
+                    RecursiveISOSearch(d);
                 }
             }
-            catch (Exception excpt)
+            catch (Exception ex)
             {
-                Console.WriteLine(excpt.Message);
+                Console.WriteLine(ex.Message);
             }
         }
 
-        private void Button1Click(object sender, EventArgs e)
+        private void buttonPrepareXML_Click(object sender, EventArgs e)
         {
-            cmbDrive.Enabled = false;
-            CreateDVDStyleXML();
+            comboBoxDriveList.Enabled = false;
+            FetchGameDataAndCreateProject();
         }
 
-        private void Button2Click(object sender, EventArgs e)
+        private void buttonGenerateDVDMenu_Click(object sender, EventArgs e)
         {
             if (File.Exists(Application.StartupPath + "\\dvd.iso"))
             {
@@ -625,6 +711,7 @@ namespace xk3yDVDMenu
                     return;
                 }
             }
+
             string dvdStylePath = Application.StartupPath + "\\DVDstyler\\bin\\dvdstyler.exe";
             if (!File.Exists(dvdStylePath.ToLower().Replace("dvdstyler.exe", "") + "..\\DVDStyler.ini"))
             {
@@ -634,20 +721,19 @@ namespace xk3yDVDMenu
             Log.Text += "Setting DVD Styler Settings" + Environment.NewLine;
             var iniSettings =
                 new IniFile(dvdStylePath.ToLower().Replace("dvdstyler.exe", "") + "..\\DVDStyler.ini");
+
             iniSettings.IniWriteValue("Burn", "Do", "0");
             iniSettings.IniWriteValue("Iso", "Do", "1");
             iniSettings.IniWriteValue("Generate", "MenuVideoBitrate", "8000");
             iniSettings.IniWriteValue("Generate", "MenuFrameCount", "50");
             iniSettings.IniWriteValue("Generate", "TempDir", Path.GetTempPath().Replace("\\", "\\\\"));
             Log.Text += "Finding first available drive" + Environment.NewLine;
-            string driveletter = GetAvailableDriveLetters().First();
+
+            // Create symlinks drive - why?!
+            string driveletter = ""; //GetAvailableDriveLetters().First();
             Log.Text += "Mapping " + driveletter + ": to startup folder" + Environment.NewLine;
             DefineDosDevice(0, driveletter.ToUpper() + ":",
                             dvdStylePath.ToLower().Replace("dvdstyler.exe", "") + "..\\");
-
-            //var exception = Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error());
-            // MessageBox.Show(exception.Message);
-
 
             Log.Text += "Starting DVDStyler..." + Environment.NewLine;
             var start = new ProcessStartInfo
@@ -671,9 +757,9 @@ namespace xk3yDVDMenu
                 {
                     CreateSectorMap();
                     MessageBox.Show("Done! Start step 3");
-                    btScan.Enabled = false;
-                    btDVDStyle.Enabled = false;
-                    btCopy.Enabled = true;
+                    buttonPrepareXML.Enabled = false;
+                    buttonGenerateDVDMenu.Enabled = false;
+                    buttonCopyToDrive.Enabled = true;
                 }
                 else
                 {
@@ -681,18 +767,14 @@ namespace xk3yDVDMenu
                 }
             }
         }
+        
 
-        private void Button4Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void Button3Click(object sender, EventArgs e)
+        private void buttonCopyToDrive_Click(object sender, EventArgs e)
         {
             try
             {
-                File.Copy(Application.StartupPath + "\\dvd.iso", cmbDrive.SelectedItem + "games\\Menu.xso", true);
-                File.Copy(Application.StartupPath + "\\Menu.xsk", cmbDrive.SelectedItem + "games\\Menu.xsk", true);
+                File.Copy(Application.StartupPath + "\\dvd.iso", comboBoxDriveList.SelectedItem + "games\\Menu.xso", true);
+                File.Copy(Application.StartupPath + "\\Menu.xsk", comboBoxDriveList.SelectedItem + "games\\Menu.xsk", true);
                 MessageBox.Show("Complete");
                 Close();
             }
@@ -701,23 +783,8 @@ namespace xk3yDVDMenu
                 MessageBox.Show("Failed. Retry!");
             }
         }
-
-
-        public List<string> GetAvailableDriveLetters()
-        {
-            var letters = new List<string>();
-            //first let's get all avilable drive letters
-            for (int i = Convert.ToInt16('a'); i < Convert.ToInt16('z'); i++)
-                letters.Add(new string(new[] {(char) i}));
-            //now loop through each and remove it's drive letter from our list
-            foreach (DriveInfo drive in DriveInfo.GetDrives())
-                letters.Remove(drive.Name.Substring(0, 1).ToLower());
-            //return the letters left
-            return letters;
-        }
-
+        
         public static string Wrap(string text, int maxLength)
-
         {
             text = text.Replace("\n", " ");
             text = text.Replace("\r", " ");
@@ -772,28 +839,18 @@ namespace xk3yDVDMenu
             return strLines;
         }
 
-        private void button5_Click_1(object sender, EventArgs e)
-        {
-            CreateSectorMap();
-        }
-
         private void Log_TextChanged(object sender, EventArgs e)
         {
             Log.SelectionStart = Log.Text.Length;
             Log.ScrollToCaret();
         }
 
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
-            CreateSectorMap();
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private void pictureBoxLogo_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("http://k3yforums.com/");
         }
 
-        private void cmbDrive_DropDown(object sender, EventArgs e)
+        private void comboBoxDriveList_DropDown(object sender, EventArgs e)
         {
             // Extend width of list beyond the ComboBox control as needed 
             ComboBox senderComboBox = (ComboBox)sender;
@@ -818,5 +875,12 @@ namespace xk3yDVDMenu
 
             senderComboBox.DropDownWidth = width;
         }
+
+        private void pictureBoxLogo_MouseHover(object sender, EventArgs e)
+        {
+            ToolTip toolTip = new ToolTip();
+            toolTip.SetToolTip(this.pictureBoxLogo, "Visit k3y Forums");
+        }
+
     }
 }
