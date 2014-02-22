@@ -66,7 +66,7 @@
             this.comboBoxDriveList.Location = new System.Drawing.Point(53, 12);
             this.comboBoxDriveList.Name = "comboBoxDriveList";
             this.comboBoxDriveList.Size = new System.Drawing.Size(179, 22);
-            this.comboBoxDriveList.TabIndex = 6;
+            this.comboBoxDriveList.TabIndex = 0;
             this.comboBoxDriveList.DropDown += new System.EventHandler(this.comboBoxDriveList_DropDown);
             // 
             // buttonPrepareXML
@@ -76,7 +76,7 @@
             this.buttonPrepareXML.Location = new System.Drawing.Point(8, 117);
             this.buttonPrepareXML.Name = "buttonPrepareXML";
             this.buttonPrepareXML.Size = new System.Drawing.Size(109, 37);
-            this.buttonPrepareXML.TabIndex = 7;
+            this.buttonPrepareXML.TabIndex = 25;
             this.buttonPrepareXML.Text = "Prepare Games Library";
             this.buttonPrepareXML.UseVisualStyleBackColor = false;
             this.buttonPrepareXML.Click += new System.EventHandler(this.buttonPrepareXML_Click);
@@ -89,7 +89,7 @@
             this.buttonGenerateDVDMenu.Location = new System.Drawing.Point(123, 117);
             this.buttonGenerateDVDMenu.Name = "buttonGenerateDVDMenu";
             this.buttonGenerateDVDMenu.Size = new System.Drawing.Size(109, 37);
-            this.buttonGenerateDVDMenu.TabIndex = 8;
+            this.buttonGenerateDVDMenu.TabIndex = 30;
             this.buttonGenerateDVDMenu.Text = "Generate\r\nDVDMenu";
             this.buttonGenerateDVDMenu.UseVisualStyleBackColor = false;
             this.buttonGenerateDVDMenu.Click += new System.EventHandler(this.buttonGenerateDVDMenu_Click);
@@ -102,7 +102,7 @@
             this.buttonCopyToDrive.Location = new System.Drawing.Point(238, 117);
             this.buttonCopyToDrive.Name = "buttonCopyToDrive";
             this.buttonCopyToDrive.Size = new System.Drawing.Size(109, 37);
-            this.buttonCopyToDrive.TabIndex = 9;
+            this.buttonCopyToDrive.TabIndex = 35;
             this.buttonCopyToDrive.Text = "Copy DVDMenu\r\nto drive";
             this.buttonCopyToDrive.UseVisualStyleBackColor = false;
             this.buttonCopyToDrive.Click += new System.EventHandler(this.buttonCopyToDrive_Click);
@@ -116,7 +116,7 @@
             this.comboBoxThemeList.Location = new System.Drawing.Point(53, 39);
             this.comboBoxThemeList.Name = "comboBoxThemeList";
             this.comboBoxThemeList.Size = new System.Drawing.Size(179, 22);
-            this.comboBoxThemeList.TabIndex = 14;
+            this.comboBoxThemeList.TabIndex = 5;
             // 
             // label3
             // 
@@ -138,7 +138,7 @@
             this.Log.ReadOnly = true;
             this.Log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.Log.Size = new System.Drawing.Size(339, 145);
-            this.Log.TabIndex = 16;
+            this.Log.TabIndex = 40;
             this.Log.TextChanged += new System.EventHandler(this.Log_TextChanged);
             // 
             // progressBar1
@@ -157,7 +157,7 @@
             this.chkArtwork.Location = new System.Drawing.Point(10, 19);
             this.chkArtwork.Name = "chkArtwork";
             this.chkArtwork.Size = new System.Drawing.Size(66, 18);
-            this.chkArtwork.TabIndex = 18;
+            this.chkArtwork.TabIndex = 15;
             this.chkArtwork.Text = "Artwork";
             this.chkArtwork.UseVisualStyleBackColor = true;
             // 
@@ -168,7 +168,7 @@
             this.chkTraillers.Location = new System.Drawing.Point(82, 19);
             this.chkTraillers.Name = "chkTraillers";
             this.chkTraillers.Size = new System.Drawing.Size(64, 18);
-            this.chkTraillers.TabIndex = 19;
+            this.chkTraillers.TabIndex = 20;
             this.chkTraillers.Text = "Traillers";
             this.chkTraillers.UseVisualStyleBackColor = true;
             // 
@@ -180,7 +180,7 @@
             this.groupBox1.Location = new System.Drawing.Point(8, 68);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(339, 43);
-            this.groupBox1.TabIndex = 20;
+            this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Download from Xbox.com";
             // 
