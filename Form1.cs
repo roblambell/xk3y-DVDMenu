@@ -62,12 +62,14 @@ namespace xk3yDVDMenu
 
         private void LoadDisks()
         {
+            int selectedIndex = 0;
+            int currentIndex = 0;
 
-            DriveInfo[] drives = DriveInfo.GetDrives();
-            Log.Text += "Found " + drives.Count() + (drives.Count() == 1 ? " windows drive." : " windows drives.") + Environment.NewLine;
+            DriveInfo[] driveList = DriveInfo.GetDrives();
+            Log.Text += "Found " + driveList.Count() + (driveList.Count() == 1 ? " windows drive." : " windows drives.") + Environment.NewLine;
 
             comboBoxDriveList.Items.Clear();
-            foreach (var drive in drives)
+            foreach (var drive in driveList)
             {
                 if (drive.IsReady == true)
                 {
@@ -99,15 +101,34 @@ namespace xk3yDVDMenu
                         }
                     }
 
+                    // Preselect drive
+                    if (drive.DriveType == DriveType.Removable)
+                    {
+                        // Any removable drive is better than nothing..
+                        if (selectedIndex == 0)
+                        {
+                            selectedIndex = currentIndex;
+                        }
+                        // BUT, one with our name in it, that must be it!
+                        bool containsXbox = driveLabel.IndexOf("Xbox", StringComparison.OrdinalIgnoreCase) >= 0;
+                        bool containsxk3y = driveLabel.IndexOf("xk3y", StringComparison.OrdinalIgnoreCase) >= 0;
+                        if (containsXbox || containsxk3y)
+                        {
+                            selectedIndex = currentIndex;
+                        }
+                    }
+
                     string optionText = string.Format("({0}) {1} ({2})",
                         drive.Name.Substring(0, 2),
                         driveLabel,
                         GetBytesReadable(drive.TotalSize)
                         );
-                comboBoxDriveList.Items.Add(optionText);
+                    comboBoxDriveList.Items.Add(optionText);
+                    currentIndex++;
                 }
             }
-            comboBoxDriveList.SelectedIndex = 0;
+
+            comboBoxDriveList.SelectedIndex = selectedIndex;
 
         }
 
