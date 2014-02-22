@@ -44,16 +44,6 @@ namespace xk3yDVDMenu
         public Form1()
         {
             InitializeComponent();
-
-            //test method
-
-            /*ArrIsolist.Clear();
-            Values["DRIVE"] = "K:\\";
-            if (Directory.Exists(string.Concat(Values["DRIVE"], "\\games\\")))
-            {
-                DirSearch(string.Concat(Values["DRIVE"], "\\games\\"));
-            }
-            CreateSectorMap();*/
         }
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -211,18 +201,24 @@ namespace xk3yDVDMenu
             return strTitleset;
         }
 
-        private void LoadGameDetails(IEnumerable<ISO> orderedIsos, int buttonCount)
+        private void LoadGameDetails(IEnumerable<ISO> orderedISOs, int buttonCount)
         {
             int index = 0;
-            foreach (ISO d in orderedIsos)
+            foreach (ISO d in orderedISOs)
             {
                 index++;
+
+                Log.Text += d.Filename + Environment.NewLine + "  ∟";
+
                 d.Gametitle = HttpUtility.HtmlEncode(d.GameTitle(chkArtwork.Checked));
                 d.Gamegenre = HttpUtility.HtmlEncode(d.GameGenre(chkArtwork.Checked));
                 d.Gamedesc = HttpUtility.HtmlEncode(d.GameDesc(chkArtwork.Checked));
                 d.Gameimage = HttpUtility.HtmlEncode(d.GameBanner(chkArtwork.Checked));
                 d.GAMEBOX = HttpUtility.HtmlEncode(d.GameBox(chkArtwork.Checked));
                 d.TRAILER = HttpUtility.HtmlEncode(d.GameTrailer(chkTraillers.Checked));
+
+                Log.Text += Environment.NewLine;
+
                 d.Page = (int) Math.Floor((double) index)/buttonCount;
             }
         }
@@ -254,9 +250,9 @@ namespace xk3yDVDMenu
             if (GameISOs.Count > 0)
             {
                 Log.Text += Environment.NewLine;
-
-                TextBox log1 = Log;
-                log1.Text = string.Concat(log1.Text, "             [Title][Genre][Desc][Banner][Cover][Trailer]", Environment.NewLine);
+                //Log.Text += "   [Title][Genre][Desc][Banner][Cover][Trailer]" + Environment.NewLine;
+                //Log.Text += Environment.NewLine;
+                
                 Values.Add("APPPATH", string.Concat(Application.StartupPath, "\\"));
                 Values.Add("PAGEINDEX", 0);
                 Values.Add("PAGE", 1);
@@ -273,10 +269,6 @@ namespace xk3yDVDMenu
                 Values.Add("JumpToGameDetails", "");
                 Values.Add("JumpToSelectThisGame", "");
                 Values.Add("JumpToTrailler", "");
-
-
-                TextBox textBox1 = Log;
-                textBox1.Text = string.Concat(textBox1.Text, "Loading theme", Environment.NewLine);
 
                 string pgc = (new StreamReader(string.Concat(pathToThemes, "PGC.txt"))).ReadToEnd();
                 int buttonCount =
@@ -300,9 +292,9 @@ namespace xk3yDVDMenu
                 string pgcs = "";
 
 
-                ISO[] orderedISO = (from ISO d in GameISOs orderby d.Gamename select d).ToArray();
-                LoadGameDetails(orderedISO, buttonCount);
-                string titleSets = CreateDvdStylerTitleSets(orderedISO, TitlesetLimit, pathToThemes);
+                ISO[] orderedISOs = (from ISO d in GameISOs orderby d.Gamename select d).ToArray();
+                LoadGameDetails(orderedISOs, buttonCount);
+                string titleSets = CreateDvdStylerTitleSets(orderedISOs, TitlesetLimit, pathToThemes);
 
                 for (int i = 0; (double) i < totalPageCount; i++)
                 {
@@ -459,6 +451,7 @@ namespace xk3yDVDMenu
             {
                 MessageBox.Show("No Games found");
                 comboBoxDriveList.Enabled = true;
+                comboBoxThemeList.Enabled = true;
             }
         }
 
@@ -707,14 +700,14 @@ namespace xk3yDVDMenu
 
         private void RecursiveISOSearch(string sDir)
         {
-            foreach (FileInfo f in new DirectoryInfo(sDir).GetFiles("*.ISO"))
+            foreach (FileInfo fileInfo in new DirectoryInfo(sDir).GetFiles("*.ISO"))
             {
                 GameISOs.Add(new ISO
                                    {
-                                       Filename = f.Name,
-                                       Gamename = Regex.Replace(f.Name, ".iso", "", RegexOptions.IgnoreCase),
-                                       Path = f.FullName,
-                                       IsoFile = f,
+                                       Filename = fileInfo.Name,
+                                       Gamename = Regex.Replace(fileInfo.Name, ".iso", "", RegexOptions.IgnoreCase),
+                                       Path = fileInfo.FullName,
+                                       IsoFile = fileInfo,
                                        Log = Log,
                                        ProgressBar1 = progressBar1
                                    });
@@ -735,6 +728,7 @@ namespace xk3yDVDMenu
         private void buttonPrepareXML_Click(object sender, EventArgs e)
         {
             comboBoxDriveList.Enabled = false;
+            comboBoxThemeList.Enabled = false;
             FetchGameDataAndCreateProject();
         }
 
@@ -830,61 +824,6 @@ namespace xk3yDVDMenu
             }
         }
         
-        public static string Wrap(string text, int maxLength)
-        {
-            text = text.Replace("\n", " ");
-            text = text.Replace("\r", " ");
-            text = text.Replace(".", ". ");
-            text = text.Replace(">", "> ");
-            text = text.Replace("\t", " ");
-            text = text.Replace(",", ", ");
-            text = text.Replace(";", "; ");
-            text = text.Replace("", " ");
-            text = text.Replace(" ", " ");
-            string[] strWords = text.Split(' ');
-            int currentLineLength = 0;
-            string strLines = "";
-            string currentLine = "";
-            bool InTag = false;
-            foreach (string currentWord in strWords)
-            {
-                if (currentWord.Length > 0)
-                {
-                    if (currentWord.Substring(0, 1) == "<")
-                        InTag = true;
-                    if (InTag)
-                    {
-                        if (currentLine.EndsWith("."))
-                        {
-                            currentLine += currentWord;
-                        }
-                        else
-                            currentLine += " " + currentWord;
-                        if (currentWord.IndexOf(">", StringComparison.Ordinal) > -1)
-                            InTag = false;
-                    }
-                    else
-                    {
-                        if (currentLineLength + currentWord.Length + 1 < maxLength)
-                        {
-                            currentLine += " " + currentWord;
-                            currentLineLength += (currentWord.Length + 1);
-                        }
-                        else
-                        {
-                            strLines += (currentLine) + "<tbreak/>";
-                            currentLine = currentWord;
-                            currentLineLength = currentWord.Length;
-                        }
-                    }
-                }
-            }
-            if (currentLine != "")
-                strLines += (currentLine) +
-                            "<tbreak/>";
-            return strLines;
-        }
-
         private void Log_TextChanged(object sender, EventArgs e)
         {
             Log.SelectionStart = Log.Text.Length;
@@ -893,12 +832,19 @@ namespace xk3yDVDMenu
 
         private void pictureBoxLogo_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://k3yforums.com/");
+            Process.Start("http://k3yforums.com/");
+        }
+
+        private void pictureBoxLogo_MouseHover(object sender, EventArgs e)
+        {
+            ToolTip toolTip = new ToolTip();
+            toolTip.SetToolTip(this.pictureBoxLogo, "Visit k3y Forums");
         }
 
         private void comboBoxDriveList_DropDown(object sender, EventArgs e)
         {
             // Extend width of list beyond the ComboBox control as needed 
+
             ComboBox senderComboBox = (ComboBox)sender;
             int width = senderComboBox.DropDownWidth;
             Graphics g = senderComboBox.CreateGraphics();
@@ -922,10 +868,31 @@ namespace xk3yDVDMenu
             senderComboBox.DropDownWidth = width;
         }
 
-        private void pictureBoxLogo_MouseHover(object sender, EventArgs e)
+        private void comboBoxThemeList_DropDown(object sender, EventArgs e)
         {
-            ToolTip toolTip = new ToolTip();
-            toolTip.SetToolTip(this.pictureBoxLogo, "Visit k3y Forums");
+            // Extend width of list beyond the ComboBox control as needed 
+
+            ComboBox senderComboBox = (ComboBox)sender;
+            int width = senderComboBox.DropDownWidth;
+            Graphics g = senderComboBox.CreateGraphics();
+            Font font = senderComboBox.Font;
+            int vertScrollBarWidth =
+                (senderComboBox.Items.Count > senderComboBox.MaxDropDownItems)
+                ? SystemInformation.VerticalScrollBarWidth : 0;
+            int newWidth;
+
+            foreach (string s in ((ComboBox)sender).Items)
+            {
+                newWidth = (int)g.MeasureString(s, font).Width
+                    + vertScrollBarWidth;
+
+                if (width < newWidth)
+                {
+                    width = newWidth;
+                }
+            }
+
+            senderComboBox.DropDownWidth = width;
         }
 
     }

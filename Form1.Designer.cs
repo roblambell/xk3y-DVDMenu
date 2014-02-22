@@ -77,7 +77,7 @@
             this.buttonPrepareXML.Name = "buttonPrepareXML";
             this.buttonPrepareXML.Size = new System.Drawing.Size(109, 37);
             this.buttonPrepareXML.TabIndex = 25;
-            this.buttonPrepareXML.Text = "Prepare Games Library";
+            this.buttonPrepareXML.Text = "Prepare Games Library && Project";
             this.buttonPrepareXML.UseVisualStyleBackColor = false;
             this.buttonPrepareXML.Click += new System.EventHandler(this.buttonPrepareXML_Click);
             // 
@@ -117,6 +117,7 @@
             this.comboBoxThemeList.Name = "comboBoxThemeList";
             this.comboBoxThemeList.Size = new System.Drawing.Size(179, 22);
             this.comboBoxThemeList.TabIndex = 5;
+            this.comboBoxThemeList.DropDown += new System.EventHandler(this.comboBoxThemeList_DropDown);
             // 
             // label3
             // 
