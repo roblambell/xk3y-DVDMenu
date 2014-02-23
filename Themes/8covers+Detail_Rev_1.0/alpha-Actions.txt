@@ -1,5 +1,0 @@
-﻿<button id="button{$alphaletter}">
-	<action>{$alphaaction}</action>
-	<filename>text-v2.xml</filename>
-	<parameter highlighted="#00ff00" selected="#ff0000" name="text_fill" normal="#ffffff"/>
-</button>

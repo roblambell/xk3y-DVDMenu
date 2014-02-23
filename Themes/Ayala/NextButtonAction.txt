@@ -1,6 +1,0 @@
-  <button keepAspectRatio="true" id="button99">
-            <action>jump menu {$PAGE + 1};</action>
-              <filename>frame.xml</filename>
-              <parameter highlighted="#0080ff" selected="#0080ff" name="stroke" normal="none"/>
-              <parameter highlighted="none" selected="none" name="fill" normal="none"/>
-            </button>

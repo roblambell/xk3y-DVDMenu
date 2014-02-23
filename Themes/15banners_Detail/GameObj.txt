@@ -1,4 +1,0 @@
-<svg id="s_obj{$PAGEINDEX}">
-	<rect style="fill:none;fill-opacity:1;" width="100%" y="0" height="100%" id="background" x="0"/>
-	<text style="dominant-baseline:middle;fill:#ffffff;fill-opacity:1;font-family:Tahoma;font-size:9;font-style:normal;font-weight:normal;stroke:none;stroke-opacity:1;stroke-width:0;text-anchor:middle;" y="50%" xml:space="preserve" id="text" x="50%">{$GAMEGENRE}</text>
-</svg>

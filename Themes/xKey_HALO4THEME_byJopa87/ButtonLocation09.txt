@@ -1,3 +1,0 @@
-<use xlink:href="#s_button{$PAGEINDEX}"  width="184" y="230" height="41" id="button{$PAGEINDEX}" x="280"/>                
-
-  

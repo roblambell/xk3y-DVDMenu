@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -9,6 +10,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web;
 using System.Windows.Forms;
 using Microsoft.Win32;
@@ -38,8 +40,13 @@ namespace xk3yDVDMenu
         public Dictionary<string, object> Values = new Dictionary<string, object>();
 
         public string WorkingDirectory;
+        public string TitleSets;
         public string PathToDVDStyler;
+        public string PathToTheme;
         public string PathToVLC;
+
+        // Step 1 and 2 are 45% each, Step 3 is 10%
+        public int PercentComplete = 0;
 
         public Form1()
         {
@@ -196,17 +203,20 @@ namespace xk3yDVDMenu
             return strTitleset;
         }
 
-        private void LoadGameDetails(IEnumerable<ISO> orderedISOs, int buttonCount)
+        private void LoadGameDetails(IEnumerable<ISO> orderedISOs, int buttonCount, BackgroundWorker worker)
         {
             int index = 0;
+            int totalGames = orderedISOs.Count();
+
             foreach (ISO gameISO in orderedISOs)
             {
                 index++;
 
-                progressBar1.Value = index / orderedISOs.Count() * 100;
+                PercentComplete = (int)Math.Round(((double)index / totalGames) * 35);
 
-                Log.Text += gameISO.Filename + Environment.NewLine + "  ∟";
-
+                string logOutput = string.Format("[{0} of {1}] ", index, totalGames) + 
+                    gameISO.Filename + Environment.NewLine + "  ∟";
+                
                 gameISO.Gametitle = HttpUtility.HtmlEncode(gameISO.GameTitle(chkArtwork.Checked));
                 gameISO.Gamegenre = HttpUtility.HtmlEncode(gameISO.GameGenre(chkArtwork.Checked));
                 gameISO.Gamedesc = HttpUtility.HtmlEncode(gameISO.GameDesc(chkArtwork.Checked));
@@ -214,21 +224,70 @@ namespace xk3yDVDMenu
                 gameISO.GAMEBOX = HttpUtility.HtmlEncode(gameISO.GameBox(chkArtwork.Checked));
                 gameISO.TRAILER = HttpUtility.HtmlEncode(gameISO.GameTrailer(chkTraillers.Checked));
 
-                Log.Text += Environment.NewLine;
+                logOutput += gameISO.Gametitle.Length > 0 ? "[Title]" : "       ";
+                logOutput += gameISO.Gamegenre.Length > 0 ? "[Genre]" : "       ";
+                logOutput += gameISO.Gamedesc.Length > 0 ? "[Desc]" : "      ";
+                logOutput += gameISO.Gameimage.Length > 0 ? "[Banner]" : "        ";
+                logOutput += gameISO.GAMEBOX.Length > 0 ? "[Cover]" : "       ";
+                logOutput += gameISO.TRAILER.Length > 0 ? "[Trailer]" : "         ";
+
+                logOutput += Environment.NewLine;
+
+                worker.ReportProgress(PercentComplete, logOutput);
 
                 gameISO.Page = (int) Math.Floor((double) index) / buttonCount;
             }
         }
 
-        private void FetchGameDataAndCreateProject()
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
+            // Get the BackgroundWorker that raised this event.
+            BackgroundWorker worker = sender as BackgroundWorker;
 
-            Values.Clear();
+            FetchGameDataAndCreateProject(worker, e);
+        }
 
-            string pathToTheme = Application.StartupPath + "\\themes\\" + comboBoxThemeList.SelectedItem + "\\";
+        private void backgroundWorker1_ProgressChanged(object sender,
+            ProgressChangedEventArgs e)
+        {
+            progressBar1.Value = e.ProgressPercentage;
+            Log.Text += e.UserState as String;
+        }
 
-            // Selected item string expected as "(Z:)..."
-            Values.Add("DRIVE", comboBoxDriveList.SelectedItem.ToString().Substring(1, 2) + "\\");
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (GameISOs.Count > 0)
+            {
+                buttonBuildProject.Enabled = false;
+                buttonTranscodeMenu.Enabled = true;
+                buttonCopyToDrive.Enabled = false;
+                
+                buttonTranscodeMenu.Focus();
+
+                Log.Text += Environment.NewLine;
+                Log.Text += "Step 1 of 3 Complete." + Environment.NewLine + Environment.NewLine;
+
+                progressBar1.Value = 45;
+            }
+            else
+            {
+                comboBoxDriveList.Enabled = true;
+                comboBoxThemeList.Enabled = true;
+
+                chkArtwork.Enabled = true;
+                chkTraillers.Enabled = true;
+                buttonBuildProject.Enabled = true;
+
+                MessageBox.Show("No Games found.");
+                comboBoxDriveList.Enabled = true;
+                comboBoxThemeList.Enabled = true;
+
+                progressBar1.Value = 0;
+            }
+        }
+
+        private void FetchGameDataAndCreateProject(BackgroundWorker worker, DoWorkEventArgs e)
+        {
 
             // Copy media files to WorkingDirectory
             if (Directory.Exists(WorkingDirectory + "media"))
@@ -237,6 +296,14 @@ namespace xk3yDVDMenu
             }
             new Microsoft.VisualBasic.Devices.Computer().
                 FileSystem.CopyDirectory(Application.StartupPath + "\\media", WorkingDirectory + "media");
+
+            // Copy theme to WorkingDirectory
+            if (Directory.Exists(WorkingDirectory + "Themes"))
+            {
+                Directory.Delete(WorkingDirectory + "Themes", true);
+            }
+            new Microsoft.VisualBasic.Devices.Computer().
+                FileSystem.CopyDirectory(Application.StartupPath + "\\Themes\\" + Values["THEME"], PathToTheme);
 
             // Create cache folder
             if (!Directory.Exists(WorkingDirectory + "cache"))
@@ -251,12 +318,13 @@ namespace xk3yDVDMenu
                 RecursiveISOSearch(string.Concat(Values["DRIVE"], "games\\"));
             }
 
-            Log.Text += "Found " + GameISOs.Count + (GameISOs.Count == 1 ? " ISO." : " ISOs.") + Environment.NewLine;
+            worker.ReportProgress(PercentComplete, "Found " + GameISOs.Count + (GameISOs.Count == 1 ? " ISO." : " ISOs.") + Environment.NewLine);
 
             if (GameISOs.Count > 0)
             {
-                Log.Text += Environment.NewLine;
-                //Log.Text += "   [Title][Genre][Desc][Banner][Cover][Trailer]" + Environment.NewLine;
+                worker.ReportProgress(PercentComplete, Environment.NewLine + 
+                    "Retrieving Game Info & Media..." + 
+                    Environment.NewLine + Environment.NewLine);
 
                 Values.Add("APPPATH", WorkingDirectory);
                 Values.Add("PAGEINDEX", 0);
@@ -275,31 +343,34 @@ namespace xk3yDVDMenu
                 Values.Add("JumpToSelectThisGame", "");
                 Values.Add("JumpToTrailler", "");
 
-                string pgc = (new StreamReader(pathToTheme + "PGC.txt")).ReadToEnd();
+                string pgc = (new StreamReader(PathToTheme + "PGC.txt")).ReadToEnd();
                 int buttonCount =
-                    (from d in new DirectoryInfo(pathToTheme).GetFiles("ButtonLocation*.txt") select d).Count();
+                    (from d in new DirectoryInfo(PathToTheme).GetFiles("ButtonLocation*.txt") select d).Count();
                 double totalPages = Math.Ceiling(GameISOs.Count/(double) buttonCount);
                 Values.Add("TotalPageCount", totalPages);
-                string buttonDef = (new StreamReader(pathToTheme + "ButtonStyle.txt")).ReadToEnd();
-                string objDef = (new StreamReader(pathToTheme + "GAMEOBJ.txt")).ReadToEnd();
-                string butActions = (new StreamReader(pathToTheme + "ButtonActions.txt")).ReadToEnd();
-                string objFiles = (new StreamReader(pathToTheme + "OBJFiles.txt")).ReadToEnd();
-                string prevDef = (new StreamReader(pathToTheme + "PrevButtonStyle.txt")).ReadToEnd();
-                string prevLoc = (new StreamReader(pathToTheme + "PrevButtonLocation.txt")).ReadToEnd();
-                string prevAct = (new StreamReader(pathToTheme + "PrevButtonAction.txt")).ReadToEnd();
-                string nextDef = (new StreamReader(pathToTheme + "NextButtonStyle.txt")).ReadToEnd();
-                string nextLoc = (new StreamReader(pathToTheme + "NextButtonLocation.txt")).ReadToEnd();
-                string nextAct = (new StreamReader(pathToTheme + "NextButtonAction.txt")).ReadToEnd();
-                string alphaDef = (new StreamReader(pathToTheme + "alphaButtonStyle.txt")).ReadToEnd();
-                string alphaLoc = (new StreamReader(pathToTheme + "alphaButtonLocation.txt")).ReadToEnd();
-                string alphaAct = (new StreamReader(pathToTheme + "alphaButtonAction.txt")).ReadToEnd();
+                string buttonDef = (new StreamReader(PathToTheme + "ButtonStyle.txt")).ReadToEnd();
+                string objDef = (new StreamReader(PathToTheme + "GAMEOBJ.txt")).ReadToEnd();
+                string butActions = (new StreamReader(PathToTheme + "ButtonActions.txt")).ReadToEnd();
+                string objFiles = (new StreamReader(PathToTheme + "OBJFiles.txt")).ReadToEnd();
+                string prevDef = (new StreamReader(PathToTheme + "PrevButtonStyle.txt")).ReadToEnd();
+                string prevLoc = (new StreamReader(PathToTheme + "PrevButtonLocation.txt")).ReadToEnd();
+                string prevAct = (new StreamReader(PathToTheme + "PrevButtonAction.txt")).ReadToEnd();
+                string nextDef = (new StreamReader(PathToTheme + "NextButtonStyle.txt")).ReadToEnd();
+                string nextLoc = (new StreamReader(PathToTheme + "NextButtonLocation.txt")).ReadToEnd();
+                string nextAct = (new StreamReader(PathToTheme + "NextButtonAction.txt")).ReadToEnd();
+                string alphaDef = (new StreamReader(PathToTheme + "alphaButtonStyle.txt")).ReadToEnd();
+                string alphaLoc = (new StreamReader(PathToTheme + "alphaButtonLocation.txt")).ReadToEnd();
+                string alphaAct = (new StreamReader(PathToTheme + "alphaButtonAction.txt")).ReadToEnd();
 
                 string pgcs = "";
 
-
                 ISO[] orderedISOs = (from ISO d in GameISOs orderby d.Gamename select d).ToArray();
-                LoadGameDetails(orderedISOs, buttonCount);
-                string titleSets = CreateDvdStylerTitleSets(orderedISOs, TitlesetLimit, pathToTheme);
+
+                LoadGameDetails(orderedISOs, buttonCount, worker);
+
+                worker.ReportProgress(35, Environment.NewLine + "Creating Page Definitions..." + Environment.NewLine);
+
+                TitleSets = CreateDvdStylerTitleSets(orderedISOs, TitlesetLimit, PathToTheme);
 
                 for (int currentPage = 0; (double)currentPage < totalPages; currentPage++)
                 {
@@ -330,10 +401,10 @@ namespace xk3yDVDMenu
                         Values["JumpToSelectThisGame"] = d.JumpToSelectThisGame;
                         Values["JumpToTrailler"] = d.JumpToTrailler;
 
-                        string pathToobjectLocationFile = pathToTheme + "ObjLocation" + Values["PAGEINDEX"] + ".txt";
+                        string pathToobjectLocationFile = PathToTheme + "ObjLocation" + Values["PAGEINDEX"] + ".txt";
                         string objectLocation = (new StreamReader(pathToobjectLocationFile)).ReadToEnd();
                         
-                        string pathToButtonLocationsFile = pathToTheme + "ButtonLocation" + Values["PAGEINDEX"] + ".txt";
+                        string pathToButtonLocationsFile = PathToTheme + "ButtonLocation" + Values["PAGEINDEX"] + ".txt";
                         string buttonLocations = (new StreamReader(pathToButtonLocationsFile)).ReadToEnd();
 
                         Values["TRAILER"] = d.TRAILER;
@@ -354,7 +425,7 @@ namespace xk3yDVDMenu
                         objFilestxt += ThemeManager.ReplaceVals(objFiles, Values);
                     }
 
-                    if (File.Exists(pathToTheme + "alpha.txt"))
+                    if (File.Exists(PathToTheme + "alpha.txt"))
                     {
                         defs += ThemeManager.ReplaceVals(alphaDef, Values);
                         locationsBut += ThemeManager.ReplaceVals(alphaLoc, Values);
@@ -383,15 +454,15 @@ namespace xk3yDVDMenu
 
                     pgcs += ThemeManager.ReplaceVals(pgc, Values);
                 }
-                if (File.Exists(pathToTheme + "alpha.txt"))
+                if (File.Exists(PathToTheme + "alpha.txt"))
                 {
                     string allactions = "";
                     Values.Add("alphaletter", "A");
                     Values.Add("alphaaction", "");
                     Values.Add("alphaActions", "");
 
-                    string alpha = (new StreamReader(pathToTheme + "alpha.txt")).ReadToEnd();
-                    string alphaActions = (new StreamReader(pathToTheme + "alpha-Actions.txt")).ReadToEnd();
+                    string alpha = (new StreamReader(PathToTheme + "alpha.txt")).ReadToEnd();
+                    string alphaActions = (new StreamReader(PathToTheme + "alpha-Actions.txt")).ReadToEnd();
                     foreach (var letterGroup in AlphaGroups)
                     {
                         int PreviousFound = 0;
@@ -414,9 +485,11 @@ namespace xk3yDVDMenu
                     pgcs += ThemeManager.ReplaceVals(alpha, Values);
                 }
                 Values.Add("PGCS", pgcs);
-                Values.Add("TITLESETS", titleSets);
-                string mainfile = (new StreamReader(pathToTheme + "Main.txt")).ReadToEnd();
+                Values.Add("TITLESETS", TitleSets);
+                string mainfile = (new StreamReader(PathToTheme + "Main.txt")).ReadToEnd();
                 mainfile = ThemeManager.ReplaceVals(mainfile, Values);
+
+                worker.ReportProgress(40, "Creating Project File..." + Environment.NewLine);
 
                 // Write our project file (XML)
                 var projectFile = new StreamWriter(WorkingDirectory + "\\project.xml", false);
@@ -434,26 +507,6 @@ namespace xk3yDVDMenu
                     num1++;
                 }
                 projectFile.Close();
-
-                // Update UI
-                buttonBuildProject.Enabled = false;
-                buttonTranscodeMenu.Enabled = true;
-                buttonCopyToDrive.Enabled = false;
-
-                chkArtwork.Enabled = false;
-                chkTraillers.Enabled = false;
-
-                buttonTranscodeMenu.Focus();
-
-                Log.Text += Environment.NewLine;
-                Log.Text += "Step 1 of 3 Complete." + Environment.NewLine + Environment.NewLine;
-
-            }
-            else
-            {
-                MessageBox.Show("No Games found.");
-                comboBoxDriveList.Enabled = true;
-                comboBoxThemeList.Enabled = true;
             }
         }
 
@@ -730,7 +783,20 @@ namespace xk3yDVDMenu
         {
             comboBoxDriveList.Enabled = false;
             comboBoxThemeList.Enabled = false;
-            FetchGameDataAndCreateProject();
+
+            chkArtwork.Enabled = false;
+            chkTraillers.Enabled = false;
+            buttonBuildProject.Enabled = false;
+
+            Values.Clear();
+
+            Values.Add("THEME", comboBoxThemeList.SelectedItem);
+            PathToTheme = WorkingDirectory + "\\Themes\\" + Values["THEME"] + "\\";
+
+            // Selected item string expected as "(Z:)..."
+            Values.Add("DRIVE", comboBoxDriveList.SelectedItem.ToString().Substring(1, 2) + "\\");
+
+            backgroundWorker1.RunWorkerAsync();
         }
 
         private void buttonTranscodeMenu_Click(object sender, EventArgs e)
@@ -778,6 +844,8 @@ namespace xk3yDVDMenu
                     Log.Text += Environment.NewLine;
                     Log.Text += "Step 2 of 3 Complete." + Environment.NewLine + Environment.NewLine;
 
+                    progressBar1.Value = 90;
+
                     // Preview before copying to drive
                     if (isVLCInstalled())
                     {
@@ -808,6 +876,8 @@ namespace xk3yDVDMenu
                 File.Copy(WorkingDirectory + "dvd.iso", Values["DRIVE"] + "games\\menu.xso", true);
                 File.Copy(WorkingDirectory + "dvd.xsk", Values["DRIVE"] + "games\\menu.xsk", true);
                 Log.Text += "Step 3 of 3 Complete." + Environment.NewLine;
+
+                progressBar1.Value = 100;
 
                 buttonCopyToDrive.Enabled = false;
 

@@ -1,4 +1,0 @@
-<svg id="s_button{$PAGEINDEX}">
-    <image xlink:href="{$GAMEBOX}" width="100%" height="100%" style="opacity:1;" id="image" y="2%" x="2%"/>
-	<rect width="100%" height="100%" style="fill:none;stroke:none;stroke-width:1;" id="rect" y="2%" rx="0" ry="0" x="2%"/>
-</svg>

@@ -121,7 +121,6 @@ namespace xk3yDVDMenu
                                     waffle.Banner = data;
                                     //TextBox textBox1 = Log;
                                     //textBox1.Text = string.Concat(textBox1.Text, "Banner saved to XML File", Path, Environment.NewLine);
-                                    Log.Text += "[Banner]";
                                     return GameBanner(true);
                                 }
                             }
@@ -133,12 +132,10 @@ namespace xk3yDVDMenu
                         {
                             //Log.Text = string.Concat(Log.Text, "Banner Download Failed:", Path, Environment.NewLine);
                             //Log.Text = string.Concat(Log.Text, "No banner found:", Path, Environment.NewLine);
-                            Log.Text += "        ";
                             return "media\\blank-banner.png";
                         }
                     }
                     //Log.Text = string.Concat(Log.Text, "No banner found:", Path, Environment.NewLine);
-                    Log.Text += "        ";
                     return "media\\blank-banner.png";
                 }
                 else
@@ -152,7 +149,6 @@ namespace xk3yDVDMenu
                     binWritter.Close();
 
                     //Log.Text = string.Concat(Log.Text, "Banner found in XML:", Path, Environment.NewLine);
-                    Log.Text += "[Banner]";
                     return string.Concat(WorkingDirectory, "cache\\",
                                          Filename.Replace(IsoFile.Extension, "-banner.png"));
                 }
@@ -160,7 +156,6 @@ namespace xk3yDVDMenu
             else
             {
                 //Log.Text = string.Concat(Log.Text, "Local Banner Found:", Path, Environment.NewLine);
-                Log.Text += "[Banner]";
                 return string.Concat(Path.Replace(IsoFile.Extension, ""), "-banner.png");
             }
         }
@@ -193,7 +188,6 @@ namespace xk3yDVDMenu
                                     waffle.BoxArt = data;
 
                                     //Log.Text = string.Concat(Log.Text, "Cover saved to XML", Path, Environment.NewLine);
-                                    Log.Text += "[Cover]";
                                     return GameBox(true);
                                 }
                                 {
@@ -208,12 +202,10 @@ namespace xk3yDVDMenu
                         {
                             //Log.Text = string.Concat(Log.Text, "Download Failed", Path, Environment.NewLine);
                             //Log.Text = string.Concat(Log.Text, "No Cover found", Path, Environment.NewLine);
-                            Log.Text += "       ";
                             return "media\\blank-cover.jpg";
                         }
                     }
                     //Log.Text = string.Concat(Log.Text, "No Cover found", Path, Environment.NewLine);
-                    Log.Text += "       ";
                     return "media\\blank-cover.jpg";
                 }
                 {
@@ -225,7 +217,6 @@ namespace xk3yDVDMenu
                     binWritter.Flush();
                     binWritter.Close();
                     //Log.Text = string.Concat(Log.Text, "Found in XML", Path, Environment.NewLine);
-                    Log.Text += "[Cover]";
                     return string.Concat(WorkingDirectory, "cache\\",
                                          Filename.Replace(IsoFile.Extension, "-cover.jpg"));
                 }
@@ -236,7 +227,6 @@ namespace xk3yDVDMenu
                     return string.Concat(Path.Replace(IsoFile.Extension, ""), "-cover.png");
                 }
                 //Log.Text = string.Concat(Log.Text, "Local cover found", Path, Environment.NewLine);
-                Log.Text += "[Cover]";
                 return string.Concat(Path.Replace(IsoFile.Extension, ""), "-cover.jpg");
             }
         }
@@ -271,7 +261,6 @@ namespace xk3yDVDMenu
                             waffleXMLFile.Summary = desc;
 
                             //Log.Text = string.Concat(Log.Text, "Found", Path, Environment.NewLine);
-                            Log.Text += "[Desc]";
                             return desc;
                         }
                     }
@@ -281,12 +270,10 @@ namespace xk3yDVDMenu
                     }
                 }
                 //Log.Text = string.Concat(Log.Text, "Not Found", Path, Environment.NewLine);
-                Log.Text += "      ";
                 return "";
             }
             {
                 //Log.Text = string.Concat(Log.Text, "In XML", Path, Environment.NewLine);
-                Log.Text += "[Desc]";
                 return waffleXMLFile.Summary;
             }
         }
@@ -322,7 +309,6 @@ namespace xk3yDVDMenu
                                 waffle.InfoItem("Genre", genre);
 
                                 //Log.Text = string.Concat(Log.Text, "Found", Path, Environment.NewLine);
-                                Log.Text += "[Genre]";
                                 return genre;
                             }
                         }
@@ -333,17 +319,14 @@ namespace xk3yDVDMenu
                     }
                     catch (Exception)
                     {
-                        Log.Text += "       ";
                         return "";
                     }
                 }
                 //Log.Text = string.Concat(Log.Text, "No Genre Found", Path, Environment.NewLine);
-                Log.Text += "       ";
                 return "";
             }
             {
                 //Log.Text = string.Concat(Log.Text, "Found in XML file", Path, Environment.NewLine);
-                Log.Text += "[Genre]";
                 return waffle.InfoItem("Genre");
             }
         }
@@ -378,7 +361,6 @@ namespace xk3yDVDMenu
                                 if (title != null) title = title.Replace("&", "&amp;");
                                 waffle.Title = title;
 
-                                Log.Text += "[Title]";
                                 return title;
                             }
                         }
@@ -389,18 +371,15 @@ namespace xk3yDVDMenu
                     }
                     catch (Exception)
                     {
-                        Log.Text += "       ";
                         return Gamename;
                     }
                 }
                 //Log.Text = string.Concat(Log.Text, "Using filename", Path, Environment.NewLine);
-                Log.Text += "[Title]";
                 return Gamename;
             }
             else
             {
                 //Log.Text = string.Concat(Log.Text, "Found in XML", Path, Environment.NewLine);
-                Log.Text += "[Title]";
                 return waffle.Title;
             }
         }
@@ -442,7 +421,6 @@ namespace xk3yDVDMenu
                                 wc.DownloadFile(strVideoUrl, Path.Replace(IsoFile.Extension, ".wmv"), ProgressBar1);
                                 string str = Path.Replace(IsoFile.Extension, ".wmv");
 
-                                Log.Text += "[Trailer]";
                                 return str;
                             }
                         }
@@ -454,13 +432,11 @@ namespace xk3yDVDMenu
                     }
                 }
                 //Log.Text = string.Concat(Log.Text, "Not Found", Path, Environment.NewLine);
-                Log.Text += "         ";
                 return "media\\blank.mpg";
             }
             else
             {
                 //Log.Text = string.Concat(Log.Text, "Local", Path, Environment.NewLine);
-                Log.Text += "[Trailer]";
                 return Path.Replace(IsoFile.Extension, ".wma");
             }
         }

@@ -42,6 +42,7 @@
             this.chkTraillers = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
@@ -140,6 +141,7 @@
             this.Log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.Log.Size = new System.Drawing.Size(339, 145);
             this.Log.TabIndex = 40;
+            this.Log.TabStop = false;
             this.Log.TextChanged += new System.EventHandler(this.Log_TextChanged);
             this.Log.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Log_KeyDown);
             // 
@@ -202,6 +204,13 @@
             this.pictureBoxLogo.Click += new System.EventHandler(this.pictureBoxLogo_Click);
             this.pictureBoxLogo.MouseHover += new System.EventHandler(this.pictureBoxLogo_MouseHover);
             // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.WorkerReportsProgress = true;
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -224,7 +233,6 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "xk3y DVDMenu Tool";
-            this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
             this.Load += new System.EventHandler(this.Form1Load);
             this.groupBox1.ResumeLayout(false);
@@ -249,6 +257,7 @@
         private System.Windows.Forms.CheckBox chkTraillers;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.PictureBox pictureBoxLogo;
+        public System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 
