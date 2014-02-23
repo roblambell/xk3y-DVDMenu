@@ -100,10 +100,10 @@ namespace xk3yDVDMenu
                     // Preselect drive
                     // We could filter on drives with `games` folder, but, I don't
                     // like the idea of scanning all the drives..
-                    if (drive.DriveType == DriveType.Removable)
+                    if (drive.DriveType == DriveType.Removable || drive.DriveType == DriveType.Network)
                     {
                         // Any removable drive is better than nothing.
-                        if (selectedIndex == 0)
+                        if (selectedIndex == 0 && drive.DriveType == DriveType.Removable)
                         {
                             selectedIndex = currentIndex;
                         }
