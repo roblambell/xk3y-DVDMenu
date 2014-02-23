@@ -5,7 +5,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Windows.Forms;
 using XkeyBrew.Utils.IsoGameReader;
 
 namespace xk3yDVDMenu

@@ -11,7 +11,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Web;
 using System.Windows.Forms;
 using Microsoft.Win32;
@@ -48,7 +47,10 @@ namespace xk3yDVDMenu
 
         ToolTip toolTip = new ToolTip();
 
-        // Step 1 and 2 are 45% each, Step 3 is 10%
+        // 30 Games & Data loaded
+        // 40 Page Templates created
+        // 90 Transcoding complete
+        // 100 Copied to drive
         public int PercentComplete = 0;
 
         public Form1()
@@ -218,7 +220,11 @@ namespace xk3yDVDMenu
             {
                 index++;
 
-                PercentComplete = (int)Math.Round(((double)index / totalGames) * 35);
+                // 30 Games & Data loaded
+                // 40 Page Templates created
+                // 90 Transcoding complete
+                // 100 Copied to drive
+                PercentComplete = (int)Math.Round(((double)index / totalGames) * 30);
 
                 string logOutput = string.Format("[{0} of {1}] ", index, totalGames) + 
                     gameISO.Filename + Environment.NewLine + "  ∟";
@@ -273,7 +279,11 @@ namespace xk3yDVDMenu
                 Log.Text += Environment.NewLine;
                 Log.Text += "Step 1 of 3 Complete." + Environment.NewLine + Environment.NewLine;
 
-                progressBar1.Value = 45;
+                // 30 Games & Data loaded
+                // 40 Page Templates created
+                // 90 Transcoding complete
+                // 100 Copied to drive
+                progressBar1.Value = 40;
             }
             else
             {
@@ -391,7 +401,7 @@ namespace xk3yDVDMenu
                         orderedISOs = (ISO[])serializer.Deserialize(stream);
                     }
 
-                    worker.ReportProgress(35, "Using Cached Game Data..." + Environment.NewLine + Environment.NewLine);
+                    worker.ReportProgress(PercentComplete, "Using Cached Game Data..." + Environment.NewLine + Environment.NewLine);
 
                     int index = 0;
                     int totalGames = orderedISOs.Count();
@@ -400,7 +410,11 @@ namespace xk3yDVDMenu
                     {
                         index++;
 
-                        PercentComplete = (int)Math.Round(((double)index / totalGames) * 35);
+                        // 30 Games & Data loaded
+                        // 40 Page Templates created
+                        // 90 Transcoding complete
+                        // 100 Copied to drive
+                        PercentComplete = (int)Math.Round(((double)index / totalGames) * 30);
 
                         string logOutput = string.Format("[{0} of {1}] ", index, totalGames) +
                             gameISO.Filename + Environment.NewLine + "  ∟";
@@ -444,7 +458,7 @@ namespace xk3yDVDMenu
                     File.Move(WorkingDirectory + "current-results.dat", WorkingDirectory + "cached-results.dat");
                 }
 
-                worker.ReportProgress(35, Environment.NewLine + "Creating Templates (this can take a while)..." + Environment.NewLine);
+                worker.ReportProgress(PercentComplete, Environment.NewLine + "Creating Templates (this can take a while)..." + Environment.NewLine);
 
                 TitleSets = CreateDVDStylerTitleSets(orderedISOs, TitlesetLimit, worker);
 
@@ -566,7 +580,12 @@ namespace xk3yDVDMenu
                 string mainfile = (new StreamReader(PathToTheme + "Main.txt")).ReadToEnd();
                 mainfile = ThemeManager.ReplaceVals(mainfile, Values);
 
-                worker.ReportProgress(40, "Creating Project File..." + Environment.NewLine);
+                // 30 Games & Data loaded
+                // 40 Page Templates created
+                // 90 Transcoding complete
+                // 100 Copied to drive
+                PercentComplete = 40;
+                worker.ReportProgress(PercentComplete, "Saving Project File..." + Environment.NewLine);
 
                 // Write our project file (XML)
                 var projectFile = new StreamWriter(WorkingDirectory + "\\project.xml", false);
@@ -931,6 +950,10 @@ namespace xk3yDVDMenu
                     Log.Text += Environment.NewLine;
                     Log.Text += "Step 2 of 3 Complete." + Environment.NewLine + Environment.NewLine;
 
+                    // 30 Games & Data loaded
+                    // 40 Page Templates created
+                    // 90 Transcoding complete
+                    // 100 Copied to drive
                     progressBar1.Value = 90;
 
                     // Preview before copying to drive
@@ -961,6 +984,10 @@ namespace xk3yDVDMenu
                 File.Copy(WorkingDirectory + "dvd.xsk", Values["DRIVE"] + "games\\menu.xsk", true);
                 Log.Text += "Step 3 of 3 Complete." + Environment.NewLine;
 
+                // 30 Games & Data loaded
+                // 40 Page Templates created
+                // 90 Transcoding complete
+                // 100 Copied to drive
                 progressBar1.Value = 100;
 
                 buttonCopyToDrive.Enabled = false;

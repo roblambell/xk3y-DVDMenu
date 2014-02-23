@@ -12,6 +12,5 @@
         string DownloadProp(string property ,string gameID, string filename);
         string AddonName { get; }
     
-
     }
 }

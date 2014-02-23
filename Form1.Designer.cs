@@ -44,8 +44,8 @@
             this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.chkUseCache = new System.Windows.Forms.CheckBox();
             this.chkPreview = new System.Windows.Forms.CheckBox();
+            this.chkUseCache = new System.Windows.Forms.CheckBox();
             label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
@@ -226,6 +226,17 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Build Settings";
             // 
+            // chkPreview
+            // 
+            this.chkPreview.AutoSize = true;
+            this.chkPreview.Location = new System.Drawing.Point(106, 19);
+            this.chkPreview.Name = "chkPreview";
+            this.chkPreview.Size = new System.Drawing.Size(64, 17);
+            this.chkPreview.TabIndex = 1;
+            this.chkPreview.Text = "Preview";
+            this.chkPreview.UseVisualStyleBackColor = true;
+            this.chkPreview.MouseHover += new System.EventHandler(this.chkPreview_MouseHover);
+            // 
             // chkUseCache
             // 
             this.chkUseCache.AutoSize = true;
@@ -239,22 +250,11 @@
             this.chkUseCache.UseVisualStyleBackColor = true;
             this.chkUseCache.MouseHover += new System.EventHandler(this.chkUseCache_MouseHover);
             // 
-            // chkPreview
-            // 
-            this.chkPreview.AutoSize = true;
-            this.chkPreview.Location = new System.Drawing.Point(106, 19);
-            this.chkPreview.Name = "chkPreview";
-            this.chkPreview.Size = new System.Drawing.Size(64, 17);
-            this.chkPreview.TabIndex = 1;
-            this.chkPreview.Text = "Preview";
-            this.chkPreview.UseVisualStyleBackColor = true;
-            this.chkPreview.MouseHover += new System.EventHandler(this.chkPreview_MouseHover);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(353, 341);
+            this.ClientSize = new System.Drawing.Size(357, 341);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.pictureBoxLogo);
             this.Controls.Add(this.groupBox1);
