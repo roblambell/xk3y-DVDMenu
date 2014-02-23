@@ -1,0 +1,5 @@
+  <svg id="s_button99">
+                  <image xlink:href="Themes\Ayala\Next.png" width="80%" height="80%" style="opacity:1;" id="image" y="10%" x="10%"/>
+                  <rect width="80%" height="80%" style="fill:none;stroke:none;stroke-width:2;" id="rect" y="10%" rx="10" ry="10" x="10%"/>
+                </svg>
+              

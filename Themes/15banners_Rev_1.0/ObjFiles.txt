@@ -1,0 +1,3 @@
+ <object defSize="true" id="obj{$PAGEINDEX}">
+              <filename>text.xml</filename>
+            </object>

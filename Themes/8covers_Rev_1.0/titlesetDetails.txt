@@ -1,0 +1,16 @@
+﻿<pgc>
+	<vob>
+		<menu rememberLastButton="-1" aspectRatio="2" videoFormat="PAL">
+			<button displayVideoFrame="false" keepAspectRatio="true" id="button03">
+				<action>
+					jump vmgm menu {$PAGE};
+				</action>
+				
+				<filename>frame.xml</filename>
+				
+				<parameter highlighted="#008000" selected="#008000" name="stroke" normal="none"/>
+				<parameter highlighted="none" selected="none" name="fill" normal="none"/>
+			</button>
+		</menu>
+	</vob>
+</pgc>

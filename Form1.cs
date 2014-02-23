@@ -6,13 +6,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Windows.Forms;
-using Ini;
 using Microsoft.Win32;
 using XkeyBrew.Utils.DvdReader;
 
@@ -38,17 +36,14 @@ namespace xk3yDVDMenu
         public ArrayList GameISOs = new ArrayList();
         public Dictionary<string, object> Values = new Dictionary<string, object>();
 
-        public string PathToDVDStyler;
         public string WorkingDirectory;
+        public string PathToDVDStyler;
+        public string PathToVLC;
 
         public Form1()
         {
             InitializeComponent();
         }
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern bool DefineDosDevice(int flags, string devname, string path);
-
 
         private void LoadDisks()
         {
@@ -121,7 +116,6 @@ namespace xk3yDVDMenu
             comboBoxDriveList.SelectedIndex = selectedIndex;
 
         }
-
 
         private string CreateDvdStylerTitleSets(IEnumerable<ISO> orderedIsos, int titlesetIsoLimit, string themepath)
         {
@@ -204,45 +198,40 @@ namespace xk3yDVDMenu
         private void LoadGameDetails(IEnumerable<ISO> orderedISOs, int buttonCount)
         {
             int index = 0;
-            foreach (ISO d in orderedISOs)
+            foreach (ISO gameISO in orderedISOs)
             {
                 index++;
 
-                Log.Text += d.Filename + Environment.NewLine + "  ∟";
+                Log.Text += gameISO.Filename + Environment.NewLine + "  ∟";
 
-                d.Gametitle = HttpUtility.HtmlEncode(d.GameTitle(chkArtwork.Checked));
-                d.Gamegenre = HttpUtility.HtmlEncode(d.GameGenre(chkArtwork.Checked));
-                d.Gamedesc = HttpUtility.HtmlEncode(d.GameDesc(chkArtwork.Checked));
-                d.Gameimage = HttpUtility.HtmlEncode(d.GameBanner(chkArtwork.Checked));
-                d.GAMEBOX = HttpUtility.HtmlEncode(d.GameBox(chkArtwork.Checked));
-                d.TRAILER = HttpUtility.HtmlEncode(d.GameTrailer(chkTraillers.Checked));
+                gameISO.Gametitle = HttpUtility.HtmlEncode(gameISO.GameTitle(chkArtwork.Checked));
+                gameISO.Gamegenre = HttpUtility.HtmlEncode(gameISO.GameGenre(chkArtwork.Checked));
+                gameISO.Gamedesc = HttpUtility.HtmlEncode(gameISO.GameDesc(chkArtwork.Checked));
+                gameISO.Gameimage = HttpUtility.HtmlEncode(gameISO.GameBanner(chkArtwork.Checked));
+                gameISO.GAMEBOX = HttpUtility.HtmlEncode(gameISO.GameBox(chkArtwork.Checked));
+                gameISO.TRAILER = HttpUtility.HtmlEncode(gameISO.GameTrailer(chkTraillers.Checked));
 
                 Log.Text += Environment.NewLine;
 
-                d.Page = (int) Math.Floor((double) index)/buttonCount;
+                gameISO.Page = (int) Math.Floor((double) index) / buttonCount;
             }
         }
 
         private void FetchGameDataAndCreateProject()
         {
-            TextBox log = Log;
 
             Values.Clear();
-            var startupPath = new object[4];
-            startupPath[0] = Application.StartupPath;
-            startupPath[1] = "\\themes\\";
-            startupPath[2] = comboBoxThemeList.SelectedItem;
-            startupPath[3] = "\\";
 
-            string pathToThemes = string.Concat(startupPath);
+            string pathToTheme = Application.StartupPath + "\\themes\\" + comboBoxThemeList.SelectedItem + "\\";
 
-            Values.Add("DRIVE", comboBoxDriveList.SelectedItem.ToString().Substring(1, 2));
+            // Selected item string expected as "(Z:)..."
+            Values.Add("DRIVE", comboBoxDriveList.SelectedItem.ToString().Substring(1, 2) + "\\");
 
             GameISOs.Clear();
-            if (Directory.Exists(string.Concat(Values["DRIVE"], "\\games\\")))
+            if (Directory.Exists(string.Concat(Values["DRIVE"], "games\\")))
             {
                 // Populates ArrIsolist
-                RecursiveISOSearch(string.Concat(Values["DRIVE"], "\\games\\"));
+                RecursiveISOSearch(string.Concat(Values["DRIVE"], "games\\"));
             }
 
             Log.Text += "Found " + GameISOs.Count + (GameISOs.Count == 1 ? " ISO." : " ISOs.") + Environment.NewLine;
@@ -251,9 +240,8 @@ namespace xk3yDVDMenu
             {
                 Log.Text += Environment.NewLine;
                 //Log.Text += "   [Title][Genre][Desc][Banner][Cover][Trailer]" + Environment.NewLine;
-                //Log.Text += Environment.NewLine;
-                
-                Values.Add("APPPATH", string.Concat(Application.StartupPath, "\\"));
+
+                Values.Add("APPPATH", WorkingDirectory);
                 Values.Add("PAGEINDEX", 0);
                 Values.Add("PAGE", 1);
                 Values.Add("ISOID", 0);
@@ -270,33 +258,33 @@ namespace xk3yDVDMenu
                 Values.Add("JumpToSelectThisGame", "");
                 Values.Add("JumpToTrailler", "");
 
-                string pgc = (new StreamReader(string.Concat(pathToThemes, "PGC.txt"))).ReadToEnd();
+                string pgc = (new StreamReader(pathToTheme + "PGC.txt")).ReadToEnd();
                 int buttonCount =
-                    (from d in new DirectoryInfo(pathToThemes).GetFiles("ButtonLocation*.txt") select d).Count();
-                double totalPageCount = Math.Ceiling(GameISOs.Count/(double) buttonCount);
-                Values.Add("TotalPageCount", totalPageCount);
-                string buttonDef = (new StreamReader(string.Concat(pathToThemes, "ButtonStyle.txt"))).ReadToEnd();
-                string objDef = (new StreamReader(string.Concat(pathToThemes, "GAMEOBJ.txt"))).ReadToEnd();
-                string butActions = (new StreamReader(string.Concat(pathToThemes, "ButtonActions.txt"))).ReadToEnd();
-                string objFiles = (new StreamReader(string.Concat(pathToThemes, "OBJFiles.txt"))).ReadToEnd();
-                string prevDef = (new StreamReader(string.Concat(pathToThemes, "PrevButtonStyle.txt"))).ReadToEnd();
-                string prevLoc = (new StreamReader(string.Concat(pathToThemes, "PrevButtonLocation.txt"))).ReadToEnd();
-                string prevAct = (new StreamReader(string.Concat(pathToThemes, "PrevButtonAction.txt"))).ReadToEnd();
-                string nextDef = (new StreamReader(string.Concat(pathToThemes, "NextButtonStyle.txt"))).ReadToEnd();
-                string nextLoc = (new StreamReader(string.Concat(pathToThemes, "NextButtonLocation.txt"))).ReadToEnd();
-                string nextAct = (new StreamReader(string.Concat(pathToThemes, "NextButtonAction.txt"))).ReadToEnd();
-                string alphaDef = (new StreamReader(string.Concat(pathToThemes, "alphaButtonStyle.txt"))).ReadToEnd();
-                string alphaLoc = (new StreamReader(string.Concat(pathToThemes, "alphaButtonLocation.txt"))).ReadToEnd();
-                string alphaAct = (new StreamReader(string.Concat(pathToThemes, "alphaButtonAction.txt"))).ReadToEnd();
+                    (from d in new DirectoryInfo(pathToTheme).GetFiles("ButtonLocation*.txt") select d).Count();
+                double totalPages = Math.Ceiling(GameISOs.Count/(double) buttonCount);
+                Values.Add("TotalPageCount", totalPages);
+                string buttonDef = (new StreamReader(pathToTheme + "ButtonStyle.txt")).ReadToEnd();
+                string objDef = (new StreamReader(pathToTheme + "GAMEOBJ.txt")).ReadToEnd();
+                string butActions = (new StreamReader(pathToTheme + "ButtonActions.txt")).ReadToEnd();
+                string objFiles = (new StreamReader(pathToTheme + "OBJFiles.txt")).ReadToEnd();
+                string prevDef = (new StreamReader(pathToTheme + "PrevButtonStyle.txt")).ReadToEnd();
+                string prevLoc = (new StreamReader(pathToTheme + "PrevButtonLocation.txt")).ReadToEnd();
+                string prevAct = (new StreamReader(pathToTheme + "PrevButtonAction.txt")).ReadToEnd();
+                string nextDef = (new StreamReader(pathToTheme + "NextButtonStyle.txt")).ReadToEnd();
+                string nextLoc = (new StreamReader(pathToTheme + "NextButtonLocation.txt")).ReadToEnd();
+                string nextAct = (new StreamReader(pathToTheme + "NextButtonAction.txt")).ReadToEnd();
+                string alphaDef = (new StreamReader(pathToTheme + "alphaButtonStyle.txt")).ReadToEnd();
+                string alphaLoc = (new StreamReader(pathToTheme + "alphaButtonLocation.txt")).ReadToEnd();
+                string alphaAct = (new StreamReader(pathToTheme + "alphaButtonAction.txt")).ReadToEnd();
 
                 string pgcs = "";
 
 
                 ISO[] orderedISOs = (from ISO d in GameISOs orderby d.Gamename select d).ToArray();
                 LoadGameDetails(orderedISOs, buttonCount);
-                string titleSets = CreateDvdStylerTitleSets(orderedISOs, TitlesetLimit, pathToThemes);
+                string titleSets = CreateDvdStylerTitleSets(orderedISOs, TitlesetLimit, pathToTheme);
 
-                for (int i = 0; (double) i < totalPageCount; i++)
+                for (int currentPage = 0; (double)currentPage < totalPages; currentPage++)
                 {
                     string defs = "<defs id=\"defs\">\n";
                     string locationsObJ = "<g id=\"objects\">\n";
@@ -304,13 +292,16 @@ namespace xk3yDVDMenu
                     string actions = "";
                     string defObjs = "";
                     string objFilestxt = "";
-                    Values["PAGE"] = i + 1;
+                    Values["PAGE"] = currentPage + 1;
                     Values["PAGEINDEX"] = 0;
+
                     IEnumerable<ISO> pageIso =
-                        (from ISO d in GameISOs orderby d.Gamename select d).Skip(i*buttonCount).Take(buttonCount);
+                        (from ISO d in GameISOs orderby d.Gamename select d).Skip(currentPage*buttonCount).Take(buttonCount);
+
                     foreach (ISO d in pageIso)
                     {
                         Application.DoEvents();
+
                         Values["PAGEINDEX"] = string.Format("{0:00}", int.Parse(Values["PAGEINDEX"].ToString()) + 1);
                         Values["ISOID"] = (int) Values["ISOID"] + 1;
                         Values["GAMETITLE"] = d.Gametitle;
@@ -322,18 +313,12 @@ namespace xk3yDVDMenu
                         Values["JumpToSelectThisGame"] = d.JumpToSelectThisGame;
                         Values["JumpToTrailler"] = d.JumpToTrailler;
 
-                        var item = new object[4];
-                        item[0] = pathToThemes;
-                        item[1] = "ObjLocation";
-                        item[2] = Values["PAGEINDEX"];
-                        item[3] = ".txt";
-                        string objLocation = (new StreamReader(string.Concat(item))).ReadToEnd();
-                        var objArray = new object[4];
-                        objArray[0] = pathToThemes;
-                        objArray[1] = "ButtonLocation";
-                        objArray[2] = Values["PAGEINDEX"];
-                        objArray[3] = ".txt";
-                        string butLocation = (new StreamReader(string.Concat(objArray))).ReadToEnd();
+                        string pathToobjectLocationFile = pathToTheme + "ObjLocation" + Values["PAGEINDEX"] + ".txt";
+                        string objectLocation = (new StreamReader(pathToobjectLocationFile)).ReadToEnd();
+                        
+                        string pathToButtonLocationsFile = pathToTheme + "ButtonLocation" + Values["PAGEINDEX"] + ".txt";
+                        string buttonLocations = (new StreamReader(pathToButtonLocationsFile)).ReadToEnd();
+
                         Values["TRAILER"] = d.TRAILER;
                         if (Values["TRAILER"].ToString() != "media\\blank.mpg")
                         {
@@ -344,53 +329,52 @@ namespace xk3yDVDMenu
                             Values["HIDETRAILER"] = "//";
                         }
 
-                        defs = string.Concat(defs, ThemeManager.ReplaceVals(buttonDef, Values));
-                        defObjs = string.Concat(defObjs, ThemeManager.ReplaceVals(objDef, Values));
-                        locationsObJ = string.Concat(locationsObJ, ThemeManager.ReplaceVals(objLocation, Values));
-                        locationsBut = string.Concat(locationsBut, ThemeManager.ReplaceVals(butLocation, Values));
-                        actions = string.Concat(actions, ThemeManager.ReplaceVals(butActions, Values));
-                        objFilestxt = string.Concat(objFilestxt, ThemeManager.ReplaceVals(objFiles, Values));
+                        defs += ThemeManager.ReplaceVals(buttonDef, Values);
+                        defObjs += ThemeManager.ReplaceVals(objDef, Values);
+                        locationsObJ += ThemeManager.ReplaceVals(objectLocation, Values);
+                        locationsBut += ThemeManager.ReplaceVals(buttonLocations, Values);
+                        actions += ThemeManager.ReplaceVals(butActions, Values);
+                        objFilestxt += ThemeManager.ReplaceVals(objFiles, Values);
                     }
-                    if (File.Exists(string.Concat(pathToThemes, "alpha.txt")))
+
+                    if (File.Exists(pathToTheme + "alpha.txt"))
                     {
-                        defs = string.Concat(defs, ThemeManager.ReplaceVals(alphaDef, Values));
-                        locationsBut = string.Concat(locationsBut, ThemeManager.ReplaceVals(alphaLoc, Values));
-                        actions = string.Concat(actions, ThemeManager.ReplaceVals(alphaAct, Values));
+                        defs += ThemeManager.ReplaceVals(alphaDef, Values);
+                        locationsBut += ThemeManager.ReplaceVals(alphaLoc, Values);
+                        actions += ThemeManager.ReplaceVals(alphaAct, Values);
                     }
-                    if (i > 0)
+
+                    if (currentPage > 0)
                     {
-                        defs = string.Concat(defs, ThemeManager.ReplaceVals(prevDef, Values));
-                        locationsBut = string.Concat(locationsBut, ThemeManager.ReplaceVals(prevLoc, Values));
-                        actions = string.Concat(actions, ThemeManager.ReplaceVals(prevAct, Values));
+                        defs += ThemeManager.ReplaceVals(prevDef, Values);
+                        locationsBut += ThemeManager.ReplaceVals(prevLoc, Values);
+                        actions += ThemeManager.ReplaceVals(prevAct, Values);
                     }
-                    if (totalPageCount > (i + 1))
+
+                    if (totalPages > (currentPage + 1))
                     {
-                        defs = string.Concat(defs, ThemeManager.ReplaceVals(nextDef, Values));
-                        locationsBut = string.Concat(locationsBut, ThemeManager.ReplaceVals(nextLoc, Values));
-                        actions = string.Concat(actions, ThemeManager.ReplaceVals(nextAct, Values));
+                        defs += ThemeManager.ReplaceVals(nextDef, Values);
+                        locationsBut += ThemeManager.ReplaceVals(nextLoc, Values);
+                        actions += ThemeManager.ReplaceVals(nextAct, Values);
                     }
-                    locationsObJ = string.Concat(locationsObJ, "</g>\n");
-                    locationsBut = string.Concat(locationsBut, "</g>\n");
-                    defs = string.Concat(defs, defObjs, "</defs>\n");
-                    var strArrays = new string[6];
-                    strArrays[0] = defs;
-                    strArrays[1] = locationsObJ;
-                    strArrays[2] = locationsBut;
-                    strArrays[3] = "</svg>\n";
-                    strArrays[4] = actions;
-                    strArrays[5] = objFilestxt;
-                    Values["CONTENT"] = string.Concat(strArrays);
-                    pgcs = string.Concat(pgcs, ThemeManager.ReplaceVals(pgc, Values));
+
+                    locationsObJ += "</g>\n";
+                    locationsBut += "</g>\n";
+                    defs += defObjs + "</defs>\n";
+
+                    Values["CONTENT"] = defs + locationsObJ + locationsBut + "</svg>\n" + actions + objFilestxt;
+
+                    pgcs += ThemeManager.ReplaceVals(pgc, Values);
                 }
-                if (File.Exists(string.Concat(pathToThemes, "alpha.txt")))
+                if (File.Exists(pathToTheme + "alpha.txt"))
                 {
                     string allactions = "";
                     Values.Add("alphaletter", "A");
                     Values.Add("alphaaction", "");
                     Values.Add("alphaActions", "");
-                    //const int alphahit = 0;
-                    string alpha = (new StreamReader(string.Concat(pathToThemes, "alpha.txt"))).ReadToEnd();
-                    string alphaActions = (new StreamReader(string.Concat(pathToThemes, "alpha-Actions.txt"))).ReadToEnd();
+
+                    string alpha = (new StreamReader(pathToTheme + "alpha.txt")).ReadToEnd();
+                    string alphaActions = (new StreamReader(pathToTheme + "alpha-Actions.txt")).ReadToEnd();
                     foreach (var letterGroup in AlphaGroups)
                     {
                         int PreviousFound = 0;
@@ -404,21 +388,21 @@ namespace xk3yDVDMenu
                             }
                         }
 
-
                         Values["alphaaction"] = string.Concat("jump vmgm menu ", PreviousFound + 1, ";");
                         Values["alphaletter"] = letterGroup[0];
 
-                        allactions = string.Concat(allactions, ThemeManager.ReplaceVals(alphaActions, Values));
+                        allactions += ThemeManager.ReplaceVals(alphaActions, Values);
                     }
                     Values["alphaActions"] = allactions;
-                    pgcs = string.Concat(pgcs, ThemeManager.ReplaceVals(alpha, Values));
+                    pgcs += ThemeManager.ReplaceVals(alpha, Values);
                 }
                 Values.Add("PGCS", pgcs);
                 Values.Add("TITLESETS", titleSets);
-                string mainfile = (new StreamReader(string.Concat(pathToThemes, "Main.txt"))).ReadToEnd();
+                string mainfile = (new StreamReader(pathToTheme + "Main.txt")).ReadToEnd();
                 mainfile = ThemeManager.ReplaceVals(mainfile, Values);
-                var dvdFile = new StreamWriter(
-                    string.Concat(Application.StartupPath, "\\dvdTemplate.dvds"), false);
+
+                // Write our project file (XML)
+                var projectFile = new StreamWriter(WorkingDirectory + "\\project.xml", false);
                 var chrArray = new char[1];
                 chrArray[0] = '\n';
                 string[] strArrays1 = mainfile.Split(chrArray);
@@ -428,12 +412,21 @@ namespace xk3yDVDMenu
                     string line = strArrays1[num1];
                     if (!line.Trim().StartsWith("//"))
                     {
-                        dvdFile.Write(line);
+                        projectFile.Write(line);
                     }
                     num1++;
                 }
-                dvdFile.Close();
+                projectFile.Close();
 
+                // Copy media files to WorkingDir
+                if (File.Exists(WorkingDirectory + "media"))
+                {
+                    Directory.Delete(WorkingDirectory + "media", true);
+                }
+                new Microsoft.VisualBasic.Devices.Computer().
+                    FileSystem.CopyDirectory(Application.StartupPath + "\\media", WorkingDirectory + "media");
+
+                // Update UI
                 buttonPrepareXML.Enabled = false;
                 buttonGenerateDVDMenu.Enabled = true;
                 buttonCopyToDrive.Enabled = false;
@@ -444,12 +437,12 @@ namespace xk3yDVDMenu
                 buttonGenerateDVDMenu.Focus();
 
                 Log.Text += Environment.NewLine;
-                Log.Text += "Complete. Click `Generate DVDMenu`." + Environment.NewLine;
+                Log.Text += "Step 1 of 3 Complete." + Environment.NewLine + Environment.NewLine;
 
             }
             else
             {
-                MessageBox.Show("No Games found");
+                MessageBox.Show("No Games found.");
                 comboBoxDriveList.Enabled = true;
                 comboBoxThemeList.Enabled = true;
             }
@@ -457,43 +450,40 @@ namespace xk3yDVDMenu
 
         private int FirstLocationAlpha(string letter, int buttonCount)
         {
-            ISO[] orderedISO =
-                (from ISO d in GameISOs orderby d.Gamename select d).ToArray();
+            ISO[] orderedISO = (from ISO gameISO in GameISOs orderby gameISO.Gamename select gameISO).ToArray();
 
             int num = 0;
             while (num < orderedISO.Length)
             {
-                ISO d = orderedISO[num];
+                ISO gameISO = orderedISO[num];
 
-                if (!d.Gamename.ToUpper().StartsWith(letter))
+                if (!gameISO.Gamename.ToUpper().StartsWith(letter))
                 {
                     num++;
                 }
                 else
                 {
-                    return d.Page;
+                    return gameISO.Page;
                 }
             }
-
 
             return -1;
         }
 
         private void CreateSectorMap()
         {
-            Log.Text = "Awaiting Code";
-            Log.Text += "Creating sector map..." + Environment.NewLine;
-            var testFile = new StreamWriter(Application.StartupPath + "\\Menu.xsk", false);
+            //Log.Text += "Awaiting Code";
+            Log.Text += "Creating Sector Map..." + Environment.NewLine;
+
+            var sectorMapFile = new StreamWriter(WorkingDirectory + "dvd.xsk", false);
             try
             {
-                List<byte[]> sectors =
-                    new DvdMenuReadSectors(Application.StartupPath + "\\dvd.iso").FillListWithMenuSectors();
+                List<byte[]> sectors = new DvdMenuReadSectors(WorkingDirectory + "dvd.iso").FillListWithMenuSectors();
 
                 SHA1 sha = new SHA1CryptoServiceProvider();
                 int i = 0;
 
-                ISO[] orderedISO =
-                    (from ISO d in GameISOs orderby d.Gamename select d).ToArray();
+                ISO[] orderedISO = (from ISO gameISO in GameISOs orderby gameISO.Gamename select gameISO).ToArray();
 
                 foreach (var sector in sectors)
                 {
@@ -502,14 +492,14 @@ namespace xk3yDVDMenu
                         encoding.GetBytes(
                             (orderedISO[i]).Path.Replace(Values["DRIVE"].ToString(), "").Replace("\\", "/").
                                 Substring("/game/".Length));
-                    testFile.BaseStream.Write(sector, 0, 4);
+                    sectorMapFile.BaseStream.Write(sector, 0, 4);
                     byte[] hash = sha.ComputeHash(data);
-                    testFile.BaseStream.Write(hash, 0, hash.Length);
+                    sectorMapFile.BaseStream.Write(hash, 0, hash.Length);
                     i += 1;
                 }
-                testFile.BaseStream.Flush();
-                testFile.Flush();
-                testFile.Close();
+                sectorMapFile.BaseStream.Flush();
+                sectorMapFile.Flush();
+                sectorMapFile.Close();
             }
             catch //(Exception ex)
             {
@@ -525,9 +515,9 @@ namespace xk3yDVDMenu
             Log.Text += "Found " + themeList.Count() + (themeList.Count() == 1 ? " theme." : " themes.") + Environment.NewLine;
 
             comboBoxThemeList.Items.Clear();
-            foreach (DirectoryInfo folder in themeList)
+            foreach (DirectoryInfo theme in themeList)
             {
-                comboBoxThemeList.Items.Add(folder.Name);
+                comboBoxThemeList.Items.Add(theme.Name);
             }
             comboBoxThemeList.SelectedIndex = 0;
         }
@@ -539,9 +529,6 @@ namespace xk3yDVDMenu
             if (File.Exists(PathToDVDStyler))
             {
                 // DVDStyler doesn't store version info in its executable...
-                //var versionInfo = FileVersionInfo.GetVersionInfo(pathToDVDStyler);
-                //string version = versionInfo.ProductVersion;
-
                 string version = (string)Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\DVDStyler", "Version", "is installed");
 
                 Log.Text += "DVDStyler " + version + Environment.NewLine;
@@ -558,19 +545,24 @@ namespace xk3yDVDMenu
 
         }
 
+        private bool isVLCInstalled()
+        {
+            PathToVLC = ProgramFilesx86() + "\\VideoLAN\\VLC\\vlc.exe";
+            return File.Exists(PathToVLC);
+        }
+        
         private void SetupWorkingDirectory()
         {
             // Current User Roaming App Data - equivalent to %AppData% if set
             string pathToRoamingAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
             // Combine the App Data\Roaming path with our desired directory name
-            WorkingDirectory = Path.Combine(pathToRoamingAppData, "xk3yDVDMenu");
+            WorkingDirectory = Path.Combine(pathToRoamingAppData, "xk3y-DVDMenu\\");
 
             if (!Directory.Exists(WorkingDirectory))
             {
                 Directory.CreateDirectory(WorkingDirectory);
             }
-             
         }
 
         private void LoadPlugins()
@@ -697,7 +689,6 @@ namespace xk3yDVDMenu
             this.ActiveControl = buttonPrepareXML;
         }
 
-
         private void RecursiveISOSearch(string sDir)
         {
             foreach (FileInfo fileInfo in new DirectoryInfo(sDir).GetFiles("*.ISO"))
@@ -734,11 +725,12 @@ namespace xk3yDVDMenu
 
         private void buttonGenerateDVDMenu_Click(object sender, EventArgs e)
         {
-            if (File.Exists(Application.StartupPath + "\\dvd.iso"))
+
+            if (File.Exists(WorkingDirectory + "dvd.iso"))
             {
                 try
                 {
-                    File.Delete(Application.StartupPath + "\\dvd.iso");
+                    File.Delete(WorkingDirectory + "dvd.iso");
                 }
                 catch (Exception)
                 {
@@ -747,48 +739,23 @@ namespace xk3yDVDMenu
                 }
             }
 
-            string dvdStylePath = Application.StartupPath + "\\DVDstyler\\bin\\dvdstyler.exe";
-            if (!File.Exists(dvdStylePath.ToLower().Replace("dvdstyler.exe", "") + "..\\DVDStyler.ini"))
-            {
-                File.Copy(Application.StartupPath + "\\DVDStyler.ini",
-                          dvdStylePath.ToLower().Replace("dvdstyler.exe", "") + "..\\DVDStyler.ini");
-            }
-            Log.Text += "Setting DVD Styler Settings" + Environment.NewLine;
-            var iniSettings =
-                new IniFile(dvdStylePath.ToLower().Replace("dvdstyler.exe", "") + "..\\DVDStyler.ini");
+            Log.Text += "Launching DVDStyler..." + Environment.NewLine;
 
-            iniSettings.IniWriteValue("Burn", "Do", "0");
-            iniSettings.IniWriteValue("Iso", "Do", "1");
-            iniSettings.IniWriteValue("Generate", "MenuVideoBitrate", "8000");
-            iniSettings.IniWriteValue("Generate", "MenuFrameCount", "50");
-            iniSettings.IniWriteValue("Generate", "TempDir", Path.GetTempPath().Replace("\\", "\\\\"));
-            Log.Text += "Finding first available drive" + Environment.NewLine;
-
-            // Create symlinks drive - why?!
-            string driveletter = ""; //GetAvailableDriveLetters().First();
-            Log.Text += "Mapping " + driveletter + ": to startup folder" + Environment.NewLine;
-            DefineDosDevice(0, driveletter.ToUpper() + ":",
-                            dvdStylePath.ToLower().Replace("dvdstyler.exe", "") + "..\\");
-
-            Log.Text += "Starting DVDStyler..." + Environment.NewLine;
             var start = new ProcessStartInfo
                             {
-                                WorkingDirectory = driveletter + ":\\",
-                                //Settings.Default.DVDStylePath.ToLower().Replace("dvdstyler.exe", ""),
-                                //  FileName = Settings.Default.DVDStylePath ,
-                                FileName = driveletter + ":\\bin\\dvdstyler.exe",
-                                Arguments = " -s \"" + Application.StartupPath + "\\dvdTemplate.dvds\"",
+                                FileName = PathToDVDStyler,
+                                Arguments = " --stderr --start \"" + WorkingDirectory + "project.xml\"",
                             };
-            using (Process process = Process.Start(start))
+
+            using (Process DVDStylerProcess = Process.Start(start))
             {
-                process.WaitForExit();
-                foreach (FileInfo f in new DirectoryInfo(driveletter + ":\\").GetFiles("*.vob"))
+                DVDStylerProcess.WaitForExit();
+                foreach (FileInfo fileInfo in new DirectoryInfo(WorkingDirectory).GetFiles("*.vob"))
                 {
-                    f.Delete();
+                    fileInfo.Delete();
                 }
-                Log.Text += "Finding first available drive" + Environment.NewLine;
-                DefineDosDevice(3, driveletter.ToUpper() + ":", null);
-                if (File.Exists(Application.StartupPath + "\\dvd.iso"))
+
+                if (File.Exists(WorkingDirectory + "dvd.iso"))
                 {
                     CreateSectorMap();
 
@@ -799,28 +766,47 @@ namespace xk3yDVDMenu
                     buttonCopyToDrive.Focus();
 
                     Log.Text += Environment.NewLine;
-                    Log.Text += "Complete. Click `Copy DVDMenu to drive`." + Environment.NewLine;
+                    Log.Text += "Step 2 of 3 Complete." + Environment.NewLine + Environment.NewLine;
+
+                    // Preview before copying to drive
+                    if (isVLCInstalled())
+                    {
+                        DialogResult dialogResult = MessageBox.Show("Preview DVDMenu in VLC?", "Step 2 of 3 Complete", MessageBoxButtons.YesNo);
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            var previewInVLC = new ProcessStartInfo
+                            {
+                                FileName = PathToVLC,
+                                Arguments = " \"" + WorkingDirectory + "dvd.iso\"",
+                            };
+                            Process.Start(previewInVLC);
+                        }
+                    }
+
                 }
                 else
                 {
-                    MessageBox.Show("ISO creation failed! Retry!");
+                    MessageBox.Show("ISO creation failed!");
                 }
             }
         }
         
-
         private void buttonCopyToDrive_Click(object sender, EventArgs e)
         {
             try
             {
-                File.Copy(Application.StartupPath + "\\dvd.iso", comboBoxDriveList.SelectedItem + "games\\Menu.xso", true);
-                File.Copy(Application.StartupPath + "\\Menu.xsk", comboBoxDriveList.SelectedItem + "games\\Menu.xsk", true);
-                MessageBox.Show("Complete");
+                File.Copy(WorkingDirectory + "dvd.iso", Values["DRIVE"] + "games\\menu.xso", true);
+                File.Copy(WorkingDirectory + "dvd.xsk", Values["DRIVE"] + "games\\menu.xsk", true);
+                Log.Text += "Step 3 of 3 Complete." + Environment.NewLine;
+
+                MessageBox.Show("DVDMenu has been copied to your drive.\n" +
+                                "Make sure your xkey.cfg has MENUDVD=Y and enjoy :)",
+                                "Step 3 of 3 Complete");
                 Close();
             }
             catch (Exception)
             {
-                MessageBox.Show("Failed. Retry!");
+                MessageBox.Show("Could not copy to drive.");
             }
         }
         
@@ -828,6 +814,15 @@ namespace xk3yDVDMenu
         {
             Log.SelectionStart = Log.Text.Length;
             Log.ScrollToCaret();
+        }
+
+        private void Log_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Ctrl+A support
+            if (e.Control & e.KeyCode == Keys.A)
+            {
+                Log.SelectAll();
+            }
         }
 
         private void pictureBoxLogo_Click(object sender, EventArgs e)
@@ -893,15 +888,6 @@ namespace xk3yDVDMenu
             }
 
             senderComboBox.DropDownWidth = width;
-        }
-
-        private void Log_KeyDown(object sender, KeyEventArgs e)
-        {
-            // Ctrl+A support
-            if (e.Control & e.KeyCode == Keys.A)
-            {
-                Log.SelectAll();
-            }
         }
 
     }

@@ -1,0 +1,6 @@
+  <button keepAspectRatio="true" id="buttonAZ">
+             <action> jump vmgm menu {$TotalPageCount+1};</action>
+              <filename>frame.xml</filename>
+              <parameter highlighted="#008000" selected="#008000" name="stroke" normal="none"/>
+              <parameter highlighted="none" selected="none" name="fill" normal="none"/>
+            </button>

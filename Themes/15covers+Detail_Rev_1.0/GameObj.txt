@@ -1,0 +1,3 @@
+<svg id="s_obj{$PAGEINDEX}">
+
+</svg>

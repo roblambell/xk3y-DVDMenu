@@ -1,0 +1,8 @@
+<button keepAspectRatio="true" id="button{$PAGEINDEX}">
+              <action tsi="{$ISOID-1}" pgci="0"/>
+              <filename>frame.xml</filename>
+              <parameter highlighted="#008000" selected="#008000" name="stroke" normal="#000000"/>
+              <parameter highlighted="none" selected="none" name="fill" normal="none"/>
+            </button>
+
+

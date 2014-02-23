@@ -224,6 +224,7 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "xk3y DVDMenu Tool";
+            this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
             this.Load += new System.EventHandler(this.Form1Load);
             this.groupBox1.ResumeLayout(false);

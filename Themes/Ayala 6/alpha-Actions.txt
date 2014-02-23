@@ -1,0 +1,6 @@
+﻿<button defSize="true" id="button{$alphaletter}">
+              <action>{$alphaaction}</action>
+              <filename>text-v2.xml</filename>
+              <parameter highlighted="#0000ff" selected="#ff0000" name="text_fill" normal="#ffffff"/>
+            </button>
+			 

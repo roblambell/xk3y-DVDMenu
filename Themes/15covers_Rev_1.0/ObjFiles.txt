@@ -1,0 +1,2 @@
+ <object defSize="true" id="obj{$PAGEINDEX}">
+            </object>

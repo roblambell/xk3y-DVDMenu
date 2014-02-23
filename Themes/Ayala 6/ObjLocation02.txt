@@ -1,0 +1,2 @@
+ <use xlink:href="#s_obj{$PAGEINDEX}"  width="120" y="20" height="19" id="obj{$PAGEINDEX}" x="200"/> 
+          

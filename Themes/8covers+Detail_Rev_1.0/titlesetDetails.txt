@@ -1,0 +1,76 @@
+﻿<pgc>
+	<vob>
+		<menu rememberLastButton="-1" aspectRatio="2" videoFormat="PAL">
+            <svg width="720" height="405">
+              <rect style="fill:#000000;" width="720" height="405" id="backgroundColour"/>
+              <image xlink:href="media\Background.jpg" width="720" height="405" id="background"/>
+              <defs id="defs">
+                <svg id="s_obj01">
+					<image style="opacity:1;" xlink:href="{$GAMEBOX}" width="100%" height="100%" id="image"/>
+                </svg>
+				<svg id="s_obj02">
+					<rect style="fill:none;fill-opacity:1;" width="100%" y="0" height="100%" id="background" x="0"/>
+					<text style="dominant-baseline:middle;fill:#ffffff;fill-opacity:1;font-family:Tahoma;font-size:12;font-style:normal;font-weight:normal;stroke:none;stroke-opacity:1;stroke-width:1;text-anchor:middle;" y="50%" xml:space="preserve" id="text" x="50%">{$GAMETITLE}</text>
+				</svg>
+				<svg id="s_obj03">
+					<rect style="fill:none;fill-opacity:1;" width="100%" y="0" height="100%" id="background" x="0"/>
+					<text style="dominant-baseline:middle;fill:#ffffff;fill-opacity:1;font-family:Tahoma;font-size:12;font-style:normal;font-weight:normal;stroke:none;stroke-opacity:1;stroke-width:1;text-anchor:middle;" y="50%" xml:space="preserve" id="text" x="50%">{$GAMEGENRE}</text>
+                </svg>
+                <svg id="s_button01">
+                  <image xlink:href="{$GAMEIMAGE}" width="100%" height="100%" style="opacity:1;" id="image" y="0%" x="0%"/>
+				  <rect width="100%" height="100%" style="fill:none;stroke:#000000;stroke-width:1;" id="rect" y="0%" rx="0" ry="0" x="0%"/>
+                </svg>
+				<svg id="s_button02">
+                  <image xlink:href="{$TRAILER}" width="100%" height="100%" id="background"/>
+				  <rect width="100%" height="100%" style="fill:none;stroke:#ffffff;stroke-width:1;" id="videoFrame" y="0%" rx="0" ry="0" x="0%"/>
+                </svg>
+				<svg id="s_button03">
+                  <image xlink:href="media\go-back-icon.png" width="100%" height="100%" style="opacity:1;" id="image" y="0%" x="0%"/>
+				  <rect width="100%" height="100%" style="fill:none;stroke:none;stroke-width:2;" id="rect" y="0%" rx="0" ry="0" x="0%"/>
+                </svg>
+            
+              </defs>
+              <g id="objects">
+                <use xlink:href="#s_obj01" width="219" y="52" height="300" id="obj01" x="76"/>
+				<use xlink:href="#s_obj02" width="283" y="164" height="15" id="obj02" x="332"/>
+				<use xlink:href="#s_obj03" width="283" y="128" height="15" id="obj03" x="332"/>
+              </g>
+              <g id="buttons">
+				<use xlink:href="#s_button01" width="316" y="51" height="71" id="button01" x="316"/>
+                <use xlink:href="#s_button02" width="240" y="188" height="135" id="button02" x="356"/>
+				<use xlink:href="#s_button03" width="48" y="328" height="48" id="button03" x="610"/>
+              </g>
+            </svg>
+			<object keepAspectRatio="true" id="obj01">
+				<filename>image.xml</filename>
+            </object>
+			<object id="obj02">
+				<filename>text.xml</filename>
+             </object>
+			<object id="obj03">
+				<filename>text.xml</filename>
+            </object>
+
+			<button keepAspectRatio="true" id="button01">
+               <action>{$JumpToSelectThisGame}</action>
+              <filename>frame.xml</filename>
+              <parameter highlighted="#008000" selected="#008000" name="stroke" normal="#000000"/>
+              <parameter highlighted="none" selected="none" name="fill" normal="none"/>
+            </button>
+			
+            <button id="button02">
+              <action>{$JumpToTrailler}</action>
+              <filename>frame.xml</filename>
+              <parameter highlighted="#0000ff" selected="#ff0000" name="stroke" normal="#ffffff"/>
+              <parameter highlighted="none" selected="none" name="fill" normal="none"/>
+            </button>
+            
+			<button displayVideoFrame="false" keepAspectRatio="true" id="button03">
+				<action>jump vmgm menu {$PAGE};</action>
+				<filename>frame.xml</filename>
+				<parameter highlighted="#008000" selected="#008000" name="stroke" normal="none"/>
+				<parameter highlighted="none" selected="none" name="fill" normal="none"/>
+			</button>
+		</menu>
+	</vob>
+</pgc>
