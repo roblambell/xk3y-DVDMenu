@@ -16,6 +16,7 @@ using XkeyBrew.Utils.DvdReader;
 
 namespace xk3yDVDMenu
 {
+
     public partial class Form1 : Form
     {
 
@@ -202,6 +203,8 @@ namespace xk3yDVDMenu
             {
                 index++;
 
+                progressBar1.Value = index / orderedISOs.Count() * 100;
+
                 Log.Text += gameISO.Filename + Environment.NewLine + "  ∟";
 
                 gameISO.Gametitle = HttpUtility.HtmlEncode(gameISO.GameTitle(chkArtwork.Checked));
@@ -226,6 +229,20 @@ namespace xk3yDVDMenu
 
             // Selected item string expected as "(Z:)..."
             Values.Add("DRIVE", comboBoxDriveList.SelectedItem.ToString().Substring(1, 2) + "\\");
+
+            // Copy media files to WorkingDirectory
+            if (Directory.Exists(WorkingDirectory + "media"))
+            {
+                Directory.Delete(WorkingDirectory + "media", true);
+            }
+            new Microsoft.VisualBasic.Devices.Computer().
+                FileSystem.CopyDirectory(Application.StartupPath + "\\media", WorkingDirectory + "media");
+
+            // Create cache folder
+            if (!Directory.Exists(WorkingDirectory + "cache"))
+            {
+                Directory.CreateDirectory(WorkingDirectory + "cache");
+            }
 
             GameISOs.Clear();
             if (Directory.Exists(string.Concat(Values["DRIVE"], "games\\")))
@@ -418,23 +435,15 @@ namespace xk3yDVDMenu
                 }
                 projectFile.Close();
 
-                // Copy media files to WorkingDir
-                if (File.Exists(WorkingDirectory + "media"))
-                {
-                    Directory.Delete(WorkingDirectory + "media", true);
-                }
-                new Microsoft.VisualBasic.Devices.Computer().
-                    FileSystem.CopyDirectory(Application.StartupPath + "\\media", WorkingDirectory + "media");
-
                 // Update UI
-                buttonPrepareXML.Enabled = false;
-                buttonGenerateDVDMenu.Enabled = true;
+                buttonBuildProject.Enabled = false;
+                buttonTranscodeMenu.Enabled = true;
                 buttonCopyToDrive.Enabled = false;
 
                 chkArtwork.Enabled = false;
                 chkTraillers.Enabled = false;
 
-                buttonGenerateDVDMenu.Focus();
+                buttonTranscodeMenu.Focus();
 
                 Log.Text += Environment.NewLine;
                 Log.Text += "Step 1 of 3 Complete." + Environment.NewLine + Environment.NewLine;
@@ -674,7 +683,7 @@ namespace xk3yDVDMenu
 
             if (!isDVDStylerInstalled())
             {
-                buttonPrepareXML.Enabled = false;
+                buttonBuildProject.Enabled = false;
             }
 
             SetupWorkingDirectory();
@@ -686,12 +695,12 @@ namespace xk3yDVDMenu
             LoadDisks();
             LoadThemes();
 
-            this.ActiveControl = buttonPrepareXML;
+            this.ActiveControl = buttonBuildProject;
         }
 
-        private void RecursiveISOSearch(string sDir)
+        private void RecursiveISOSearch(string targetDirectory)
         {
-            foreach (FileInfo fileInfo in new DirectoryInfo(sDir).GetFiles("*.ISO"))
+            foreach (FileInfo fileInfo in new DirectoryInfo(targetDirectory).GetFiles("*.ISO"))
             {
                 GameISOs.Add(new ISO
                                    {
@@ -700,14 +709,15 @@ namespace xk3yDVDMenu
                                        Path = fileInfo.FullName,
                                        IsoFile = fileInfo,
                                        Log = Log,
+                                       WorkingDirectory = WorkingDirectory,
                                        ProgressBar1 = progressBar1
                                    });
             }
             try
             {
-                foreach (string d in Directory.GetDirectories(sDir))
+                foreach (string directory in Directory.GetDirectories(targetDirectory))
                 {
-                    RecursiveISOSearch(d);
+                    RecursiveISOSearch(directory);
                 }
             }
             catch (Exception ex)
@@ -716,14 +726,14 @@ namespace xk3yDVDMenu
             }
         }
 
-        private void buttonPrepareXML_Click(object sender, EventArgs e)
+        private void buttonBuildProject_Click(object sender, EventArgs e)
         {
             comboBoxDriveList.Enabled = false;
             comboBoxThemeList.Enabled = false;
             FetchGameDataAndCreateProject();
         }
 
-        private void buttonGenerateDVDMenu_Click(object sender, EventArgs e)
+        private void buttonTranscodeMenu_Click(object sender, EventArgs e)
         {
 
             if (File.Exists(WorkingDirectory + "dvd.iso"))
@@ -759,8 +769,8 @@ namespace xk3yDVDMenu
                 {
                     CreateSectorMap();
 
-                    buttonPrepareXML.Enabled = false;
-                    buttonGenerateDVDMenu.Enabled = false;
+                    buttonBuildProject.Enabled = false;
+                    buttonTranscodeMenu.Enabled = false;
                     buttonCopyToDrive.Enabled = true;
 
                     buttonCopyToDrive.Focus();
@@ -798,6 +808,8 @@ namespace xk3yDVDMenu
                 File.Copy(WorkingDirectory + "dvd.iso", Values["DRIVE"] + "games\\menu.xso", true);
                 File.Copy(WorkingDirectory + "dvd.xsk", Values["DRIVE"] + "games\\menu.xsk", true);
                 Log.Text += "Step 3 of 3 Complete." + Environment.NewLine;
+
+                buttonCopyToDrive.Enabled = false;
 
                 MessageBox.Show("DVDMenu has been copied to your drive.\n" +
                                 "Make sure your xkey.cfg has MENUDVD=Y and enjoy :)",

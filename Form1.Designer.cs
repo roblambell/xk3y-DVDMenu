@@ -31,8 +31,8 @@
             System.Windows.Forms.Label label1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.comboBoxDriveList = new System.Windows.Forms.ComboBox();
-            this.buttonPrepareXML = new System.Windows.Forms.Button();
-            this.buttonGenerateDVDMenu = new System.Windows.Forms.Button();
+            this.buttonBuildProject = new System.Windows.Forms.Button();
+            this.buttonTranscodeMenu = new System.Windows.Forms.Button();
             this.buttonCopyToDrive = new System.Windows.Forms.Button();
             this.comboBoxThemeList = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -69,30 +69,30 @@
             this.comboBoxDriveList.TabIndex = 0;
             this.comboBoxDriveList.DropDown += new System.EventHandler(this.comboBoxDriveList_DropDown);
             // 
-            // buttonPrepareXML
+            // buttonBuildProject
             // 
-            this.buttonPrepareXML.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.buttonPrepareXML.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonPrepareXML.Location = new System.Drawing.Point(8, 117);
-            this.buttonPrepareXML.Name = "buttonPrepareXML";
-            this.buttonPrepareXML.Size = new System.Drawing.Size(109, 37);
-            this.buttonPrepareXML.TabIndex = 25;
-            this.buttonPrepareXML.Text = "Prepare Games Library && Project";
-            this.buttonPrepareXML.UseVisualStyleBackColor = false;
-            this.buttonPrepareXML.Click += new System.EventHandler(this.buttonPrepareXML_Click);
+            this.buttonBuildProject.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.buttonBuildProject.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonBuildProject.Location = new System.Drawing.Point(8, 117);
+            this.buttonBuildProject.Name = "buttonBuildProject";
+            this.buttonBuildProject.Size = new System.Drawing.Size(109, 37);
+            this.buttonBuildProject.TabIndex = 25;
+            this.buttonBuildProject.Text = "Build DVDMenu\r\nProject";
+            this.buttonBuildProject.UseVisualStyleBackColor = false;
+            this.buttonBuildProject.Click += new System.EventHandler(this.buttonBuildProject_Click);
             // 
-            // buttonGenerateDVDMenu
+            // buttonTranscodeMenu
             // 
-            this.buttonGenerateDVDMenu.Enabled = false;
-            this.buttonGenerateDVDMenu.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.buttonGenerateDVDMenu.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonGenerateDVDMenu.Location = new System.Drawing.Point(123, 117);
-            this.buttonGenerateDVDMenu.Name = "buttonGenerateDVDMenu";
-            this.buttonGenerateDVDMenu.Size = new System.Drawing.Size(109, 37);
-            this.buttonGenerateDVDMenu.TabIndex = 30;
-            this.buttonGenerateDVDMenu.Text = "Generate\r\nDVDMenu";
-            this.buttonGenerateDVDMenu.UseVisualStyleBackColor = false;
-            this.buttonGenerateDVDMenu.Click += new System.EventHandler(this.buttonGenerateDVDMenu_Click);
+            this.buttonTranscodeMenu.Enabled = false;
+            this.buttonTranscodeMenu.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.buttonTranscodeMenu.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonTranscodeMenu.Location = new System.Drawing.Point(123, 117);
+            this.buttonTranscodeMenu.Name = "buttonTranscodeMenu";
+            this.buttonTranscodeMenu.Size = new System.Drawing.Size(109, 37);
+            this.buttonTranscodeMenu.TabIndex = 30;
+            this.buttonTranscodeMenu.Text = "Transcode\r\nDVDMenu";
+            this.buttonTranscodeMenu.UseVisualStyleBackColor = false;
+            this.buttonTranscodeMenu.Click += new System.EventHandler(this.buttonTranscodeMenu_Click);
             // 
             // buttonCopyToDrive
             // 
@@ -214,8 +214,8 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.comboBoxThemeList);
             this.Controls.Add(this.buttonCopyToDrive);
-            this.Controls.Add(this.buttonGenerateDVDMenu);
-            this.Controls.Add(this.buttonPrepareXML);
+            this.Controls.Add(this.buttonTranscodeMenu);
+            this.Controls.Add(this.buttonBuildProject);
             this.Controls.Add(this.comboBoxDriveList);
             this.Controls.Add(label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -238,8 +238,8 @@
         #endregion
 
         private System.Windows.Forms.ComboBox comboBoxDriveList;
-        private System.Windows.Forms.Button buttonPrepareXML;
-        private System.Windows.Forms.Button buttonGenerateDVDMenu;
+        private System.Windows.Forms.Button buttonBuildProject;
+        private System.Windows.Forms.Button buttonTranscodeMenu;
         private System.Windows.Forms.Button buttonCopyToDrive;
         private System.Windows.Forms.ComboBox comboBoxThemeList;
         private System.Windows.Forms.Label label3;

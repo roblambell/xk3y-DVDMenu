@@ -29,6 +29,7 @@ namespace xk3yDVDMenu
         public ProgressBar ProgressBar1;
         public string RedirectURL;
         public string TRAILER;
+        public string WorkingDirectory;
 
         private string AddDiscDataToBanner(string bannerPath, int discNumber, int discCount)
         {
@@ -41,7 +42,7 @@ namespace xk3yDVDMenu
             byte[] bannerArray = File.ReadAllBytes(bannerPath);
             var bannerMs = new MemoryStream(bannerArray);
             Image banner = Image.FromStream(bannerMs);
-            byte[] discIconArray = File.ReadAllBytes(string.Concat(Application.StartupPath, "\\media\\disk.png"));
+            byte[] discIconArray = File.ReadAllBytes(string.Concat(WorkingDirectory, "media\\disk.png"));
             var discIconMs = new MemoryStream(discIconArray);
             Image image = Image.FromStream(discIconMs);
             if (banner.Height < scale)
@@ -54,7 +55,7 @@ namespace xk3yDVDMenu
             }
             Image discIcon = Resize(image, height);
             byte[] discCurrentIconArray =
-                File.ReadAllBytes(string.Concat(Application.StartupPath, "\\media\\disc_current.png"));
+                File.ReadAllBytes(string.Concat(WorkingDirectory, "media\\disc_current.png"));
             var discCurrentIconMs = new MemoryStream(discCurrentIconArray);
             Image discCurrentIcon = Resize(Image.FromStream(discCurrentIconMs), scale);
             const int offset = 10;
@@ -67,7 +68,7 @@ namespace xk3yDVDMenu
             }
             Graphics gr = Graphics.FromImage(banner);
             gr.DrawImage(bitmapDisc, banner.Width - bitmapDisc.Width - 2, 2, bitmapDisc.Width, bitmapDisc.Height);
-            bannerPath = string.Concat(Application.StartupPath, "\\temp\\",
+            bannerPath = string.Concat(WorkingDirectory, "cache\\",
                                        Filename.Replace(IsoFile.Extension, "-banner.png"));
             banner.Save(bannerPath, ImageFormat.Png);
             return bannerPath;
@@ -144,7 +145,7 @@ namespace xk3yDVDMenu
                 {
                     var binWritter =
                         new StreamWriter(
-                            string.Concat(Application.StartupPath, "\\temp\\",
+                            string.Concat(WorkingDirectory, "cache\\",
                                           Filename.Replace(IsoFile.Extension, "-banner.png")), false);
                     binWritter.BaseStream.Write(waffle.Banner, 0, waffle.Banner.Length);
                     binWritter.Flush();
@@ -152,7 +153,7 @@ namespace xk3yDVDMenu
 
                     //Log.Text = string.Concat(Log.Text, "Banner found in XML:", Path, Environment.NewLine);
                     Log.Text += "[Banner]";
-                    return string.Concat(Application.StartupPath, "\\temp\\",
+                    return string.Concat(WorkingDirectory, "cache\\",
                                          Filename.Replace(IsoFile.Extension, "-banner.png"));
                 }
             }
@@ -218,14 +219,14 @@ namespace xk3yDVDMenu
                 {
                     var binWritter =
                         new StreamWriter(
-                            string.Concat(Application.StartupPath, "\\temp\\",
+                            string.Concat(WorkingDirectory, "cache\\",
                                           Filename.Replace(IsoFile.Extension, "-cover.jpg")), false);
                     binWritter.BaseStream.Write(waffle.BoxArt, 0, waffle.BoxArt.Length);
                     binWritter.Flush();
                     binWritter.Close();
                     //Log.Text = string.Concat(Log.Text, "Found in XML", Path, Environment.NewLine);
                     Log.Text += "[Cover]";
-                    return string.Concat(Application.StartupPath, "\\temp\\",
+                    return string.Concat(WorkingDirectory, "cache\\",
                                          Filename.Replace(IsoFile.Extension, "-cover.jpg"));
                 }
             }
