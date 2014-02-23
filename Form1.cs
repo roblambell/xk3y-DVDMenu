@@ -695,8 +695,8 @@ namespace xk3yDVDMenu
             }
             else
             {
-                Log.Text += "DVDStyler not found. Please install to:" + Environment.NewLine;
-                Log.Text += PathToDVDStyler + Environment.NewLine;
+                Log.Text += "DVDStyler not found." + Environment.NewLine;
+                Log.Text += "Get it at http://www.dvdstyler.org" + Environment.NewLine;
 
                 return false;
             }
@@ -1145,6 +1145,11 @@ namespace xk3yDVDMenu
         private void chkUseCache_MouseHover(object sender, EventArgs e)
         {
             toolTip.Show("Uncheck if ISOs haven't\nchanged but Media / XML has", chkUseCache, 32000);
+        }
+
+        private void Log_LinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            Process.Start(e.LinkText);
         }
 
     }

@@ -36,7 +36,7 @@
             this.buttonCopyToDrive = new System.Windows.Forms.Button();
             this.comboBoxThemeList = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.Log = new System.Windows.Forms.TextBox();
+            this.Log = new System.Windows.Forms.RichTextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.chkArtwork = new System.Windows.Forms.CheckBox();
             this.chkTraillers = new System.Windows.Forms.CheckBox();
@@ -139,13 +139,14 @@
             this.Log.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.Log.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Log.Location = new System.Drawing.Point(8, 189);
-            this.Log.Multiline = true;
             this.Log.Name = "Log";
             this.Log.ReadOnly = true;
-            this.Log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.Log.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.Log.Size = new System.Drawing.Size(339, 145);
             this.Log.TabIndex = 40;
             this.Log.TabStop = false;
+            this.Log.Text = "";
+            this.Log.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.Log_LinkClicked);
             this.Log.TextChanged += new System.EventHandler(this.Log_TextChanged);
             this.Log.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Log_KeyDown);
             // 
@@ -293,7 +294,7 @@
         private System.Windows.Forms.Button buttonCopyToDrive;
         private System.Windows.Forms.ComboBox comboBoxThemeList;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox Log;
+        private System.Windows.Forms.RichTextBox Log;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.CheckBox chkArtwork;
         private System.Windows.Forms.CheckBox chkTraillers;
