@@ -43,9 +43,13 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chkUseCache = new System.Windows.Forms.CheckBox();
+            this.chkPreview = new System.Windows.Forms.CheckBox();
             label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -183,7 +187,7 @@
             this.groupBox1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(8, 68);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(339, 43);
+            this.groupBox1.Size = new System.Drawing.Size(156, 43);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Download from Xbox.com";
@@ -211,11 +215,47 @@
             this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.chkPreview);
+            this.groupBox2.Controls.Add(this.chkUseCache);
+            this.groupBox2.Location = new System.Drawing.Point(170, 68);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(177, 43);
+            this.groupBox2.TabIndex = 41;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Build Settings";
+            // 
+            // chkUseCache
+            // 
+            this.chkUseCache.AutoSize = true;
+            this.chkUseCache.Checked = true;
+            this.chkUseCache.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkUseCache.Location = new System.Drawing.Point(7, 19);
+            this.chkUseCache.Name = "chkUseCache";
+            this.chkUseCache.Size = new System.Drawing.Size(93, 17);
+            this.chkUseCache.TabIndex = 0;
+            this.chkUseCache.Text = "Cache Games";
+            this.chkUseCache.UseVisualStyleBackColor = true;
+            this.chkUseCache.MouseHover += new System.EventHandler(this.chkUseCache_MouseHover);
+            // 
+            // chkPreview
+            // 
+            this.chkPreview.AutoSize = true;
+            this.chkPreview.Location = new System.Drawing.Point(106, 19);
+            this.chkPreview.Name = "chkPreview";
+            this.chkPreview.Size = new System.Drawing.Size(64, 17);
+            this.chkPreview.TabIndex = 1;
+            this.chkPreview.Text = "Preview";
+            this.chkPreview.UseVisualStyleBackColor = true;
+            this.chkPreview.MouseHover += new System.EventHandler(this.chkPreview_MouseHover);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(353, 341);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.pictureBoxLogo);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.progressBar1);
@@ -238,6 +278,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -258,6 +300,9 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.PictureBox pictureBoxLogo;
         public System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox chkPreview;
+        private System.Windows.Forms.CheckBox chkUseCache;
     }
 }
 

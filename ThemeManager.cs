@@ -45,7 +45,9 @@ internal static class ThemeManager
         MatchCollection matches = regex.Matches(strInput);
         foreach (Match result in matches)
         {
-            string aggregate = Values.Keys.Aggregate(result.Value, (current, v) => current.Replace("$" + v, Values[v].ToString()));
+            string aggregate = Values.Keys.Aggregate(
+                result.Value, (current, v) => current.Replace("$" + v, Values[v].ToString())
+                );
             strInput = strInput.Replace(result.Value, ThemeManager.Evaluate(aggregate.Replace("{", "").Replace("}", "")));
         }
         return strInput;

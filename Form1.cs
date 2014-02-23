@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -44,6 +45,8 @@ namespace xk3yDVDMenu
         public string PathToDVDStyler;
         public string PathToTheme;
         public string PathToVLC;
+
+        ToolTip toolTip = new ToolTip();
 
         // Step 1 and 2 are 45% each, Step 3 is 10%
         public int PercentComplete = 0;
@@ -95,14 +98,16 @@ namespace xk3yDVDMenu
                     }
 
                     // Preselect drive
+                    // We could filter on drives with `games` folder, but, I don't
+                    // like the idea of scanning all the drives..
                     if (drive.DriveType == DriveType.Removable)
                     {
-                        // Any removable drive is better than nothing..
+                        // Any removable drive is better than nothing.
                         if (selectedIndex == 0)
                         {
                             selectedIndex = currentIndex;
                         }
-                        // BUT, one with our name in it, that must be it!
+                        // HOWEVER, one with our name in it, that must be it!
                         bool containsXbox = driveLabel.IndexOf("Xbox", StringComparison.OrdinalIgnoreCase) >= 0;
                         bool containsxk3y = driveLabel.IndexOf("xk3y", StringComparison.OrdinalIgnoreCase) >= 0;
                         if (containsXbox || containsxk3y)
@@ -125,17 +130,17 @@ namespace xk3yDVDMenu
 
         }
 
-        private string CreateDvdStylerTitleSets(IEnumerable<ISO> orderedIsos, int titlesetIsoLimit, string themepath)
+        private string CreateDVDStylerTitleSets(IEnumerable<ISO> orderedISOs, int titlesetIsoLimit, BackgroundWorker worker)
         {
             Values.Add("TITLESETINDEX", "");
             Values.Add("TITLESETPGC", "");
             Values.Add("TITLESETTRAILERS", "");
             string strTitleset = "";
 
-            var totalTitleSets = (int) Math.Ceiling((decimal) orderedIsos.Count()/titlesetIsoLimit);
-            string titlesetHeader = (new StreamReader(string.Concat(themepath, "titlesetHeader.txt"))).ReadToEnd();
-            string titlesetSelected = (new StreamReader(string.Concat(themepath, "titlesetSelected.txt"))).ReadToEnd();
-            string titlesetDetails = (new StreamReader(string.Concat(themepath, "titlesetDetails.txt"))).ReadToEnd();
+            var totalTitleSets = (int) Math.Ceiling((decimal) orderedISOs.Count()/titlesetIsoLimit);
+            string titlesetHeader = (new StreamReader(string.Concat(PathToTheme, "titlesetHeader.txt"))).ReadToEnd();
+            string titlesetSelected = (new StreamReader(string.Concat(PathToTheme, "titlesetSelected.txt"))).ReadToEnd();
+            string titlesetDetails = (new StreamReader(string.Concat(PathToTheme, "titlesetDetails.txt"))).ReadToEnd();
 
 
             int currentTitleSet = 0;
@@ -143,11 +148,11 @@ namespace xk3yDVDMenu
             {
                 Values["TITLESETPGC"] = string.Empty;
 
-                IEnumerable<ISO> titlesetIso =
-                    (from ISO d in GameISOs orderby d.Gamename select d).Skip(currentTitleSet*titlesetIsoLimit).Take(
+                IEnumerable<ISO> titlesetISO =
+                    (from ISO d in orderedISOs orderby d.GameNameFromFilename select d).Skip(currentTitleSet * titlesetIsoLimit).Take(
                         titlesetIsoLimit).ToArray();
                 string titlesetindex = "if (g0 == 1) jump menu 2;";
-                for (int i = 1; i < titlesetIso.Count()*2; i++)
+                for (int i = 1; i < titlesetISO.Count()*2; i++)
                 {
                     titlesetindex += "else if (g0 == " + (i + 1) + ") jump menu " + (i + 2) + ";";
                 }
@@ -155,7 +160,7 @@ namespace xk3yDVDMenu
                 int isoindex = 0;
                 string titlesettrailers = "";
 
-                foreach (ISO gameiso in titlesetIso)
+                foreach (ISO gameiso in titlesetISO)
                 {
                     isoindex++;
                     gameiso.JumpToGameDetails = "g0 = " + (((isoindex - 1)*2) + 2) + "; jump titleset " +
@@ -170,12 +175,13 @@ namespace xk3yDVDMenu
                     Values["JumpToGameDetails"] = gameiso.JumpToGameDetails;
                     Values["JumpToSelectThisGame"] = gameiso.JumpToSelectThisGame;
                     Values["JumpToTrailler"] = gameiso.JumpToTrailler;
-                    Values["GAMETITLE"] = gameiso.Gametitle;
-                    Values["GAMEGENRE"] = gameiso.Gamegenre;
-                    Values["GAMEDESC"] = gameiso.Gamedesc;
+                    Values["GAMETITLE"] = gameiso.GameTitle;
+                    Values["GAMEGENRE"] = gameiso.GameGenre;
+                    Values["GAMEDESC"] = gameiso.GameDesc;
                     Values["GAMEIMAGE"] = gameiso.Gameimage;
-                    Values["GAMEBOX"] = gameiso.GAMEBOX;
-                    Values["TRAILER"] = gameiso.TRAILER;
+                    Values["GAMEBOX"] = gameiso.GameBoxart;
+                    Values["TRAILER"] = gameiso.GameTrailer;
+
                     if (Values["TRAILER"].ToString() != "media\\blank.mpg")
                     {
                         Values["HIDETRAILER"] = "";
@@ -188,7 +194,7 @@ namespace xk3yDVDMenu
                     Values["TITLESETPGC"] += ThemeManager.ReplaceVals(titlesetSelected, Values) +
                                              ThemeManager.ReplaceVals(titlesetDetails, Values);
                     ;
-                    titlesettrailers += "<pgc>\n<vob file=\"" + gameiso.TRAILER +
+                    titlesettrailers += "<pgc>\n<vob file=\"" + gameiso.GameTrailer +
                                         "\">\n<video format=\"1\"/><audio format=\"3\"/></vob><post>call last menu;</post></pgc>";
                 }
 
@@ -217,20 +223,20 @@ namespace xk3yDVDMenu
                 string logOutput = string.Format("[{0} of {1}] ", index, totalGames) + 
                     gameISO.Filename + Environment.NewLine + "  ∟";
                 
-                gameISO.Gametitle = HttpUtility.HtmlEncode(gameISO.GameTitle(chkArtwork.Checked));
-                gameISO.Gamegenre = HttpUtility.HtmlEncode(gameISO.GameGenre(chkArtwork.Checked));
-                gameISO.Gamedesc = HttpUtility.HtmlEncode(gameISO.GameDesc(chkArtwork.Checked));
-                gameISO.Gameimage = HttpUtility.HtmlEncode(gameISO.GameBanner(chkArtwork.Checked));
-                gameISO.GAMEBOX = HttpUtility.HtmlEncode(gameISO.GameBox(chkArtwork.Checked));
-                gameISO.TRAILER = HttpUtility.HtmlEncode(gameISO.GameTrailer(chkTraillers.Checked));
+                gameISO.GameTitle = HttpUtility.HtmlEncode(gameISO.GetGameTitle(chkArtwork.Checked));
+                gameISO.GameGenre = HttpUtility.HtmlEncode(gameISO.GetGameGenre(chkArtwork.Checked));
+                gameISO.GameDesc = HttpUtility.HtmlEncode(gameISO.GetGameDesc(chkArtwork.Checked));
+                gameISO.Gameimage = HttpUtility.HtmlEncode(gameISO.GetGameBanner(chkArtwork.Checked));
+                gameISO.GameBoxart = HttpUtility.HtmlEncode(gameISO.GetGameBoxart(chkArtwork.Checked));
+                gameISO.GameTrailer = HttpUtility.HtmlEncode(gameISO.GetGameTrailer(chkTraillers.Checked));
 
-                logOutput += gameISO.Gametitle.Length > 0 ? "[Title]" : "       ";
-                logOutput += gameISO.Gamegenre.Length > 0 ? "[Genre]" : "       ";
-                logOutput += gameISO.Gamedesc.Length > 0 ? "[Desc]" : "      ";
+                logOutput += gameISO.GameTitle.Length > 0 ? "[Title]" : "       ";
+                logOutput += gameISO.GameGenre.Length > 0 ? "[Genre]" : "       ";
+                logOutput += gameISO.GameDesc.Length > 0 ? "[Desc]" : "      ";
                 logOutput += gameISO.Gameimage.Length > 0 ? "[Banner]" : "        ";
-                logOutput += gameISO.GAMEBOX.Length > 0 ? "[Cover]" : "       ";
-                logOutput += gameISO.TRAILER.Length > 0 ? "[Trailer]" : "         ";
-
+                logOutput += gameISO.GameBoxart.Length > 0 ? "[Cover]" : "       ";
+                logOutput += gameISO.GameTrailer != "media\\blank.mpg" ? "[Trailer]" : "         ";
+                
                 logOutput += Environment.NewLine;
 
                 worker.ReportProgress(PercentComplete, logOutput);
@@ -276,6 +282,7 @@ namespace xk3yDVDMenu
 
                 chkArtwork.Enabled = true;
                 chkTraillers.Enabled = true;
+                chkUseCache.Enabled = true;
                 buttonBuildProject.Enabled = true;
 
                 MessageBox.Show("No Games found.");
@@ -314,17 +321,23 @@ namespace xk3yDVDMenu
             GameISOs.Clear();
             if (Directory.Exists(string.Concat(Values["DRIVE"], "games\\")))
             {
-                // Populates ArrIsolist
+                // Populates GameISOs
                 RecursiveISOSearch(string.Concat(Values["DRIVE"], "games\\"));
             }
 
             worker.ReportProgress(PercentComplete, "Found " + GameISOs.Count + (GameISOs.Count == 1 ? " ISO." : " ISOs.") + Environment.NewLine);
 
+            // Serialize search results to file
+            var serializer = new BinaryFormatter();
+            using (var stream = File.Create(WorkingDirectory + "current-results.dat"))
+            {
+                serializer.Serialize(stream, GameISOs);
+            }
+            
             if (GameISOs.Count > 0)
             {
                 worker.ReportProgress(PercentComplete, Environment.NewLine + 
-                    "Retrieving Game Info & Media..." + 
-                    Environment.NewLine + Environment.NewLine);
+                    "Retrieving Game Info & Media..." + Environment.NewLine);
 
                 Values.Add("APPPATH", WorkingDirectory);
                 Values.Add("PAGEINDEX", 0);
@@ -364,13 +377,76 @@ namespace xk3yDVDMenu
 
                 string pgcs = "";
 
-                ISO[] orderedISOs = (from ISO d in GameISOs orderby d.Gamename select d).ToArray();
+                ISO[] orderedISOs = (from ISO d in GameISOs orderby d.GameNameFromFilename select d).ToArray();
 
-                LoadGameDetails(orderedISOs, buttonCount, worker);
+                // Check previous search results
+                if (chkUseCache.Checked == true && 
+                    File.Exists(WorkingDirectory + "game-data.dat") &&
+                    File.Exists(WorkingDirectory + "cached-results.dat") &&
+                    FilesAreIdentical(WorkingDirectory + "current-results.dat", WorkingDirectory + "cached-results.dat"))
+                {
+                    // Deserialize cached IEnumerable<ISO> orderedISOs
+                    using (var stream = File.OpenRead(WorkingDirectory + "game-data.dat"))
+                    {
+                        orderedISOs = (ISO[])serializer.Deserialize(stream);
+                    }
 
-                worker.ReportProgress(35, Environment.NewLine + "Creating Page Definitions..." + Environment.NewLine);
+                    worker.ReportProgress(35, "Using Cached Game Data..." + Environment.NewLine + Environment.NewLine);
 
-                TitleSets = CreateDvdStylerTitleSets(orderedISOs, TitlesetLimit, PathToTheme);
+                    int index = 0;
+                    int totalGames = orderedISOs.Count();
+
+                    foreach (ISO gameISO in orderedISOs)
+                    {
+                        index++;
+
+                        PercentComplete = (int)Math.Round(((double)index / totalGames) * 35);
+
+                        string logOutput = string.Format("[{0} of {1}] ", index, totalGames) +
+                            gameISO.Filename + Environment.NewLine + "  ∟";
+
+                        logOutput += gameISO.GameTitle.Length > 0 ? "[Title]" : "       ";
+                        logOutput += gameISO.GameGenre.Length > 0 ? "[Genre]" : "       ";
+                        logOutput += gameISO.GameDesc.Length > 0 ? "[Desc]" : "      ";
+                        logOutput += gameISO.Gameimage.Length > 0 ? "[Banner]" : "        ";
+                        logOutput += gameISO.GameBoxart.Length > 0 ? "[Cover]" : "       ";
+                        logOutput += gameISO.GameTrailer != "media\\blank.mpg" ? "[Trailer]" : "         ";
+                        
+                        logOutput += Environment.NewLine;
+
+                        worker.ReportProgress(PercentComplete, logOutput);
+                    }
+
+                    // Disregard current (identical) results
+                    if (File.Exists(WorkingDirectory + "current-results.dat"))
+                    {
+                        File.Delete(WorkingDirectory + "current-results.dat");
+                    }
+                }
+                else
+                {
+                    worker.ReportProgress(PercentComplete, Environment.NewLine);
+
+                    // Finds Game resources inc Title & populates orderedISOs entries
+                    LoadGameDetails(orderedISOs, buttonCount, worker);
+
+                    // Serialize orderedISOs to file
+                    using (var stream = File.Create(WorkingDirectory + "game-data.dat"))
+                    {
+                        serializer.Serialize(stream, orderedISOs);
+                    }
+
+                    // Replace cached-results with the current-results
+                    if (File.Exists(WorkingDirectory + "cached-results.dat"))
+                    {
+                        File.Delete(WorkingDirectory + "cached-results.dat");
+                    }
+                    File.Move(WorkingDirectory + "current-results.dat", WorkingDirectory + "cached-results.dat");
+                }
+
+                worker.ReportProgress(35, Environment.NewLine + "Creating Templates (this can take a while)..." + Environment.NewLine);
+
+                TitleSets = CreateDVDStylerTitleSets(orderedISOs, TitlesetLimit, worker);
 
                 for (int currentPage = 0; (double)currentPage < totalPages; currentPage++)
                 {
@@ -383,20 +459,20 @@ namespace xk3yDVDMenu
                     Values["PAGE"] = currentPage + 1;
                     Values["PAGEINDEX"] = 0;
 
-                    IEnumerable<ISO> pageIso =
-                        (from ISO d in GameISOs orderby d.Gamename select d).Skip(currentPage*buttonCount).Take(buttonCount);
+                    IEnumerable<ISO> pageISO =
+                        (from ISO d in orderedISOs orderby d.GameNameFromFilename select d).Skip(currentPage*buttonCount).Take(buttonCount);
 
-                    foreach (ISO d in pageIso)
+                    foreach (ISO d in pageISO)
                     {
                         Application.DoEvents();
 
                         Values["PAGEINDEX"] = string.Format("{0:00}", int.Parse(Values["PAGEINDEX"].ToString()) + 1);
                         Values["ISOID"] = (int) Values["ISOID"] + 1;
-                        Values["GAMETITLE"] = d.Gametitle;
-                        Values["GAMEGENRE"] = d.Gamegenre;
-                        Values["GAMEDESC"] = d.Gamedesc;
+                        Values["GAMETITLE"] = d.GameTitle;
+                        Values["GAMEGENRE"] = d.GameGenre;
+                        Values["GAMEDESC"] = d.GameDesc;
                         Values["GAMEIMAGE"] = d.Gameimage;
-                        Values["GAMEBOX"] = d.GAMEBOX;
+                        Values["GAMEBOX"] = d.GameBoxart;
                         Values["JumpToGameDetails"] = d.JumpToGameDetails;
                         Values["JumpToSelectThisGame"] = d.JumpToSelectThisGame;
                         Values["JumpToTrailler"] = d.JumpToTrailler;
@@ -407,7 +483,7 @@ namespace xk3yDVDMenu
                         string pathToButtonLocationsFile = PathToTheme + "ButtonLocation" + Values["PAGEINDEX"] + ".txt";
                         string buttonLocations = (new StreamReader(pathToButtonLocationsFile)).ReadToEnd();
 
-                        Values["TRAILER"] = d.TRAILER;
+                        Values["TRAILER"] = d.GameTrailer;
                         if (Values["TRAILER"].ToString() != "media\\blank.mpg")
                         {
                             Values["HIDETRAILER"] = "";
@@ -454,6 +530,7 @@ namespace xk3yDVDMenu
 
                     pgcs += ThemeManager.ReplaceVals(pgc, Values);
                 }
+
                 if (File.Exists(PathToTheme + "alpha.txt"))
                 {
                     string allactions = "";
@@ -512,14 +589,14 @@ namespace xk3yDVDMenu
 
         private int FirstLocationAlpha(string letter, int buttonCount)
         {
-            ISO[] orderedISO = (from ISO gameISO in GameISOs orderby gameISO.Gamename select gameISO).ToArray();
+            ISO[] orderedISO = (from ISO gameISO in GameISOs orderby gameISO.GameNameFromFilename select gameISO).ToArray();
 
             int num = 0;
             while (num < orderedISO.Length)
             {
                 ISO gameISO = orderedISO[num];
 
-                if (!gameISO.Gamename.ToUpper().StartsWith(letter))
+                if (!gameISO.GameNameFromFilename.ToUpper().StartsWith(letter))
                 {
                     num++;
                 }
@@ -545,7 +622,7 @@ namespace xk3yDVDMenu
                 SHA1 sha = new SHA1CryptoServiceProvider();
                 int i = 0;
 
-                ISO[] orderedISO = (from ISO gameISO in GameISOs orderby gameISO.Gamename select gameISO).ToArray();
+                ISO[] orderedISO = (from ISO gameISO in GameISOs orderby gameISO.GameNameFromFilename select gameISO).ToArray();
 
                 foreach (var sector in sectors)
                 {
@@ -739,6 +816,15 @@ namespace xk3yDVDMenu
                 buttonBuildProject.Enabled = false;
             }
 
+            if (isVLCInstalled())
+            {
+                chkPreview.Checked = true;
+            }
+            else
+            {
+                chkPreview.Enabled = false;
+            }
+
             SetupWorkingDirectory();
 
             Log.Text += Environment.NewLine;
@@ -758,12 +844,10 @@ namespace xk3yDVDMenu
                 GameISOs.Add(new ISO
                                    {
                                        Filename = fileInfo.Name,
-                                       Gamename = Regex.Replace(fileInfo.Name, ".iso", "", RegexOptions.IgnoreCase),
+                                       GameNameFromFilename = Regex.Replace(fileInfo.Name, ".iso", "", RegexOptions.IgnoreCase),
                                        Path = fileInfo.FullName,
-                                       IsoFile = fileInfo,
-                                       Log = Log,
-                                       WorkingDirectory = WorkingDirectory,
-                                       ProgressBar1 = progressBar1
+                                       ISOFile = fileInfo,
+                                       WorkingDirectory = WorkingDirectory
                                    });
             }
             try
@@ -786,6 +870,7 @@ namespace xk3yDVDMenu
 
             chkArtwork.Enabled = false;
             chkTraillers.Enabled = false;
+            chkUseCache.Enabled = false;
             buttonBuildProject.Enabled = false;
 
             Values.Clear();
@@ -814,6 +899,8 @@ namespace xk3yDVDMenu
                     return;
                 }
             }
+
+            chkPreview.Enabled = false;
 
             Log.Text += "Launching DVDStyler..." + Environment.NewLine;
 
@@ -847,24 +934,21 @@ namespace xk3yDVDMenu
                     progressBar1.Value = 90;
 
                     // Preview before copying to drive
-                    if (isVLCInstalled())
+                    if (chkPreview.Checked == true && isVLCInstalled())
                     {
-                        DialogResult dialogResult = MessageBox.Show("Preview DVDMenu in VLC?", "Step 2 of 3 Complete", MessageBoxButtons.YesNo);
-                        if (dialogResult == DialogResult.Yes)
+                        var previewInVLC = new ProcessStartInfo
                         {
-                            var previewInVLC = new ProcessStartInfo
-                            {
-                                FileName = PathToVLC,
-                                Arguments = " \"" + WorkingDirectory + "dvd.iso\"",
-                            };
-                            Process.Start(previewInVLC);
-                        }
+                            FileName = PathToVLC,
+                            Arguments = " \"" + WorkingDirectory + "dvd.iso\"",
+                        };
+                        Process.Start(previewInVLC);
                     }
 
                 }
                 else
                 {
                     MessageBox.Show("ISO creation failed!");
+                    chkPreview.Enabled = true;
                 }
             }
         }
@@ -881,10 +965,11 @@ namespace xk3yDVDMenu
 
                 buttonCopyToDrive.Enabled = false;
 
-                MessageBox.Show("DVDMenu has been copied to your drive.\n" +
-                                "Make sure your xkey.cfg has MENUDVD=Y and enjoy :)",
-                                "Step 3 of 3 Complete");
-                Close();
+                Log.Text += Environment.NewLine;
+                Log.Text += "Make sure your xkey.cfg has MENUDVD=Y and enjoy :)" + Environment.NewLine;
+
+                // TODO: timer for ~5 seconds then unlock (reset) all controls..
+
             }
             catch (Exception)
             {
@@ -914,8 +999,7 @@ namespace xk3yDVDMenu
 
         private void pictureBoxLogo_MouseHover(object sender, EventArgs e)
         {
-            ToolTip toolTip = new ToolTip();
-            toolTip.SetToolTip(this.pictureBoxLogo, "Visit k3y Forums");
+            toolTip.Show("Visit k3y Forums", pictureBoxLogo, 32000);
         }
 
         private void comboBoxDriveList_DropDown(object sender, EventArgs e)
@@ -970,6 +1054,70 @@ namespace xk3yDVDMenu
             }
 
             senderComboBox.DropDownWidth = width;
+        }
+
+        // This method accepts two strings the represent two files to 
+        // compare. A return value of true indicates that the contents 
+        // of the files are the same.
+        private bool FilesAreIdentical(string file1, string file2)
+        {
+            int file1byte;
+            int file2byte;
+            FileStream fs1;
+            FileStream fs2;
+
+            // Determine if the same file was referenced two times.
+            if (file1 == file2)
+            {
+                // Return true to indicate that the files are the same.
+                return true;
+            }
+
+            // Open the two files.
+            fs1 = new FileStream(file1, FileMode.Open, FileAccess.Read);
+            fs2 = new FileStream(file2, FileMode.Open, FileAccess.Read);
+
+            // Check the file sizes. If they are not the same, the files 
+            // are not the same.
+            if (fs1.Length != fs2.Length)
+            {
+                // Close the file
+                fs1.Close();
+                fs2.Close();
+
+                // Return false to indicate files are different
+                return false;
+            }
+
+            // Read and compare a byte from each file until either a
+            // non-matching set of bytes is found or until the end of
+            // file1 is reached.
+            do
+            {
+                // Read one byte from each file.
+                file1byte = fs1.ReadByte();
+                file2byte = fs2.ReadByte();
+            }
+            while ((file1byte == file2byte) && (file1byte != -1));
+
+            // Close the files.
+            fs1.Close();
+            fs2.Close();
+
+            // Return the success of the comparison. "file1byte" is 
+            // equal to "file2byte" at this point only if the files are 
+            // the same.
+            return ((file1byte - file2byte) == 0);
+        }
+
+        private void chkPreview_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Preview using VLC", chkPreview, 32000);
+        }
+
+        private void chkUseCache_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Uncheck if ISOs haven't\nchanged but Media / XML has", chkUseCache, 32000);
         }
 
     }

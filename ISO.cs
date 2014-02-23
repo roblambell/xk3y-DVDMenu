@@ -10,25 +10,24 @@ using XkeyBrew.Utils.IsoGameReader;
 
 namespace xk3yDVDMenu
 {
+    [Serializable]
     public class ISO
     {
         public string Filename;
-        public string GAMEBOX;
-        public string Gamedesc;
-        public string Gamegenre;
+        public string GameBoxart;
+        public string GameDesc;
+        public string GameGenre;
         public string Gameimage;
-        public string Gamename;
-        public string Gametitle;
-        public FileInfo IsoFile;
+        public string GameNameFromFilename;
+        public string GameTitle;
+        public FileInfo ISOFile;
         public string JumpToGameDetails;
         public string JumpToSelectThisGame;
         public string JumpToTrailler;
-        public TextBox Log;
         public int Page;
         public string Path;
-        public ProgressBar ProgressBar1;
         public string RedirectURL;
-        public string TRAILER;
+        public string GameTrailer;
         public string WorkingDirectory;
 
         private string AddDiscDataToBanner(string bannerPath, int discNumber, int discCount)
@@ -69,15 +68,15 @@ namespace xk3yDVDMenu
             Graphics gr = Graphics.FromImage(banner);
             gr.DrawImage(bitmapDisc, banner.Width - bitmapDisc.Width - 2, 2, bitmapDisc.Width, bitmapDisc.Height);
             bannerPath = string.Concat(WorkingDirectory, "cache\\",
-                                       Filename.Replace(IsoFile.Extension, "-banner.png"));
+                                       Filename.Replace(ISOFile.Extension, "-banner.png"));
             banner.Save(bannerPath, ImageFormat.Png);
             return bannerPath;
         }
 
-        public string GameBanner(bool chkArtwork)
+        public string GetGameBanner(bool chkArtwork)
         {
             string banner;
-            string bannerPath = GameBannerBasic(chkArtwork);
+            string bannerPath = GetGameBannerBasic(chkArtwork);
             try
             {
                 var isoFile = new IsoGameInfo(Path);
@@ -91,19 +90,19 @@ namespace xk3yDVDMenu
             return banner;
         }
 
-        public string GameBannerBasic(bool chkArtwork)
+        public string GetGameBannerBasic(bool chkArtwork)
         {
             //Log.Text = string.Concat(Log.Text, "Loading banner:", Path, Environment.NewLine);
-            if (!File.Exists(string.Concat(Path.Replace(IsoFile.Extension, ""), "-banner.png")))
+            if (!File.Exists(string.Concat(Path.Replace(ISOFile.Extension, ""), "-banner.png")))
             {
-                var waffle = new WaffleXML(Path.Replace(IsoFile.Extension, ".xml"));
+                var waffle = new WaffleXML(Path.Replace(ISOFile.Extension, ".xml"));
                 if (waffle.Banner == null)
                 {
                     if (chkArtwork)
                     {
                         try
                         {
-                            var iso = new Iso(IsoFile.FullName, true);
+                            var iso = new Iso(ISOFile.FullName, true);
                             if (iso.DefaultXeX != null)
                             {
                                 //Log.Text = string.Concat(Log.Text, "Searching Xbox.com for banner:", Path, Environment.NewLine);
@@ -121,7 +120,7 @@ namespace xk3yDVDMenu
                                     waffle.Banner = data;
                                     //TextBox textBox1 = Log;
                                     //textBox1.Text = string.Concat(textBox1.Text, "Banner saved to XML File", Path, Environment.NewLine);
-                                    return GameBanner(true);
+                                    return GetGameBanner(true);
                                 }
                             }
                             {
@@ -143,38 +142,38 @@ namespace xk3yDVDMenu
                     var binWritter =
                         new StreamWriter(
                             string.Concat(WorkingDirectory, "cache\\",
-                                          Filename.Replace(IsoFile.Extension, "-banner.png")), false);
+                                          Filename.Replace(ISOFile.Extension, "-banner.png")), false);
                     binWritter.BaseStream.Write(waffle.Banner, 0, waffle.Banner.Length);
                     binWritter.Flush();
                     binWritter.Close();
 
                     //Log.Text = string.Concat(Log.Text, "Banner found in XML:", Path, Environment.NewLine);
                     return string.Concat(WorkingDirectory, "cache\\",
-                                         Filename.Replace(IsoFile.Extension, "-banner.png"));
+                                         Filename.Replace(ISOFile.Extension, "-banner.png"));
                 }
             }
             else
             {
                 //Log.Text = string.Concat(Log.Text, "Local Banner Found:", Path, Environment.NewLine);
-                return string.Concat(Path.Replace(IsoFile.Extension, ""), "-banner.png");
+                return string.Concat(Path.Replace(ISOFile.Extension, ""), "-banner.png");
             }
         }
 
-        public string GameBox(bool chkArtwork)
+        public string GetGameBoxart(bool chkArtwork)
         {
             //Log.Text = string.Concat(Log.Text, "Finding cover for:", Path, Environment.NewLine);
             if (
-                !(File.Exists(string.Concat(Path.Replace(IsoFile.Extension, ""), "-cover.jpg")) |
-                  File.Exists(string.Concat(Path.Replace(IsoFile.Extension, ""), "-cover.png"))))
+                !(File.Exists(string.Concat(Path.Replace(ISOFile.Extension, ""), "-cover.jpg")) |
+                  File.Exists(string.Concat(Path.Replace(ISOFile.Extension, ""), "-cover.png"))))
             {
-                var waffle = new WaffleXML(Path.Replace(IsoFile.Extension, ".xml"));
+                var waffle = new WaffleXML(Path.Replace(ISOFile.Extension, ".xml"));
                 if (waffle.BoxArt == null)
                 {
                     if (chkArtwork)
                     {
                         try
                         {
-                            var iso = new Iso(IsoFile.FullName, true);
+                            var iso = new Iso(ISOFile.FullName, true);
                             if (iso.DefaultXeX != null)
                             {
                                 //Log.Text = string.Concat(Log.Text, "Searching Xbox.com for cover", Path, Environment.NewLine);
@@ -188,7 +187,7 @@ namespace xk3yDVDMenu
                                     waffle.BoxArt = data;
 
                                     //Log.Text = string.Concat(Log.Text, "Cover saved to XML", Path, Environment.NewLine);
-                                    return GameBox(true);
+                                    return GetGameBoxart(true);
                                 }
                                 {
                                     throw new Exception("Download Failed");
@@ -212,36 +211,36 @@ namespace xk3yDVDMenu
                     var binWritter =
                         new StreamWriter(
                             string.Concat(WorkingDirectory, "cache\\",
-                                          Filename.Replace(IsoFile.Extension, "-cover.jpg")), false);
+                                          Filename.Replace(ISOFile.Extension, "-cover.jpg")), false);
                     binWritter.BaseStream.Write(waffle.BoxArt, 0, waffle.BoxArt.Length);
                     binWritter.Flush();
                     binWritter.Close();
                     //Log.Text = string.Concat(Log.Text, "Found in XML", Path, Environment.NewLine);
                     return string.Concat(WorkingDirectory, "cache\\",
-                                         Filename.Replace(IsoFile.Extension, "-cover.jpg"));
+                                         Filename.Replace(ISOFile.Extension, "-cover.jpg"));
                 }
             }
             {
-                if (File.Exists(string.Concat(Path.Replace(IsoFile.Extension, ""), "-cover.png")))
+                if (File.Exists(string.Concat(Path.Replace(ISOFile.Extension, ""), "-cover.png")))
                 {
-                    return string.Concat(Path.Replace(IsoFile.Extension, ""), "-cover.png");
+                    return string.Concat(Path.Replace(ISOFile.Extension, ""), "-cover.png");
                 }
                 //Log.Text = string.Concat(Log.Text, "Local cover found", Path, Environment.NewLine);
-                return string.Concat(Path.Replace(IsoFile.Extension, ""), "-cover.jpg");
+                return string.Concat(Path.Replace(ISOFile.Extension, ""), "-cover.jpg");
             }
         }
 
-        public string GameDesc(bool chkArtwork)
+        public string GetGameDesc(bool chkArtwork)
         {
             //Log.Text = string.Concat(Log.Text, "Finding Desc", Path, Environment.NewLine);
-            var waffleXMLFile = new WaffleXML(Path.Replace(IsoFile.Extension, ".xml"));
+            var waffleXMLFile = new WaffleXML(Path.Replace(ISOFile.Extension, ".xml"));
             if (waffleXMLFile.Summary == "")
             {
                 if (chkArtwork)
                 {
                     try
                     {
-                        var iso = new Iso(IsoFile.FullName, true);
+                        var iso = new Iso(ISOFile.FullName, true);
                         if (iso.DefaultXeX == null)
                         {
                         }
@@ -278,17 +277,17 @@ namespace xk3yDVDMenu
             }
         }
 
-        public string GameGenre(bool chkArtwork)
+        public string GetGameGenre(bool chkArtwork)
         {
             //Log.Text = string.Concat(Log.Text, "Finding Genre", Path, Environment.NewLine);
-            var waffle = new WaffleXML(Path.Replace(IsoFile.Extension, ".xml"));
+            var waffle = new WaffleXML(Path.Replace(ISOFile.Extension, ".xml"));
             if (waffle.InfoItem("Genre") == "")
             {
                 if (chkArtwork)
                 {
                     try
                     {
-                        var iso = new Iso(IsoFile.FullName, true);
+                        var iso = new Iso(ISOFile.FullName, true);
                         if (iso.DefaultXeX != null)
                         {
                             //Log.Text = string.Concat(Log.Text, "Xbox.com Search", Path, Environment.NewLine);
@@ -331,17 +330,17 @@ namespace xk3yDVDMenu
             }
         }
 
-        public string GameTitle(bool chkArtwork)
+        public string GetGameTitle(bool chkArtwork)
         {
             //Log.Text = string.Concat(Log.Text, "Finding Title", Path, Environment.NewLine);
-            var waffle = new WaffleXML(Path.Replace(IsoFile.Extension, ".xml"));
+            var waffle = new WaffleXML(Path.Replace(ISOFile.Extension, ".xml"));
             if (waffle.Title == "")
             {
                 if (chkArtwork)
                 {
                     try
                     {
-                        var iso = new Iso(IsoFile.FullName, true);
+                        var iso = new Iso(ISOFile.FullName, true);
                         if (iso.DefaultXeX != null)
                         {
                             //Log.Text = string.Concat(Log.Text, "Xbox.com search", Path, Environment.NewLine);
@@ -371,11 +370,11 @@ namespace xk3yDVDMenu
                     }
                     catch (Exception)
                     {
-                        return Gamename;
+                        return GameNameFromFilename;
                     }
                 }
                 //Log.Text = string.Concat(Log.Text, "Using filename", Path, Environment.NewLine);
-                return Gamename;
+                return GameNameFromFilename;
             }
             else
             {
@@ -384,16 +383,16 @@ namespace xk3yDVDMenu
             }
         }
 
-        public string GameTrailer(bool chkTrailers)
+        public string GetGameTrailer(bool chkTrailers)
         {
             //Log.Text = string.Concat(Log.Text, "Finding Trailer", Path, Environment.NewLine);
-            if (!File.Exists(Path.Replace(IsoFile.Extension, ".wmv")))
+            if (!File.Exists(Path.Replace(ISOFile.Extension, ".wmv")))
             {
                 if (chkTrailers)
                 {
                     try
                     {
-                        var isoGame = new Iso(IsoFile.FullName, true);
+                        var isoGame = new Iso(ISOFile.FullName, true);
                         if (isoGame.DefaultXeX != null)
                         {
                             //Log.Text = string.Concat(Log.Text, "Xbox.com", Path, Environment.NewLine);
@@ -418,8 +417,8 @@ namespace xk3yDVDMenu
                                 regexmatchResult = regexReplacer.Match(strVideoAsx);
                                 //Log.Text = string.Concat(Log.Text, "Downloading", Path, Environment.NewLine);
                                 string strVideoUrl = regexmatchResult.Value.Replace("href=\"", "").Replace("\"", "");
-                                wc.DownloadFile(strVideoUrl, Path.Replace(IsoFile.Extension, ".wmv"), ProgressBar1);
-                                string str = Path.Replace(IsoFile.Extension, ".wmv");
+                                wc.DownloadFile(strVideoUrl, Path.Replace(ISOFile.Extension, ".wmv"));
+                                string str = Path.Replace(ISOFile.Extension, ".wmv");
 
                                 return str;
                             }
@@ -427,7 +426,6 @@ namespace xk3yDVDMenu
                     }
                     catch (Exception)
                     {
-                        ProgressBar1.Value = 0;
                         //Log.Text = string.Concat(Log.Text, "Failed", Path, Environment.NewLine);
                     }
                 }
@@ -437,7 +435,7 @@ namespace xk3yDVDMenu
             else
             {
                 //Log.Text = string.Concat(Log.Text, "Local", Path, Environment.NewLine);
-                return Path.Replace(IsoFile.Extension, ".wma");
+                return Path.Replace(ISOFile.Extension, ".wma");
             }
         }
 
