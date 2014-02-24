@@ -646,14 +646,25 @@ namespace xk3yDVDMenu
                 foreach (var sector in sectors)
                 {
                     var encoding = new UTF8Encoding();
-                    byte[] data =
-                        encoding.GetBytes(
-                            (orderedISO[i]).Path.Replace(Values["DRIVE"].ToString(), "").Replace("\\", "/").
-                                Substring("/game/".Length));
+
+                    // E:\games\FIFA 14\FIFA 14 [15467F11].iso
+                    string gamePath = orderedISO[i].Path;
+
+                    // games/FIFA 14/FIFA 14 [15467F11].iso
+                    gamePath = gamePath.Replace(Values["DRIVE"].ToString(), "").Replace("\\", "/");
+
+                    // FIFA 14/FIFA 14 [15467F11].iso
+                    gamePath = gamePath.Substring("games/".Length);
+
+                    byte[] data = encoding.GetBytes(gamePath);
+
                     sectorMapFile.BaseStream.Write(sector, 0, 4);
+
                     byte[] hash = sha.ComputeHash(data);
+
                     sectorMapFile.BaseStream.Write(hash, 0, hash.Length);
-                    i += 1;
+
+                    i++;
                 }
                 sectorMapFile.BaseStream.Flush();
                 sectorMapFile.Flush();
