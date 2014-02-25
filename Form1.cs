@@ -112,7 +112,8 @@ namespace xk3yDVDMenu
                         // HOWEVER, one with our name in it, that must be it!
                         bool containsXbox = driveLabel.IndexOf("Xbox", StringComparison.OrdinalIgnoreCase) >= 0;
                         bool containsxk3y = driveLabel.IndexOf("xk3y", StringComparison.OrdinalIgnoreCase) >= 0;
-                        if (containsXbox || containsxk3y)
+                        bool containsxkey = driveLabel.IndexOf("xkey", StringComparison.OrdinalIgnoreCase) >= 0;
+                        if (containsXbox || containsxk3y || containsxkey)
                         {
                             selectedIndex = currentIndex;
                         }
