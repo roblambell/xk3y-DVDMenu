@@ -586,10 +586,12 @@ namespace xk3yDVDMenu
                 // 90 Transcoding complete
                 // 100 Copied to drive
                 PercentComplete = 40;
-                worker.ReportProgress(PercentComplete, "Saving Project File..." + Environment.NewLine);
+                worker.ReportProgress(PercentComplete, 
+                    "Saving Project File..." + Environment.NewLine +
+                    "file://" + WorkingDirectory + "project.dvds" + Environment.NewLine);
 
                 // Write our project file (XML)
-                var projectFile = new StreamWriter(WorkingDirectory + "\\project.xml", false);
+                var projectFile = new StreamWriter(WorkingDirectory + "project.dvds", false);
                 var chrArray = new char[1];
                 chrArray[0] = '\n';
                 string[] strArrays1 = mainfile.Split(chrArray);
@@ -939,7 +941,7 @@ namespace xk3yDVDMenu
             var start = new ProcessStartInfo
                             {
                                 FileName = PathToDVDStyler,
-                                Arguments = " --stderr --start \"" + WorkingDirectory + "project.xml\"",
+                                Arguments = " --stderr --start \"" + WorkingDirectory + "project.dvds\"",
                             };
 
             using (Process DVDStylerProcess = Process.Start(start))
