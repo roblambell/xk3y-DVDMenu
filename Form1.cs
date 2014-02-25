@@ -340,7 +340,7 @@ namespace xk3yDVDMenu
 
             // Serialize search results to file
             var serializer = new BinaryFormatter();
-            using (var stream = File.Create(WorkingDirectory + "current-results.dat"))
+            using (var stream = File.Create(WorkingDirectory + "current-results-" + Values["DRIVE_LETTER"] + ".dat"))
             {
                 serializer.Serialize(stream, GameISOs);
             }
@@ -391,13 +391,13 @@ namespace xk3yDVDMenu
                 ISO[] orderedISOs = (from ISO d in GameISOs orderby d.GameNameFromFilename select d).ToArray();
 
                 // Check previous search results
-                if (chkUseCache.Checked == true && 
-                    File.Exists(WorkingDirectory + "game-data.dat") &&
-                    File.Exists(WorkingDirectory + "cached-results.dat") &&
-                    FilesAreIdentical(WorkingDirectory + "current-results.dat", WorkingDirectory + "cached-results.dat"))
+                if (chkUseCache.Checked == true &&
+                    File.Exists(WorkingDirectory + "game-data-" + Values["DRIVE_LETTER"] + ".dat") &&
+                    File.Exists(WorkingDirectory + "cached-results-" + Values["DRIVE_LETTER"] + ".dat") &&
+                    FilesAreIdentical(WorkingDirectory + "current-results-" + Values["DRIVE_LETTER"] + ".dat", WorkingDirectory + "cached-results-" + Values["DRIVE_LETTER"] + ".dat"))
                 {
                     // Deserialize cached IEnumerable<ISO> orderedISOs
-                    using (var stream = File.OpenRead(WorkingDirectory + "game-data.dat"))
+                    using (var stream = File.OpenRead(WorkingDirectory + "game-data-" + Values["DRIVE_LETTER"] + ".dat"))
                     {
                         orderedISOs = (ISO[])serializer.Deserialize(stream);
                     }
@@ -433,9 +433,9 @@ namespace xk3yDVDMenu
                     }
 
                     // Disregard current (identical) results
-                    if (File.Exists(WorkingDirectory + "current-results.dat"))
+                    if (File.Exists(WorkingDirectory + "current-results-" + Values["DRIVE_LETTER"] + ".dat"))
                     {
-                        File.Delete(WorkingDirectory + "current-results.dat");
+                        File.Delete(WorkingDirectory + "current-results-" + Values["DRIVE_LETTER"] + ".dat");
                     }
                 }
                 else
@@ -446,17 +446,17 @@ namespace xk3yDVDMenu
                     LoadGameDetails(orderedISOs, buttonCount, worker);
 
                     // Serialize orderedISOs to file
-                    using (var stream = File.Create(WorkingDirectory + "game-data.dat"))
+                    using (var stream = File.Create(WorkingDirectory + "game-data-" + Values["DRIVE_LETTER"] + ".dat"))
                     {
                         serializer.Serialize(stream, orderedISOs);
                     }
 
                     // Replace cached-results with the current-results
-                    if (File.Exists(WorkingDirectory + "cached-results.dat"))
+                    if (File.Exists(WorkingDirectory + "cached-results-" + Values["DRIVE_LETTER"] + ".dat"))
                     {
-                        File.Delete(WorkingDirectory + "cached-results.dat");
+                        File.Delete(WorkingDirectory + "cached-results-" + Values["DRIVE_LETTER"] + ".dat");
                     }
-                    File.Move(WorkingDirectory + "current-results.dat", WorkingDirectory + "cached-results.dat");
+                    File.Move(WorkingDirectory + "current-results-" + Values["DRIVE_LETTER"] + ".dat", WorkingDirectory + "cached-results-" + Values["DRIVE_LETTER"] + ".dat");
                 }
 
                 worker.ReportProgress(PercentComplete, Environment.NewLine + "Creating Templates (this can take a while)..." + Environment.NewLine);
@@ -911,6 +911,7 @@ namespace xk3yDVDMenu
 
             // Selected item string expected as "(Z:)..."
             Values.Add("DRIVE", comboBoxDriveList.SelectedItem.ToString().Substring(1, 2) + "\\");
+            Values.Add("DRIVE_LETTER", Values["DRIVE"].ToString().Substring(0, 1));
 
             backgroundWorker1.RunWorkerAsync();
         }
