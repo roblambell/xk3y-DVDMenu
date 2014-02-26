@@ -335,7 +335,7 @@ namespace xk3yDVDMenu
                 // Populates GameISOs
                 RecursiveISOSearch(string.Concat(Values["DRIVE"], "games\\"));
             }
-
+            
             worker.ReportProgress(PercentComplete, "Found " + GameISOs.Count + (GameISOs.Count == 1 ? " ISO." : " ISOs.") + Environment.NewLine);
 
             // Serialize search results to file

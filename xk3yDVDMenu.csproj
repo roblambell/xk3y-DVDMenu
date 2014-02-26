@@ -63,8 +63,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>appicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
@@ -102,6 +101,7 @@
     <Compile Include="WbClient.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Content Include="appicon.ico" />
     <Content Include="Themes\PalTheme\titlesetDetails.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
