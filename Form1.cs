@@ -737,52 +737,6 @@ namespace xk3yDVDMenu
             }
         }
 
-        private void LoadPlugins()
-        {
-            // TODO: Working on plugin support for scrappers
-            FileInfo[] filelist = new DirectoryInfo(Application.StartupPath + "\\plugins\\").GetFiles("*.dll");
-            foreach (FileInfo F in filelist)
-            {
-                Assembly asm = Assembly.LoadFrom(F.FullName);
-                Type[] typeAsm = asm.GetTypes();
-                Type ti = typeof (IMediaDownloader);
-
-                foreach (Type type in typeAsm)
-                {
-                    IEnumerable<Type> results = from d in type.GetInterfaces()
-                                                where d.Name == "IMediaDownloader"
-                                                select d;
-                    if (results.Any())
-                    {
-                        MessageBox.Show("Test");
-                    }
-                }
-
-                //if type
-                //    if  (typeAsm.GetInterface(GetType()))
-                //    {
-
-                //    }
-                //Not
-                //typeAsm.GetInterface(GetType(IInterface).FullName)
-                //Is Nothing 
-                //Then
-                //' 
-                //Type
-                //typeAsm.Fullname in
-                //asm.Fullname supports 
-                //the interface
-                //Dim
-                //obj as Object,
-                //iObj as IInterface
-                //obj = asm.CreateInstance(typeAsm.FullName, True)
-                //Return Ctype 
-                //(obj, iObj)
-                //End If 
-                //Next
-            }
-        }
-
         // Returns the human-readable file size for an arbitrary, 64-bit file size 
         // The default format is "0.## XB", e.g. "4.2 KB" or "1.43 GB"
         public static string GetBytesReadable(long i)
@@ -862,8 +816,7 @@ namespace xk3yDVDMenu
 
             Log.Text += Environment.NewLine;
 
-            // TODO: This one creates error, cannot find plugin - will add plugin support in next build - Diag
-            //LoadPlugins();
+            // Populate comboBoxes
             LoadDisks();
             LoadThemes();
 
@@ -915,6 +868,7 @@ namespace xk3yDVDMenu
             Values.Add("DRIVE", comboBoxDriveList.SelectedItem.ToString().Substring(1, 2) + "\\");
             Values.Add("DRIVE_LETTER", Values["DRIVE"].ToString().Substring(0, 1));
 
+            // FetchGameDataAndCreateProject() in new thread
             backgroundWorker1.RunWorkerAsync();
         }
 
