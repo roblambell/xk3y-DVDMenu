@@ -20,13 +20,10 @@ namespace xk3yDVDMenu
         public string GameNameFromFilename;
         public string GameTitle;
         public FileInfo ISOFile;
-        public string JumpToGameDetails;
         public string JumpToSelectThisGame;
-        public string JumpToTrailler;
         public int Page;
         public string Path;
         public string RedirectURL;
-        public string GameTrailer;
         public string WorkingDirectory;
 
         private string AddDiscDataToBanner(string bannerPath, int discNumber, int discCount)
@@ -381,63 +378,7 @@ namespace xk3yDVDMenu
                 return waffle.Title;
             }
         }
-
-        public string GetGameTrailer(bool chkTrailers)
-        {
-            //Log.Text = string.Concat(Log.Text, "Finding Trailer", Path, Environment.NewLine);
-            if (!File.Exists(Path.Replace(ISOFile.Extension, ".wmv")))
-            {
-                if (chkTrailers)
-                {
-                    try
-                    {
-                        var isoGame = new Iso(ISOFile.FullName, true);
-                        if (isoGame.DefaultXeX != null)
-                        {
-                            //Log.Text = string.Concat(Log.Text, "Xbox.com", Path, Environment.NewLine);
-                            var wc = new WbClient();
-                            string page =
-                                wc.DownloadString(wc.RedirectURL(this,
-                                                                 ("http://marketplace.xbox.com/en-US/games/media/66acd000-77fe-1000-9115-d802" +
-                                                                  isoGame.DefaultXeX.XeXHeader.TitleId.ToLower()) +
-                                                                 "?nosplash=1"));
-                            var regexReplacer = new Regex("addVideo\\('[^,]*,");
-                            Match regexmatchResult = regexReplacer.Match(page);
-                            if (!regexmatchResult.Success)
-                            {
-                            }
-                            else
-                            {
-                                string strVideoAsx =
-                                    wc.DownloadString(
-                                        regexmatchResult.Value.Replace("\\x3a", ":").Replace("\\x2f", "/").Substring(10)
-                                            .Replace(",", "").Trim());
-                                regexReplacer = new Regex("href=\"[^\"]*\"");
-                                regexmatchResult = regexReplacer.Match(strVideoAsx);
-                                //Log.Text = string.Concat(Log.Text, "Downloading", Path, Environment.NewLine);
-                                string strVideoUrl = regexmatchResult.Value.Replace("href=\"", "").Replace("\"", "");
-                                wc.DownloadFile(strVideoUrl, Path.Replace(ISOFile.Extension, ".wmv"));
-                                string str = Path.Replace(ISOFile.Extension, ".wmv");
-
-                                return str;
-                            }
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        //Log.Text = string.Concat(Log.Text, "Failed", Path, Environment.NewLine);
-                    }
-                }
-                //Log.Text = string.Concat(Log.Text, "Not Found", Path, Environment.NewLine);
-                return "media\\blank.mpg";
-            }
-            else
-            {
-                //Log.Text = string.Concat(Log.Text, "Local", Path, Environment.NewLine);
-                return Path.Replace(ISOFile.Extension, ".wma");
-            }
-        }
-
+        
         public Image Resize(Image srcImage, int newSize)
         {
             var newImage = new Bitmap(newSize, newSize);

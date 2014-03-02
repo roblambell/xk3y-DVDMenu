@@ -39,7 +39,6 @@
             this.Log = new System.Windows.Forms.RichTextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.chkArtwork = new System.Windows.Forms.CheckBox();
-            this.chkTraillers = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
@@ -170,28 +169,16 @@
             this.chkArtwork.Text = "Artwork";
             this.chkArtwork.UseVisualStyleBackColor = true;
             // 
-            // chkTraillers
-            // 
-            this.chkTraillers.AutoSize = true;
-            this.chkTraillers.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkTraillers.Location = new System.Drawing.Point(82, 19);
-            this.chkTraillers.Name = "chkTraillers";
-            this.chkTraillers.Size = new System.Drawing.Size(64, 18);
-            this.chkTraillers.TabIndex = 20;
-            this.chkTraillers.Text = "Traillers";
-            this.chkTraillers.UseVisualStyleBackColor = true;
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.chkArtwork);
-            this.groupBox1.Controls.Add(this.chkTraillers);
             this.groupBox1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(8, 68);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(156, 43);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Download from Xbox.com";
+            this.groupBox1.Text = "Download";
             // 
             // pictureBoxLogo
             // 
@@ -297,7 +284,6 @@
         private System.Windows.Forms.RichTextBox Log;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.CheckBox chkArtwork;
-        private System.Windows.Forms.CheckBox chkTraillers;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.PictureBox pictureBoxLogo;
         public System.ComponentModel.BackgroundWorker backgroundWorker1;
