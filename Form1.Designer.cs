@@ -45,6 +45,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.chkPreview = new System.Windows.Forms.CheckBox();
             this.chkUseCache = new System.Windows.Forms.CheckBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
@@ -175,7 +176,7 @@
             this.groupBox1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(8, 68);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(156, 43);
+            this.groupBox1.Size = new System.Drawing.Size(82, 43);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Download";
@@ -205,11 +206,12 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.comboBox1);
             this.groupBox2.Controls.Add(this.chkPreview);
             this.groupBox2.Controls.Add(this.chkUseCache);
-            this.groupBox2.Location = new System.Drawing.Point(170, 68);
+            this.groupBox2.Location = new System.Drawing.Point(96, 68);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(177, 43);
+            this.groupBox2.Size = new System.Drawing.Size(249, 43);
             this.groupBox2.TabIndex = 41;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Build Settings";
@@ -217,7 +219,7 @@
             // chkPreview
             // 
             this.chkPreview.AutoSize = true;
-            this.chkPreview.Location = new System.Drawing.Point(106, 19);
+            this.chkPreview.Location = new System.Drawing.Point(92, 19);
             this.chkPreview.Name = "chkPreview";
             this.chkPreview.Size = new System.Drawing.Size(64, 17);
             this.chkPreview.TabIndex = 1;
@@ -232,11 +234,25 @@
             this.chkUseCache.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkUseCache.Location = new System.Drawing.Point(7, 19);
             this.chkUseCache.Name = "chkUseCache";
-            this.chkUseCache.Size = new System.Drawing.Size(93, 17);
+            this.chkUseCache.Size = new System.Drawing.Size(79, 17);
             this.chkUseCache.TabIndex = 0;
-            this.chkUseCache.Text = "Cache Games";
+            this.chkUseCache.Text = "Use Cache";
             this.chkUseCache.UseVisualStyleBackColor = true;
             this.chkUseCache.MouseHover += new System.EventHandler(this.chkUseCache_MouseHover);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "NTSC 16:9",
+            "NTSC 4:3",
+            "PAL 16:9",
+            "PAL 4:3"});
+            this.comboBox1.Location = new System.Drawing.Point(162, 15);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(81, 21);
+            this.comboBox1.TabIndex = 2;
             // 
             // Form1
             // 
@@ -290,6 +306,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox chkPreview;
         private System.Windows.Forms.CheckBox chkUseCache;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
 

@@ -21,7 +21,7 @@ namespace xk3yDVDMenu
     public partial class Form1 : Form
     {
 
-        private const int TitlesetISOLimit = 10;
+        private const int TitlesetISOLimit = 20;
 
         public string[][] AlphaGroups = new[]
                                             {
@@ -355,20 +355,10 @@ namespace xk3yDVDMenu
         {
 
             // Copy media files to WorkingDirectory
-            if (Directory.Exists(WorkingDirectory + "media"))
-            {
-                Directory.Delete(WorkingDirectory + "media", true);
-            }
-            new Microsoft.VisualBasic.Devices.Computer().
-                FileSystem.CopyDirectory(Application.StartupPath + "\\media", WorkingDirectory + "media");
+            CopyFolder(Application.StartupPath + "\\media", WorkingDirectory + "media");
 
             // Copy theme to WorkingDirectory
-            if (Directory.Exists(WorkingDirectory + "Themes"))
-            {
-                Directory.Delete(WorkingDirectory + "Themes", true);
-            }
-            new Microsoft.VisualBasic.Devices.Computer().
-                FileSystem.CopyDirectory(Application.StartupPath + "\\Themes\\" + Values["THEME"], PathToTheme);
+            CopyFolder(Application.StartupPath + "\\Themes\\" + Values["THEME"], PathToTheme);
 
             // Create cache folder
             if (!Directory.Exists(WorkingDirectory + "cache"))
@@ -384,12 +374,14 @@ namespace xk3yDVDMenu
             }
 
             // Limit for testing..
+            /*
             int limitForTesting = 20;
             if (GameISOs.Count > limitForTesting)
             {
                 GameISOs = GameISOs.GetRange(0, limitForTesting);
             }
-            
+            */
+
             worker.ReportProgress(PercentComplete, "Found " + GameISOs.Count + (GameISOs.Count == 1 ? " ISO." : " ISOs.") + Environment.NewLine);
 
             // Serialize search results to file
@@ -1021,6 +1013,29 @@ namespace xk3yDVDMenu
 
             senderComboBox.DropDownWidth = width;
         }
+
+
+        // Copy folder to another folder recursively
+        public static void CopyFolder(string sourceFolder, string destFolder)
+        {
+            if (!Directory.Exists(destFolder))
+                Directory.CreateDirectory(destFolder);
+            string[] files = Directory.GetFiles(sourceFolder);
+            foreach (string file in files)
+            {
+                string name = Path.GetFileName(file);
+                string dest = Path.Combine(destFolder, name);
+                File.Copy(file, dest, true);
+            }
+            string[] folders = Directory.GetDirectories(sourceFolder);
+            foreach (string folder in folders)
+            {
+                string name = Path.GetFileName(folder);
+                string dest = Path.Combine(destFolder, name);
+                CopyFolder(folder, dest);
+            }
+        }
+
 
         // This method accepts two strings the represent two files to 
         // compare. A return value of true indicates that the contents 
