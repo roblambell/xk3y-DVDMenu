@@ -140,8 +140,8 @@ namespace xk3yDVDMenu
             string strTitleset = "";
 
             var totalTitleSets = (int)Math.Ceiling((decimal)orderedISOs.Count() / TitlesetISOLimit);
-            string titlesetHeader = (new StreamReader(string.Concat(PathToTheme, "titlesetHeader.txt"))).ReadToEnd();
-            string titlesetSelected = (new StreamReader(string.Concat(PathToTheme, "titlesetSelected.txt"))).ReadToEnd();
+            string titlesetHeader = (new StreamReader(string.Concat(PathToTheme, "titlesetHeader.xml"))).ReadToEnd();
+            string titlesetSelected = (new StreamReader(string.Concat(PathToTheme, "titlesetSelected.xml"))).ReadToEnd();
 
             int currentTitleSet = 0;
             while (currentTitleSet < totalTitleSets)
@@ -360,6 +360,23 @@ namespace xk3yDVDMenu
             // Copy theme to WorkingDirectory
             CopyFolder(Application.StartupPath + "\\Themes\\" + Values["THEME"], PathToTheme);
 
+            // Update theme files in WorkingDirectory from .txt to .xml as needed
+            string filename;
+            string[] filePaths = Directory.GetFiles(PathToTheme, "*.txt");
+            foreach (string myfile in filePaths)
+            {
+                filename = Path.ChangeExtension(myfile, ".xml");
+                try
+                {
+                    File.Delete(filename);
+                    File.Move(myfile, filename);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+
             // Create cache folder
             if (!Directory.Exists(WorkingDirectory + "cache"))
             {
@@ -374,14 +391,12 @@ namespace xk3yDVDMenu
             }
 
             // Limit for testing..
-            /*
             int limitForTesting = 20;
             if (GameISOs.Count > limitForTesting)
             {
                 GameISOs = GameISOs.GetRange(0, limitForTesting);
             }
-            */
-
+            
             worker.ReportProgress(PercentComplete, "Found " + GameISOs.Count + (GameISOs.Count == 1 ? " ISO." : " ISOs.") + Environment.NewLine);
 
             // Serialize search results to file
@@ -409,24 +424,24 @@ namespace xk3yDVDMenu
 
                 Values.Add("JumpToSelectThisGame", "");
 
-                string pgc = (new StreamReader(PathToTheme + "PGC.txt")).ReadToEnd();
+                string pgc = (new StreamReader(PathToTheme + "PGC.xml")).ReadToEnd();
                 int buttonCount =
-                    (from d in new DirectoryInfo(PathToTheme).GetFiles("ButtonLocation*.txt") select d).Count();
+                    (from d in new DirectoryInfo(PathToTheme).GetFiles("ButtonLocation*.xml") select d).Count();
                 double totalPages = Math.Ceiling(GameISOs.Count/(double) buttonCount);
                 Values.Add("TotalPageCount", totalPages);
-                string buttonDef = (new StreamReader(PathToTheme + "ButtonStyle.txt")).ReadToEnd();
-                string objDef = (new StreamReader(PathToTheme + "GAMEOBJ.txt")).ReadToEnd();
-                string butActions = (new StreamReader(PathToTheme + "ButtonActions.txt")).ReadToEnd();
-                string objFiles = (new StreamReader(PathToTheme + "OBJFiles.txt")).ReadToEnd();
-                string prevDef = (new StreamReader(PathToTheme + "PrevButtonStyle.txt")).ReadToEnd();
-                string prevLoc = (new StreamReader(PathToTheme + "PrevButtonLocation.txt")).ReadToEnd();
-                string prevAct = (new StreamReader(PathToTheme + "PrevButtonAction.txt")).ReadToEnd();
-                string nextDef = (new StreamReader(PathToTheme + "NextButtonStyle.txt")).ReadToEnd();
-                string nextLoc = (new StreamReader(PathToTheme + "NextButtonLocation.txt")).ReadToEnd();
-                string nextAct = (new StreamReader(PathToTheme + "NextButtonAction.txt")).ReadToEnd();
-                string alphaDef = (new StreamReader(PathToTheme + "alphaButtonStyle.txt")).ReadToEnd();
-                string alphaLoc = (new StreamReader(PathToTheme + "alphaButtonLocation.txt")).ReadToEnd();
-                string alphaAct = (new StreamReader(PathToTheme + "alphaButtonAction.txt")).ReadToEnd();
+                string buttonDef = (new StreamReader(PathToTheme + "ButtonStyle.xml")).ReadToEnd();
+                string objDef = (new StreamReader(PathToTheme + "GAMEOBJ.xml")).ReadToEnd();
+                string butActions = (new StreamReader(PathToTheme + "ButtonActions.xml")).ReadToEnd();
+                string objFiles = (new StreamReader(PathToTheme + "OBJFiles.xml")).ReadToEnd();
+                string prevDef = (new StreamReader(PathToTheme + "PrevButtonStyle.xml")).ReadToEnd();
+                string prevLoc = (new StreamReader(PathToTheme + "PrevButtonLocation.xml")).ReadToEnd();
+                string prevAct = (new StreamReader(PathToTheme + "PrevButtonAction.xml")).ReadToEnd();
+                string nextDef = (new StreamReader(PathToTheme + "NextButtonStyle.xml")).ReadToEnd();
+                string nextLoc = (new StreamReader(PathToTheme + "NextButtonLocation.xml")).ReadToEnd();
+                string nextAct = (new StreamReader(PathToTheme + "NextButtonAction.xml")).ReadToEnd();
+                string alphaDef = (new StreamReader(PathToTheme + "alphaButtonStyle.xml")).ReadToEnd();
+                string alphaLoc = (new StreamReader(PathToTheme + "alphaButtonLocation.xml")).ReadToEnd();
+                string alphaAct = (new StreamReader(PathToTheme + "alphaButtonAction.xml")).ReadToEnd();
 
                 string pgcs = "";
 
@@ -464,10 +479,10 @@ namespace xk3yDVDMenu
                         Values["GAMEBOX"] = d.GameBoxart;
                         Values["JumpToSelectThisGame"] = d.JumpToSelectThisGame;
 
-                        string pathToobjectLocationFile = PathToTheme + "ObjLocation" + Values["PAGEINDEX"] + ".txt";
-                        string objectLocation = (new StreamReader(pathToobjectLocationFile)).ReadToEnd();
+                        string pathToObjectLocationFile = PathToTheme + "ObjLocation" + Values["PAGEINDEX"] + ".xml";
+                        string objectLocation = (new StreamReader(pathToObjectLocationFile)).ReadToEnd();
                         
-                        string pathToButtonLocationsFile = PathToTheme + "ButtonLocation" + Values["PAGEINDEX"] + ".txt";
+                        string pathToButtonLocationsFile = PathToTheme + "ButtonLocation" + Values["PAGEINDEX"] + ".xml";
                         string buttonLocations = (new StreamReader(pathToButtonLocationsFile)).ReadToEnd();
 
                         defs += ThemeManager.ReplaceVals(buttonDef, Values);
@@ -478,7 +493,7 @@ namespace xk3yDVDMenu
                         objFilestxt += ThemeManager.ReplaceVals(objFiles, Values);
                     }
 
-                    if (File.Exists(PathToTheme + "alpha.txt"))
+                    if (File.Exists(PathToTheme + "alpha.xml"))
                     {
                         defs += ThemeManager.ReplaceVals(alphaDef, Values);
                         locationsBut += ThemeManager.ReplaceVals(alphaLoc, Values);
@@ -508,15 +523,15 @@ namespace xk3yDVDMenu
                     pgcs += ThemeManager.ReplaceVals(pgc, Values);
                 }
 
-                if (File.Exists(PathToTheme + "alpha.txt"))
+                if (File.Exists(PathToTheme + "alpha.xml"))
                 {
                     string allactions = "";
                     Values.Add("alphaletter", "A");
                     Values.Add("alphaaction", "");
                     Values.Add("alphaActions", "");
 
-                    string alpha = (new StreamReader(PathToTheme + "alpha.txt")).ReadToEnd();
-                    string alphaActions = (new StreamReader(PathToTheme + "alpha-Actions.txt")).ReadToEnd();
+                    string alpha = (new StreamReader(PathToTheme + "alpha.xml")).ReadToEnd();
+                    string alphaActions = (new StreamReader(PathToTheme + "alpha-Actions.xml")).ReadToEnd();
                     foreach (var letterGroup in AlphaGroups)
                     {
                         int PreviousFound = 0;
@@ -541,7 +556,7 @@ namespace xk3yDVDMenu
 
                 Values.Add("PGCS", pgcs);
                 Values.Add("TITLESETS", TitleSets);
-                string mainfile = (new StreamReader(PathToTheme + "Main.txt")).ReadToEnd();
+                string mainfile = (new StreamReader(PathToTheme + "Main.xml")).ReadToEnd();
                 mainfile = ThemeManager.ReplaceVals(mainfile, Values);
 
                 // 30 Games & Data loaded
@@ -596,25 +611,25 @@ namespace xk3yDVDMenu
 
         private void CreateSectorMap()
         {
-            //Log.Text += "Awaiting Code";
             Log.Text += "Creating Sector Map..." + Environment.NewLine;
 
             var sectorMapFile = new StreamWriter(WorkingDirectory + "dvd.xsk", false);
             try
             {
-                List<byte[]> sectors = new DvdMenuReadSectors(WorkingDirectory + "dvd.iso").FillListWithMenuSectors();
+                var sha = new SHA1CryptoServiceProvider();
+                var encoding = new UTF8Encoding();
 
-                SHA1 sha = new SHA1CryptoServiceProvider();
+                // https://code.google.com/p/xkey-brew/source/browse/Utils/DvdReader/DvdMenuReadSectors.cs
+                // We can match Sectors and ISOs by the order they are in, write out sector map with xk3y Game IDs
+
+                var sectors = new DvdMenuReadSectors(WorkingDirectory + "dvd.iso").FillListWithMenuSectors();
+                var orderedISOs = (from ISO gameISO in GameISOs orderby gameISO.GameNameFromFilename select gameISO).ToArray();
+
                 int i = 0;
-
-                ISO[] orderedISO = (from ISO gameISO in GameISOs orderby gameISO.GameNameFromFilename select gameISO).ToArray();
-
                 foreach (var sector in sectors)
                 {
-                    var encoding = new UTF8Encoding();
-
                     // E:\games\FIFA 14\FIFA 14 [15467F11].iso
-                    string gamePath = orderedISO[i].Path;
+                    string gamePath = orderedISOs[i].Path;
 
                     // games/FIFA 14/FIFA 14 [15467F11].iso
                     gamePath = gamePath.Replace(Values["DRIVE"].ToString(), "").Replace("\\", "/");
@@ -622,12 +637,13 @@ namespace xk3yDVDMenu
                     // FIFA 14/FIFA 14 [15467F11].iso
                     gamePath = gamePath.Substring("games/".Length);
 
+                    // "FIFA 14/FIFA 14 [15467F11].iso" as sequence of bytes
                     byte[] data = encoding.GetBytes(gamePath);
 
-                    sectorMapFile.BaseStream.Write(sector, 0, 4);
-
+                    // Game ID, e.g. 39677831299d46ac508bf532afba24cb1c05248c
                     byte[] hash = sha.ComputeHash(data);
 
+                    sectorMapFile.BaseStream.Write(sector, 0, 4);
                     sectorMapFile.BaseStream.Write(hash, 0, hash.Length);
 
                     i++;
