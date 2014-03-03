@@ -463,21 +463,22 @@ namespace xk3yDVDMenu
                     Values["PAGE"] = currentPage + 1;
                     Values["PAGEINDEX"] = 0;
 
-                    IEnumerable<ISO> pageISO =
-                        (from ISO d in orderedISOs orderby d.GameNameFromFilename select d).Skip(currentPage*buttonCount).Take(buttonCount);
+                    var pageISOs = (from ISO d in orderedISOs orderby d.GameNameFromFilename select d).Skip(currentPage*buttonCount).Take(buttonCount);
 
-                    foreach (ISO d in pageISO)
+                    Values["PageButtonCount"] = pageISOs.Count();
+
+                    foreach (ISO currentISO in pageISOs)
                     {
                         Application.DoEvents();
 
                         Values["PAGEINDEX"] = string.Format("{0:00}", int.Parse(Values["PAGEINDEX"].ToString()) + 1);
                         Values["ISOID"] = (int) Values["ISOID"] + 1;
-                        Values["GAMETITLE"] = d.GameTitle;
-                        Values["GAMEGENRE"] = d.GameGenre;
-                        Values["GAMEDESC"] = d.GameDesc;
-                        Values["GAMEIMAGE"] = d.Gameimage;
-                        Values["GAMEBOX"] = d.GameBoxart;
-                        Values["JumpToSelectThisGame"] = d.JumpToSelectThisGame;
+                        Values["GAMETITLE"] = currentISO.GameTitle;
+                        Values["GAMEGENRE"] = currentISO.GameGenre;
+                        Values["GAMEDESC"] = currentISO.GameDesc;
+                        Values["GAMEIMAGE"] = currentISO.Gameimage;
+                        Values["GAMEBOX"] = currentISO.GameBoxart;
+                        Values["JumpToSelectThisGame"] = currentISO.JumpToSelectThisGame;
 
                         string pathToObjectLocationFile = PathToTheme + "ObjLocation" + Values["PAGEINDEX"] + ".xml";
                         string objectLocation = (new StreamReader(pathToObjectLocationFile)).ReadToEnd();
@@ -1107,6 +1108,11 @@ namespace xk3yDVDMenu
             return ((file1byte - file2byte) == 0);
         }
 
+        private void chkArtwork_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Download missing Artwork from Xbox.com", chkArtwork, 32000);
+        }
+
         private void chkPreview_MouseHover(object sender, EventArgs e)
         {
             toolTip.Show("Preview using VLC", chkPreview, 32000);
@@ -1114,7 +1120,7 @@ namespace xk3yDVDMenu
 
         private void chkUseCache_MouseHover(object sender, EventArgs e)
         {
-            toolTip.Show("Uncheck if ISOs haven't\nchanged but Media / XML has", chkUseCache, 32000);
+            toolTip.Show("Uncheck if ISOs haven't changed but\nMedia / XML / Download Artwork choice has", chkUseCache, 32000);
         }
 
         private void Log_LinkClicked(object sender, LinkClickedEventArgs e)
