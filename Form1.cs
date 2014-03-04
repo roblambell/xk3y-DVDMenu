@@ -778,19 +778,8 @@ namespace xk3yDVDMenu
         {
             Log.Text += "xk3y DVDMenu Tool" + Environment.NewLine;
 
-            if (!isDVDStylerInstalled())
-            {
-                buttonBuildProject.Enabled = false;
-            }
-
-            if (isVLCInstalled())
-            {
-                chkPreview.Checked = true;
-            }
-            else
-            {
-                chkPreview.Enabled = false;
-            }
+            buttonBuildProject.Enabled = isDVDStylerInstalled();
+            chkPreview.Checked = isVLCInstalled();
 
             SetupWorkingDirectory();
 
@@ -1054,9 +1043,8 @@ namespace xk3yDVDMenu
         }
 
 
-        // This method accepts two strings the represent two files to 
-        // compare. A return value of true indicates that the contents 
-        // of the files are the same.
+        // Compares files from provided path strings
+        // A return value of true indicates a match
         private bool FilesAreIdentical(string file1, string file2)
         {
             int file1byte;
